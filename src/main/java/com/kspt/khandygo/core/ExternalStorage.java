@@ -4,11 +4,11 @@ import java.util.List;
 
 public interface ExternalStorage<T> {
 
-  T store(final T t);
+  T save(final T t);
 
-  int storeAll(final List<T> ts);
+  T update(final T t);
 
-  T retrieve(final long id);
+  T find(final long id);
 
-  List<T> retrieveAll();
+  List<T> findAll();
 }
