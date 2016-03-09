@@ -1,6 +1,6 @@
 package com.kspt.khandygo.core.usecases;
 
-import com.kspt.khandygo.core.UseCaseVisitor;
+import com.kspt.khandygo.core.SendMessageUseCaseVisitor;
 import com.kspt.khandygo.core.entities.MeetingLocation;
 
 public interface ProposeMeeting extends SendMessage {
@@ -11,7 +11,7 @@ public interface ProposeMeeting extends SendMessage {
 
   MeetingLocation where();
 
-  default void accept(final UseCaseVisitor visitor) {
+  default void accept(final SendMessageUseCaseVisitor visitor) {
     visitor.visit(this);
   }
 }

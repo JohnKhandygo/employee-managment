@@ -1,6 +1,6 @@
 package com.kspt.khandygo.core.usecases;
 
-import com.kspt.khandygo.core.UseCaseVisitor;
+import com.kspt.khandygo.core.SendMessageUseCaseVisitor;
 
 public interface TrackTime extends SendMessage {
 
@@ -8,9 +8,9 @@ public interface TrackTime extends SendMessage {
 
   int onBehalfOf();
 
-  int minutes();
+  long minutes();
 
-  default void accept(final UseCaseVisitor visitor) {
+  default void accept(final SendMessageUseCaseVisitor visitor) {
     visitor.visit(this);
   }
 }
