@@ -1,4 +1,4 @@
-package com.kspt.khandygo.usecases;
+package com.kspt.khandygo.core.usecases;
 
 import java.util.List;
 

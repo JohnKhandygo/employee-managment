@@ -1,6 +1,6 @@
-package com.kspt.khandygo.usecases;
+package com.kspt.khandygo.core.usecases;
 
-import com.kspt.khandygo.core.MeetingLocation;
+import com.kspt.khandygo.core.entities.MeetingLocation;
 
 public interface ProposeMeetingUseCase extends SendMessageUseCase {
 

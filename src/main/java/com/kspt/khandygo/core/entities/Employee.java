@@ -1,4 +1,4 @@
-package com.kspt.khandygo.core;
+package com.kspt.khandygo.core.entities;
 
 public interface Employee {
 
