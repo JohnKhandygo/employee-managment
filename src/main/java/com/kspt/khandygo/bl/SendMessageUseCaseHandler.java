@@ -44,7 +44,7 @@ public class SendMessageUseCaseHandler implements SendMessageUseCaseVisitor {
   @Override
   public void visit(final SendChatMessage u) {
     final Message m = new ChatMessage(u.origin(), u.author(), u.text());
-    sendAdnSaveMessage(m);
+    messageSender.send(m);
   }
 
   @Override
