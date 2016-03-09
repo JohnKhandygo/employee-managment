@@ -2,7 +2,7 @@ package com.kspt.khandygo.core.usecases;
 
 import com.kspt.khandygo.core.UseCaseVisitor;
 
-public interface TrackTimeUseCase extends SendMessageUseCase {
+public interface TrackTime extends SendMessage {
 
   long when();
 

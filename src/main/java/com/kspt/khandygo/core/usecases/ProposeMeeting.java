@@ -3,9 +3,11 @@ package com.kspt.khandygo.core.usecases;
 import com.kspt.khandygo.core.UseCaseVisitor;
 import com.kspt.khandygo.core.entities.MeetingLocation;
 
-public interface ProposeMeetingUseCase extends SendMessageUseCase {
+public interface ProposeMeeting extends SendMessage {
 
   long when();
+
+  int durationMinutes();
 
   MeetingLocation where();
 

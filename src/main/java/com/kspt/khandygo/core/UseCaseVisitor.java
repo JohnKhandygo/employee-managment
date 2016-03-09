@@ -1,20 +1,20 @@
 package com.kspt.khandygo.core;
 
-import com.kspt.khandygo.core.usecases.ProposeMeetingUseCase;
-import com.kspt.khandygo.core.usecases.SendChatMessageUseCase;
-import com.kspt.khandygo.core.usecases.SendNotificationUseCase;
-import com.kspt.khandygo.core.usecases.TrackTimeUseCase;
-import com.kspt.khandygo.core.usecases.UpdateEmployeeDataUseCase;
+import com.kspt.khandygo.core.usecases.ProposeMeeting;
+import com.kspt.khandygo.core.usecases.SendChatMessage;
+import com.kspt.khandygo.core.usecases.SendNotification;
+import com.kspt.khandygo.core.usecases.TrackTime;
+import com.kspt.khandygo.core.usecases.UpdateEmployeeData;
 
 public interface UseCaseVisitor {
 
-  void visit(final ProposeMeetingUseCase useCase);
+  void visit(final ProposeMeeting useCase);
 
-  void visit(final SendChatMessageUseCase useCase);
+  void visit(final SendChatMessage useCase);
 
-  void visit(final SendNotificationUseCase useCase);
+  void visit(final SendNotification useCase);
 
-  void visit(final TrackTimeUseCase useCase);
+  void visit(final TrackTime useCase);
 
-  void visit(final UpdateEmployeeDataUseCase useCase);
+  void visit(final UpdateEmployeeData useCase);
 }

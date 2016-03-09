@@ -2,7 +2,7 @@ package com.kspt.khandygo.core.usecases;
 
 import com.kspt.khandygo.core.UseCaseVisitor;
 
-public interface SendChatMessageUseCase extends SendMessageUseCase {
+public interface SendChatMessage extends SendMessage {
 
   String text();
 

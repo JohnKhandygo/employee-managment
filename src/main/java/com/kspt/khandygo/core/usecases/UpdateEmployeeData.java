@@ -4,7 +4,7 @@ import com.kspt.khandygo.core.UseCase;
 import com.kspt.khandygo.core.UseCaseVisitor;
 import com.kspt.khandygo.core.entities.Employee;
 
-public interface UpdateEmployeeDataUseCase extends UseCase {
+public interface UpdateEmployeeData extends UseCase {
 
   long origin();
 
