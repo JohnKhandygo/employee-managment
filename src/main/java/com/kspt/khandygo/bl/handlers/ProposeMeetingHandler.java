@@ -26,7 +26,7 @@ public class ProposeMeetingHandler {
         pm.when(),
         pm.minutes(),
         pm.where(),
-        "You have been invated to the meeting.");
+        "You have been invited to the meeting.");
     messageSender.send(m);
     messages.save(m);
   }
