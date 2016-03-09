@@ -7,7 +7,7 @@ public interface ProposeMeeting extends SendMessage {
 
   long when();
 
-  int durationMinutes();
+  long minutes();
 
   MeetingLocation where();
 
