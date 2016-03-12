@@ -1,4 +1,4 @@
-package com.kspt.khandygo.core.usecases;
+package com.kspt.khandygo.core.usecases.employee;
 
 import com.kspt.khandygo.core.entities.Employee;
 

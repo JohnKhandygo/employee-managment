@@ -7,9 +7,9 @@ import com.kspt.khandygo.core.ExternalStorage;
 import com.kspt.khandygo.core.MessageSender;
 import com.kspt.khandygo.core.SendMessageUseCaseVisitor;
 import com.kspt.khandygo.core.entities.Message;
-import com.kspt.khandygo.core.usecases.ProposeMeeting;
-import com.kspt.khandygo.core.usecases.SendChatMessage;
-import com.kspt.khandygo.core.usecases.TrackTime;
+import com.kspt.khandygo.core.usecases.chat.SendChatMessage;
+import com.kspt.khandygo.core.usecases.employee.TrackTime;
+import com.kspt.khandygo.core.usecases.meeting.ProposeMeeting;
 
 public class SendMessageUseCaseHandler implements SendMessageUseCaseVisitor {
 
@@ -36,15 +36,10 @@ public class SendMessageUseCaseHandler implements SendMessageUseCaseVisitor {
     sendAdnSaveMessage(m);
   }
 
-  private void sendAdnSaveMessage(final Message m) {
-    messageSender.send(m);
-    messages.save(m);
-  }
-
   @Override
   public void visit(final SendChatMessage u) {
     final Message m = new ChatMessage(u.origin(), u.author(), u.text());
-    messageSender.send(m);
+    sendAdnSaveMessage(m);
   }
 
   @Override
@@ -56,5 +51,10 @@ public class SendMessageUseCaseHandler implements SendMessageUseCaseVisitor {
         u.when(),
         u.minutes());
     sendAdnSaveMessage(m);
+  }
+
+  private void sendAdnSaveMessage(final Message m) {
+    messageSender.send(m);
+    messages.save(m);
   }
 }

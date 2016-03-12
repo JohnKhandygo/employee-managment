@@ -1,6 +1,7 @@
-package com.kspt.khandygo.core.usecases;
+package com.kspt.khandygo.core.usecases.employee;
 
 import com.kspt.khandygo.core.SendMessageUseCaseVisitor;
+import com.kspt.khandygo.core.usecases.SendMessage;
 
 public interface TrackTime extends SendMessage {
 
