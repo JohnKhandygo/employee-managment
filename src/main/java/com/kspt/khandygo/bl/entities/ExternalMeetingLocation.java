@@ -1,4 +1,4 @@
-package com.kspt.khandygo.bl.locations;
+package com.kspt.khandygo.bl.entities;
 
 import com.kspt.khandygo.core.entities.MeetingLocation;
 

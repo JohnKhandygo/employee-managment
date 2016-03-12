@@ -4,6 +4,6 @@ import com.kspt.khandygo.core.entities.Message;
 
 public interface MessageSender {
 
-  void send(final Message message);
+  void send(final int recipient, final Message message);
 
 }

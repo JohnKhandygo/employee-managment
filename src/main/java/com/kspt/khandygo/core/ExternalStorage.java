@@ -11,4 +11,6 @@ public interface ExternalStorage<T> {
   T find(final long id);
 
   List<T> findAll();
+
+  void delete(final int id);
 }

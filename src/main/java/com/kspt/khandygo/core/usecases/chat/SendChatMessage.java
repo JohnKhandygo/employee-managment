@@ -6,6 +6,8 @@ import com.kspt.khandygo.core.usecases.SendMessage;
 
 public interface SendChatMessage extends SendMessage {
 
+  int chatId();
+
   String text();
 
   default void accept(final SendMessageUseCaseVisitor visitor) {
