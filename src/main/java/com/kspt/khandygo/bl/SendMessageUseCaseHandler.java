@@ -1,3 +1,4 @@
+/*
 package com.kspt.khandygo.bl;
 
 import com.kspt.khandygo.bl.messages.ChatMessage;
@@ -58,3 +59,4 @@ public class SendMessageUseCaseHandler implements SendMessageUseCaseVisitor {
     messages.save(m);
   }
 }
+*/
