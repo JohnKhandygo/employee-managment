@@ -1,7 +1,6 @@
 package com.kspt.khandygo.core.entities;
 
-public interface MeetingLocation {
+import com.kspt.khandygo.core.Entity;
 
-  int id();
-
+public interface MeetingLocation extends Entity {
 }
