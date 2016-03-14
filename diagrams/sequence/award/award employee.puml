@@ -1,0 +1,63 @@
+@startuml
+
+actor Manager as manager
+participant AwardResource as resource
+participant EmployeesApi as api
+participant "Repository<Employee>" as employees
+participant "Repository<Payments>" as payments
+participant "Repository<Message>" as messages
+participant "MessageSender" as sender
+database DBMS
+actor "Related \n Paymaster" as paymaster
+
+manager -> resource : award()
+activate resource
+resource -> api : award()
+activate api
+
+''''' get awarded employee
+api -> employees : get()
+activate employees
+employees -> DBMS : <<query>>
+activate DBMS
+DBMS --> employees : raw response
+deactivate DBMS
+employees --> api : Employee
+deactivate employees
+
+''''' add new payment
+ref over api : Payment::new
+api -> payments : add()
+activate payments
+payments -> DBMS : <<query>>
+activate DBMS
+DBMS --> payments : raw response
+deactivate DBMS
+payments --> api : Payment
+deactivate payments
+
+''''' create message
+ref over api : Message::new
+api -> messages : add()
+activate messages
+messages -> DBMS : <<query>>
+activate DBMS
+DBMS --> messages : raw response
+deactivate DBMS
+messages --> api : Message
+deactivate messages
+
+''''' send a message to the paymaster
+ref over api : Employee::paymaster
+api -> sender : send()
+activate sender
+sender ->> paymaster : <<send>>
+sender --> api : void
+deactivate sender
+
+api -->  resource : void
+deactivate api
+resource --> manager : Response
+deactivate resource
+
+@enduml
