@@ -1,0 +1,79 @@
+@startuml
+left to right direction
+
+:Employee: as employee
+:Worker: as worker
+:Manager: as manager
+:Paymaster: as paymaster
+
+worker --|> employee
+manager --|> employee
+paymaster --|> employee
+
+rectangle discussion {
+  (Discussion) as d
+  (Accept) as a
+  (Decline) as c
+
+  a --|> d
+  c --|> d
+}
+
+rectangle activity {
+  (Track Time) as tt
+  (On Behalf of \n Himself) as ttByEmployee
+  (On Behalf of \n Another User) as ttByManager
+
+  ttByEmployee --|> tt
+  ttByManager --|> tt
+
+  (Propose Meeting) as pm
+
+  (Reserve Out-of-Office) as rooo
+
+  pm ..> d
+  rooo ..> d
+  tt ..> d
+}
+
+employee -- ttByEmployee
+manager -- ttByManager
+
+employee -- pm
+
+employee -- rooo
+
+rectangle view {
+  (View Data) as vd
+  (View Own Data) as vod
+  (View Other \n Employee Data) as voed
+  (View All \n Employees Data) as vaed
+  (View Payments) as vp
+
+  vod --|> vd
+  voed --|> vd
+  vaed --|> vd
+  vp --|> vd
+}
+
+employee -- vod
+manager -- vd
+paymaster -- vd
+
+rectangle update {
+  (Update Data) as ud
+  (Update Employee Data) as ued
+  (Update Payments Plan) as upp
+  (Award Employee) as ae
+
+  ued --|> ud
+  upp --|> ud
+  ae --|> ud
+
+  upp ..> d
+}
+
+employee -- upp
+manager -- ud
+
+@enduml
