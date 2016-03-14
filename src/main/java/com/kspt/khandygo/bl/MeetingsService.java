@@ -3,6 +3,7 @@ package com.kspt.khandygo.bl;
 import com.kspt.khandygo.core.MessageSender;
 import com.kspt.khandygo.core.Repository;
 import com.kspt.khandygo.core.apis.MeetingsApi;
+import com.kspt.khandygo.core.entities.Employee;
 import com.kspt.khandygo.core.entities.Meeting;
 import com.kspt.khandygo.core.entities.Message;
 import java.time.Instant;
@@ -33,13 +34,13 @@ public class MeetingsService implements MeetingsApi {
   @Override
   public void propose(final Meeting meeting) {
     meetingsRepository.add(meeting);
-    messageSender.send(meeting.group(), messageForMeeting(meeting));
+    messageSender.send(meeting.group().id(), messageForMeeting(meeting));
   }
 
   private Message messageForMeeting(final Meeting meeting) {
     return new Message() {
       @Override
-      public int author() {
+      public Employee author() {
         return meeting.author();
       }
 

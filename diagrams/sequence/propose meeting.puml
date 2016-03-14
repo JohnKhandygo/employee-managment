@@ -1,0 +1,19 @@
+@startuml
+
+actor Employee
+
+Employee -> MeetingsResource : propose()
+activate MeetingsResource
+MeetingResource -> Message : <<create>>
+
+deactivate MeetingsResource
+
+
+
+actor Alice
+Alice -> Bob: Authentication Request
+Bob --> Alice: Authentication Response
+
+Alice -> Bob: Another authentication Request
+Alice <-- Bob: another authentication Response
+@enduml
