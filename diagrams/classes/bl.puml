@@ -1,0 +1,35 @@
+@startuml
+
+package "core" {
+  interface EmployeesApi
+  interface MeetingsApi
+  interface PaymentsApi
+
+  interface Repository<E extends Entity>
+  interface MessageSender
+}
+
+package "bl" {
+  class EmployeesService {
+    - employeesRepository : Repository<Employee>
+    - paymentsRepository : Repository<Payment>
+  }
+  class MeetingsService {
+    - meetingsRepository : Repository<Meeting>
+    - messageSender : MessageSender
+  }
+  class PaymentsService {
+    - paymentPlansRepository : Repository<PaymentPlan>
+  }
+}
+
+EmployeesService ..|> EmployeesApi
+MeetingsService ..|> MeetingsApi
+PaymentsService ..|> PaymentsApi
+
+EmployeesService ..> Repository
+MeetingsService ..> Repository
+PaymentsService ..> Repository
+PaymentsService ..> MessageSender
+
+@enduml

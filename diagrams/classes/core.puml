@@ -1,0 +1,43 @@
+@startuml
+
+package "core" {
+
+interface Entity {
+  + id() : int
+}
+
+interface MessageSender {
+  + send(recipient : int, message : Message) : void
+}
+
+interface Repository<E extends Entity> {
+  + add(e : E) : E
+  + update(e : E) : E
+  + get(id : int) : E
+  + delete(id : int) : E
+}
+
+interface EmployeesApi {
+  + fire(id : int) : void
+  + hire(e : Employee) : void
+  + trackTime(id : int, amount : long) : void
+  + update(e : Employee) : void
+  + get(id : int) : Employee
+  + award(id : int, amount : long) : void
+}
+
+interface MeetingsApi {
+  + accept(id : int) : void
+  + decline(id : int) : void
+  + propose(meeting : Meeting) : void
+  + cancel(id : int) : void
+}
+
+interface PaymentsApi {
+  get(id : int) : PaymentPlan
+}
+
+Repository --> Entity
+}
+
+@enduml

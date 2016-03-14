@@ -1,0 +1,53 @@
+@startuml
+
+package "core" {
+
+interface Entity {
+  + id() : int
+}
+
+interface Group {
+  + participants() : List<Employee>
+}
+
+interface Employee extends Entity {
+  + name() : String;
+  + paymentPlan() : PaymentPlan
+}
+
+interface Meeting extends Entity {
+  + when() : long
+  + where() : MeetingLocation
+  + author() : Employee
+  + group() : Group
+}
+
+interface MeetingLocation extends Entity
+
+interface Message extends Entity {
+  + author() : Employee
+  + origin() : long
+  + body() : Object
+}
+
+interface Payment extends Entity {
+  + when() : long
+  + amount() : long
+  + increaseBy(by : long) : Payment
+}
+
+interface PaymentPlan extends Entity {
+  + next() : Payment
+  + employee() : Employee
+}
+
+Employee --> PaymentPlan
+Meeting --> Employee
+Meeting --> Group
+Meeting --> MeetingLocation
+Group "*" --o "*" Employee
+PaymentPlan "1" --* "*" Payment
+Message --> Employee
+}
+
+@enduml
