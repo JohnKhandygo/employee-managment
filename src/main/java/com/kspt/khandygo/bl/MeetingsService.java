@@ -32,9 +32,9 @@ public class MeetingsService implements MeetingsApi {
   }
 
   @Override
-  public void propose(final Meeting meeting) {
-    meetingsRepository.add(meeting);
+  public Meeting propose(final Meeting meeting) {
     messageSender.send(meeting.group().id(), messageForMeeting(meeting));
+    return meetingsRepository.add(meeting);
   }
 
   private Message messageForMeeting(final Meeting meeting) {

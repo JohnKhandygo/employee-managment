@@ -8,7 +8,7 @@ public interface MeetingsApi {
 
   void decline(final int id);
 
-  void propose(final Meeting meeting);
+  Meeting propose(final Meeting meeting);
 
   void cancel(final int id);
 }
