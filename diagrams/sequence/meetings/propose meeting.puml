@@ -1,0 +1,58 @@
+@startuml
+
+actor "author : Employee" as author
+participant MeetingsResource as resource
+participant MeetingsApi as api
+participant "Repository<Group>" as groups
+participant "Repository<Message>" as messages
+participant MessageSender as sender
+participant "Repository<Meeting>" as meetings
+database DBMS
+actor Group as group
+
+author -> resource : propose()
+activate resource
+
+resource -> api : propose()
+activate api
+
+''''' create a meeting group
+ref over api : Group::new
+api -> groups : add()
+activate groups
+groups -> DBMS : <<query>>
+DBMS --> groups : raw response
+groups --> api : Group
+deactivate groups
+
+''''' create invitation message
+ref over api : Message::new
+api -> messages : add()
+activate messages
+messages -> DBMS : <<query>>
+DBMS --> messages : raw response
+messages --> api : Message
+deactivate messages
+
+''''' send a message
+api -> sender : send()
+activate sender
+sender ->> group : <<send>>
+sender --> api : void
+deactivate sender
+
+''' save meeting entry
+ref over api : Meeting::new
+api -> meetings : add()
+activate meetings
+meetings --> api : Meeting
+deactivate meetings
+api --> resource : Meeting
+
+deactivate api
+
+resource --> author : int
+
+deactivate resource
+
+@enduml

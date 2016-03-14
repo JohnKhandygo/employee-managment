@@ -1,0 +1,59 @@
+@startuml
+
+actor "participant : Employee" as participant
+participant MeetingsResource as resource
+participant MeetingsApi as api
+participant "Repository<Group>" as groups
+participant "Repository<Message>" as messages
+participant MessageSender as sender
+actor group
+database DBMS
+
+participant -> resource : accept()
+activate resource
+resource -> api : accept()
+activate api
+
+''''' get meeting instance
+api -> groups : get()
+activate groups
+groups -> DBMS : <<query>>
+activate DBMS
+DBMS --> groups : raw response
+deactivate DBMS
+groups --> api : Group
+deactivate groups
+
+ref over api : Group::rollback()
+
+''''' update group
+api -> groups : update()
+activate groups
+groups -> DBMS : <<query>>
+activate DBMS
+DBMS --> groups : raw response
+deactivate DBMS
+groups --> api : Group
+deactivate groups
+
+
+''''' send message
+ref over api : Message::new
+api -> messages : add()
+activate messages
+messages --> api : Message
+deactivate messages
+api -> sender : send()
+activate sender
+sender ->> group : <<send>>
+sender --> api : void
+deactivate sender
+
+
+
+api --> resource : void
+deactivate api
+resource --> participant : Response
+deactivate resource
+
+@enduml
