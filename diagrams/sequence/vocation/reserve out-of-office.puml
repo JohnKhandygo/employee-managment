@@ -1,0 +1,67 @@
+@startuml
+
+actor Employee as employee
+participant ReservationResource as resource
+participant ReservationApi as api
+participant "Repository<TimeReservation>" as reservations
+participant "Repository<Employee>" as employees
+participant "Repository<Message>" as messages
+participant MessageSender as sender
+database DBMS
+actor "Employee's \n Manager" as manager
+
+employee -> resource : reserve()
+activate resource
+
+resource -> api : reserve()
+activate api
+
+  ''''' add time reservation
+  ref over api : TimeReservation::new
+  api -> reservations : add()
+  activate reservations
+  reservations -> DBMS : <<query>>
+  activate DBMS
+  DBMS --> reservations : raw response
+  deactivate DBMS
+  reservations --> api : TimeReservation
+  deactivate reservations
+
+  ''''' get manager of employee
+  api -> employees : get()
+  activate employees
+  employees -> DBMS : <<query>>
+  activate DBMS
+  DBMS --> employees : raw response
+  deactivate DBMS
+  employees --> api : Employee
+  deactivate employees
+  ref over api : Employee::manager
+
+  ''''' create message to manager
+  ref over api : Message::new
+  api -> messages : add()
+  activate messages
+  messages -> DBMS : <<query>>
+  activate DBMS
+  DBMS --> messages : raw response
+  deactivate DBMS
+  messages --> api : Message
+  deactivate messages
+
+  ''''' send a message
+  api -> sender : send()
+  activate sender
+  sender ->> manager : <<send>>
+  sender --> api : void
+  deactivate sender
+
+  api --> resource : boolean
+
+deactivate api
+
+resource --> employee : ReservationStatusView
+deactivate resource
+
+
+@enduml
