@@ -4,7 +4,7 @@ import com.kspt.khandygo.core.Entity;
 
 public interface Message extends Entity {
 
-  int author();
+  Employee author();
 
   long origin();
 

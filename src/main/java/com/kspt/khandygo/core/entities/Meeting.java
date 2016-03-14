@@ -8,7 +8,7 @@ public interface Meeting extends Entity {
 
   MeetingLocation where();
 
-  int author();
+  Employee author();
 
-  int group();
+  Group group();
 }
