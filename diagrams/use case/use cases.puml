@@ -14,9 +14,12 @@ rectangle discussion {
   (Discussion) as d
   (Accept) as a
   (Decline) as c
+  (Suggest Changes) as sc
+
 
   a --|> d
   c --|> d
+  sc --|> d
 }
 
 rectangle activity {
