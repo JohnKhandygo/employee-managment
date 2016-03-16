@@ -24,8 +24,8 @@ public class EmployeesService implements EmployeesApi {
   }
 
   @Override
-  public void update(final Employee e) {
-    employeesRepository.update(e);
+  public Employee update(final Employee e) {
+    return employeesRepository.update(e);
   }
 
   @Override

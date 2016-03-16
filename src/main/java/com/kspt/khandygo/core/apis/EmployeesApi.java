@@ -6,7 +6,7 @@ public interface EmployeesApi {
 
   void trackTime(final int id, final long amount);
 
-  void update(final Employee e);
+  Employee update(final Employee e);
 
   Employee get(final int id);
 
