@@ -1,10 +1,16 @@
 package com.kspt.khandygo.bl;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
+import com.kspt.khandygo.bl.entities.beans.MessageBean;
 import com.kspt.khandygo.bl.entities.payments.Award;
 import com.kspt.khandygo.core.Repository;
 import com.kspt.khandygo.core.apis.PaymentsApi;
+import com.kspt.khandygo.core.entities.Employee;
 import com.kspt.khandygo.core.entities.Payment;
+import com.kspt.khandygo.core.sys.Messenger;
+import static com.kspt.khandygo.utils.TimeUtils.currentUTCMs;
+import javax.inject.Inject;
 import java.time.Instant;
 import java.util.List;
 
@@ -12,9 +18,14 @@ public class PaymentsService implements PaymentsApi {
 
   private final Repository<Payment> payments;
 
+  private final Messenger messenger;
+
+  @Inject
   public PaymentsService(
-      final Repository<Payment> payments) {
+      final Repository<Payment> payments,
+      final Messenger messenger) {
     this.payments = payments;
+    this.messenger = messenger;
   }
 
   @Override
@@ -34,6 +45,11 @@ public class PaymentsService implements PaymentsApi {
       final Award award = (Award) payment;
       final Award approved = award.approve();
       payments.update(approved);
+
+      final Employee employee = payment.employee();
+      messenger.send(
+          Lists.newArrayList(employee, employee.manager()),
+          new MessageBean(-1, employee.paymaster(), currentUTCMs(), award));
     } else {
       throw new RuntimeException();
     }
@@ -59,5 +75,10 @@ public class PaymentsService implements PaymentsApi {
     Preconditions.checkState(payment.when() > Instant.now().toEpochMilli());
     final Payment canceled = payment.cancel();
     payments.update(canceled);
+
+    final Employee employee = payment.employee();
+    messenger.send(
+        employee.manager(),
+        new MessageBean(-1, employee.paymaster(), currentUTCMs(), payment));
   }
 }

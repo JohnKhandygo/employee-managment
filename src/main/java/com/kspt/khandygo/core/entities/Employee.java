@@ -5,4 +5,8 @@ import com.kspt.khandygo.core.Entity;
 public interface Employee extends Entity {
 
   String name();
+
+  Employee manager();
+
+  Employee paymaster();
 }

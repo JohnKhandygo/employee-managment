@@ -6,4 +6,8 @@ public interface Vocation extends TimeHolder {
   boolean accepted();
 
   boolean canceled();
+
+  Vocation accept();
+
+  Vocation decline();
 }

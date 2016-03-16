@@ -10,5 +10,5 @@ public interface TimeHolder extends Entity {
 
   long duration();
 
-  Employee author();
+  Employee employee();
 }
