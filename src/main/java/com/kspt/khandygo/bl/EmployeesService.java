@@ -19,16 +19,6 @@ public class EmployeesService implements EmployeesApi {
   }
 
   @Override
-  public void fire(final int id) {
-    employeesRepository.delete(id);
-  }
-
-  @Override
-  public void hire(final Employee e) {
-    employeesRepository.add(e);
-  }
-
-  @Override
   public void trackTime(final int id, final long amount) {
     throw new UnsupportedOperationException("not implemented for a while.");
   }
