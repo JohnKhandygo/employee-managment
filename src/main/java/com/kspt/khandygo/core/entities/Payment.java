@@ -8,5 +8,9 @@ public interface Payment extends Entity {
 
   long amount();
 
-  Payment increaseBy(final long by);
+  Employee employee();
+
+  boolean canceled();
+
+  Payment cancel();
 }
