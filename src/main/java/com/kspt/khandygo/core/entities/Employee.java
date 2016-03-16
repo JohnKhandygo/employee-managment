@@ -5,6 +5,4 @@ import com.kspt.khandygo.core.Entity;
 public interface Employee extends Entity {
 
   String name();
-
-  PaymentPlan paymentPlan();
 }
