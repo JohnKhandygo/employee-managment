@@ -1,9 +1,9 @@
 package com.kspt.khandygo.bl;
 
-import com.kspt.khandygo.core.MessageSender;
 import com.kspt.khandygo.core.Repository;
 import com.kspt.khandygo.core.apis.TimeHolderApi;
 import com.kspt.khandygo.core.entities.TimeHolder;
+import com.kspt.khandygo.core.sys.MessageSender;
 
 public class TimeHolderService implements TimeHolderApi {
 

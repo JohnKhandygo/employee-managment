@@ -1,9 +1,9 @@
 package com.kspt.khandygo.bl;
 
 import com.google.common.base.Preconditions;
+import com.kspt.khandygo.bl.entities.payments.Award;
 import com.kspt.khandygo.core.Repository;
 import com.kspt.khandygo.core.apis.PaymentsApi;
-import com.kspt.khandygo.core.entities.Award;
 import com.kspt.khandygo.core.entities.Payment;
 import java.time.Instant;
 import java.util.List;

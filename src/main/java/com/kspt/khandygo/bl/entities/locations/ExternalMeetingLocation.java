@@ -1,6 +1,4 @@
-package com.kspt.khandygo.bl.entities;
-
-import com.kspt.khandygo.core.entities.MeetingLocation;
+package com.kspt.khandygo.bl.entities.locations;
 
 public interface ExternalMeetingLocation extends MeetingLocation {
 

@@ -1,8 +1,8 @@
 package com.kspt.khandygo.bl;
 
 import com.kspt.khandygo.core.Repository;
-import com.kspt.khandygo.core.apis.AdminApi;
 import com.kspt.khandygo.core.entities.Employee;
+import com.kspt.khandygo.core.sys.AdminApi;
 
 public class AdminService implements AdminApi {
 

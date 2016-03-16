@@ -1,6 +1,4 @@
-package com.kspt.khandygo.core;
-
-import com.kspt.khandygo.core.entities.Message;
+package com.kspt.khandygo.core.sys;
 
 public interface MessageSender {
 

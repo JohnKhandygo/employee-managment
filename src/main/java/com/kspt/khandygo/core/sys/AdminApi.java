@@ -1,4 +1,4 @@
-package com.kspt.khandygo.core.apis;
+package com.kspt.khandygo.core.sys;
 
 import com.kspt.khandygo.core.entities.Employee;
 
