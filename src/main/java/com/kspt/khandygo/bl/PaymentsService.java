@@ -6,6 +6,7 @@ import com.kspt.khandygo.core.apis.PaymentsApi;
 import com.kspt.khandygo.core.entities.Award;
 import com.kspt.khandygo.core.entities.Payment;
 import java.time.Instant;
+import java.util.List;
 
 public class PaymentsService implements PaymentsApi {
 
@@ -14,6 +15,11 @@ public class PaymentsService implements PaymentsApi {
   public PaymentsService(
       final Repository<Payment> payments) {
     this.payments = payments;
+  }
+
+  @Override
+  public List<Payment> get(final int id, final long since, final long till) {
+    throw new UnsupportedOperationException("not implemented yet.");
   }
 
   @Override
