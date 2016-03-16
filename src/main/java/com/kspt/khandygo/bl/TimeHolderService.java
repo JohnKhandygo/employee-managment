@@ -2,24 +2,24 @@ package com.kspt.khandygo.bl;
 
 import com.kspt.khandygo.core.MessageSender;
 import com.kspt.khandygo.core.Repository;
-import com.kspt.khandygo.core.apis.TimeReservationApi;
-import com.kspt.khandygo.core.entities.TimeReservation;
+import com.kspt.khandygo.core.apis.TimeHolderApi;
+import com.kspt.khandygo.core.entities.TimeHolder;
 
-public class TimeReservationService implements TimeReservationApi {
+public class TimeHolderService implements TimeHolderApi {
 
-  private final Repository<TimeReservation> reservations;
+  private final Repository<TimeHolder> reservations;
 
   private final MessageSender messageSender;
 
-  public TimeReservationService(
-      final Repository<TimeReservation> reservations,
+  public TimeHolderService(
+      final Repository<TimeHolder> reservations,
       final MessageSender messageSender) {
     this.reservations = reservations;
     this.messageSender = messageSender;
   }
 
   @Override
-  public TimeReservation reserve(final TimeReservation tr) {
+  public TimeHolder reserve(final TimeHolder tr) {
     throw new UnsupportedOperationException("not implemented yet.");
   }
 

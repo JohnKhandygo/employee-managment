@@ -1,6 +1,6 @@
 package com.kspt.khandygo.core.entities;
 
-public interface Meeting extends TimeReservation {
+public interface Meeting extends TimeHolder {
 
   MeetingLocation where();
 
