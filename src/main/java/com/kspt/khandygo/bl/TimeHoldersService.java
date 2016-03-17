@@ -33,13 +33,13 @@ public class TimeHoldersService implements TimeHoldersApi {
 
   @Override
   public TimeHolder track(final TimeHolder th) {
-    Preconditions.checkState(th.start() < currentUTCMs());
+    Preconditions.checkState(th.when() < currentUTCMs());
     return addAndNotify(th);
   }
 
   @Override
   public TimeHolder reserve(final TimeHolder th) {
-    Preconditions.checkState(th.start() > currentUTCMs());
+    Preconditions.checkState(th.when() > currentUTCMs());
     return addAndNotify(th);
   }
 
