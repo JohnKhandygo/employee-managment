@@ -1,7 +1,7 @@
 package com.kspt.khandygo.bl.entities.payments;
 
-import com.kspt.khandygo.core.entities.Approvable;
 import com.kspt.khandygo.core.entities.Payment;
+import com.kspt.khandygo.core.entities.Pending;
 
-public interface Award extends Payment, Approvable<Award> {
+public interface Award extends Payment, Pending {
 }

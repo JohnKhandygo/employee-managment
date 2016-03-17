@@ -1,7 +1,6 @@
 package com.kspt.khandygo.core.entities;
 
-public interface Answer {
-
+public interface Pending {
   default boolean pending() {
     return !accepted() && !rejected();
   }
@@ -9,4 +8,8 @@ public interface Answer {
   boolean accepted();
 
   boolean rejected();
+
+  Pending rejectBy(final Employee responsible);
+
+  Pending approveBy(final Employee responsible);
 }
