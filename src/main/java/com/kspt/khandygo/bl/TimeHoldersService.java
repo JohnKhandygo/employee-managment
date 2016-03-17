@@ -1,5 +1,6 @@
 package com.kspt.khandygo.bl;
 
+import static com.google.common.collect.Lists.newArrayList;
 import com.kspt.khandygo.bl.entities.beans.MessageBean;
 import com.kspt.khandygo.bl.entities.th.Meeting;
 import com.kspt.khandygo.bl.entities.th.OutOfOffice;
@@ -10,7 +11,9 @@ import com.kspt.khandygo.core.entities.Employee;
 import com.kspt.khandygo.core.entities.TimeHolder;
 import com.kspt.khandygo.core.sys.Messenger;
 import static com.kspt.khandygo.utils.TimeUtils.currentUTCMs;
+import static java.util.Collections.singletonList;
 import javax.inject.Inject;
+import java.util.List;
 
 public class TimeHoldersService implements TimeHoldersApi {
 
@@ -30,26 +33,22 @@ public class TimeHoldersService implements TimeHoldersApi {
   public TimeHolder reserve(final TimeHolder th) {
     final TimeHolder added = ths.add(th);
     final Employee employee = added.employee();
-    if (th instanceof Meeting) {
-      messenger.send(
-          employee,
-          new MessageBean(-1, employee, currentUTCMs(), added));
-    } else if (th instanceof OutOfOffice) {
-      messenger.send(
-          employee.manager(),
-          new MessageBean(-1, employee, currentUTCMs(), added));
-    } else if (th instanceof Vocation) {
-      messenger.send(
-          employee.manager(),
-          new MessageBean(-1, employee, currentUTCMs(), added));
-    } else {
-      throw new RuntimeException();
-    }
+    notifyAbout(added, employee);
     return added;
   }
 
-  @Override
-  public void cancel(final int id) {
-    throw new UnsupportedOperationException("not implemented yet");
+  private void notifyAbout(final TimeHolder subject, final Employee author) {
+    final List<Employee> subscribers;
+    if (subject instanceof Meeting) {
+      subscribers = ((Meeting) subject).participants();
+    } else if (subject instanceof OutOfOffice) {
+      subscribers = singletonList(subject.employee().manager());
+    } else if (subject instanceof Vocation) {
+      final Employee employee = subject.employee();
+      subscribers = newArrayList(employee.manager(), employee.paymaster());
+    } else {
+      throw new RuntimeException();
+    }
+    messenger.send(subscribers, new MessageBean(-1, author, currentUTCMs(), subject));
   }
 }

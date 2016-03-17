@@ -8,6 +8,4 @@ public interface PaymentsApi {
   List<Payment> get(final int id, final long since, final long till);
 
   Payment add(final Payment p);
-
-  void cancel(final int id);
 }
