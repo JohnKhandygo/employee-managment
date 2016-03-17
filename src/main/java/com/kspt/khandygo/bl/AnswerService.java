@@ -1,6 +1,5 @@
 package com.kspt.khandygo.bl;
 
-import com.google.common.base.Preconditions;
 import static com.google.common.collect.Lists.newArrayList;
 import com.kspt.khandygo.bl.entities.beans.MessageBean;
 import com.kspt.khandygo.bl.entities.payments.Award;
@@ -42,7 +41,6 @@ public class AnswerService implements AnswerApi {
   private void commitAndNotify(final int id, final BiFunction<Pending, Employee, Pending> committer,
       final Employee responsible) {
     final Pending found = pendings.get(id);
-    Preconditions.checkState(found.pending());
     final Pending committed = committer.apply(found, responsible);
     final Pending updated = pendings.update(committed);
 
