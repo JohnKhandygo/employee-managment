@@ -49,58 +49,6 @@ public class TimeHoldersService implements TimeHoldersApi {
   }
 
   @Override
-  public void accept(final int id) {
-    final TimeHolder found = ths.get(id);
-    final Employee employee = found.employee();
-    if (found instanceof Meeting) {
-      final Meeting accepted = ((Meeting) found).accept();
-      for (final Employee recipient : accepted.participants()) {
-        messenger.send(
-            recipient,
-            new MessageBean(-1, employee, currentUTCMs(), found));
-      }
-    } else if (found instanceof OutOfOffice) {
-      throw new RuntimeException();
-    } else if (found instanceof Vocation) {
-      //TODO somehow extract identity of approver to use (at least) as author
-      final Employee author = null;
-      final Vocation vocation = (Vocation) found;
-      final Vocation accepted = vocation.accept();
-      messenger.send(
-          employee,
-          new MessageBean(-1, author, currentUTCMs(), accepted));
-    } else {
-      throw new RuntimeException();
-    }
-  }
-
-  @Override
-  public void decline(final int id) {
-    final TimeHolder found = ths.get(id);
-    final Employee employee = found.employee();
-    if (found instanceof Meeting) {
-      final Meeting accepted = ((Meeting) found).decline();
-      for (final Employee recipient : accepted.participants()) {
-        messenger.send(
-            recipient,
-            new MessageBean(-1, employee, currentUTCMs(), found));
-      }
-    } else if (found instanceof OutOfOffice) {
-      throw new RuntimeException();
-    } else if (found instanceof Vocation) {
-      //TODO somehow extract identity of approver to use (at least) as author
-      final Employee author = null;
-      final Vocation vocation = (Vocation) found;
-      final Vocation canceled = vocation.decline();
-      messenger.send(
-          employee,
-          new MessageBean(-1, author, currentUTCMs(), canceled));
-    } else {
-      throw new RuntimeException();
-    }
-  }
-
-  @Override
   public void cancel(final int id) {
     throw new UnsupportedOperationException("not implemented yet");
   }

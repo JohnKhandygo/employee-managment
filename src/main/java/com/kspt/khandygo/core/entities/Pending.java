@@ -1,11 +1,13 @@
 package com.kspt.khandygo.core.entities;
 
-public interface Pending {
+import com.kspt.khandygo.core.Entity;
+
+public interface Pending extends Entity {
   default boolean pending() {
-    return !accepted() && !rejected();
+    return !approved() && !rejected();
   }
 
-  boolean accepted();
+  boolean approved();
 
   boolean rejected();
 

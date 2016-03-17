@@ -9,9 +9,5 @@ public interface PaymentsApi {
 
   Payment add(final Payment p);
 
-  void accept(final int id);
-
-  void decline(final int id);
-
   void cancel(final int id);
 }

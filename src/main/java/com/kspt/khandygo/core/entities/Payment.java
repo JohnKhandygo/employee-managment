@@ -11,4 +11,6 @@ public interface Payment extends Entity {
   boolean received();
 
   Employee employee();
+
+  Payment cancel();
 }
