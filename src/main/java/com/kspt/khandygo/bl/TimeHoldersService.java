@@ -53,10 +53,12 @@ public class TimeHoldersService implements TimeHoldersApi {
     final TimeHolder found = ths.get(id);
     final Employee employee = found.employee();
     if (found instanceof Meeting) {
-      //TODO extract participants somehow and send to each a message
-      /*messenger.send(
-          employee,
-          new MessageBean(-1, employee, currentUTCMs(), found));*/
+      final Meeting accepted = ((Meeting) found).accept();
+      for (final Employee recipient : accepted.participants()) {
+        messenger.send(
+            recipient,
+            new MessageBean(-1, employee, currentUTCMs(), found));
+      }
     } else if (found instanceof OutOfOffice) {
       throw new RuntimeException();
     } else if (found instanceof Vocation) {
@@ -77,10 +79,12 @@ public class TimeHoldersService implements TimeHoldersApi {
     final TimeHolder found = ths.get(id);
     final Employee employee = found.employee();
     if (found instanceof Meeting) {
-      //TODO extract participants somehow and send to each a message
-      /*messenger.send(
-          employee,
-          new MessageBean(-1, employee, currentUTCMs(), found));*/
+      final Meeting accepted = ((Meeting) found).decline();
+      for (final Employee recipient : accepted.participants()) {
+        messenger.send(
+            recipient,
+            new MessageBean(-1, employee, currentUTCMs(), found));
+      }
     } else if (found instanceof OutOfOffice) {
       throw new RuntimeException();
     } else if (found instanceof Vocation) {

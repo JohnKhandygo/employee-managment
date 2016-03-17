@@ -3,6 +3,7 @@ package com.kspt.khandygo.bl.entities.th;
 import com.kspt.khandygo.bl.entities.locations.MeetingLocation;
 import com.kspt.khandygo.core.entities.Employee;
 import com.kspt.khandygo.core.entities.TimeHolder;
+import java.util.List;
 
 public interface Meeting extends TimeHolder {
 
@@ -10,6 +11,9 @@ public interface Meeting extends TimeHolder {
 
   MeetingLocation where();
 
-  //TODO separate Meeting as TimeHolder and Meeting as proposal.
-  //List<Employee> participants();
+  List<Employee> participants();
+
+  Meeting accept();
+
+  Meeting decline();
 }
