@@ -16,6 +16,7 @@ import com.kspt.khandygo.core.entities.Employee;
 import com.kspt.khandygo.core.entities.TimeHolder;
 import com.kspt.khandygo.core.sys.Messenger;
 import static com.kspt.khandygo.utils.TimeUtils.currentUTCMs;
+import javax.inject.Inject;
 import java.util.Collections;
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class CancelService implements CancelApi {
 
   private final Messenger messenger;
 
+  @Inject
   public CancelService(final Repository<Approved> repository, final Messenger messenger) {
     this.repository = repository;
     this.messenger = messenger;

@@ -1,8 +1,6 @@
 package com.kspt.khandygo.core.entities;
 
-import com.kspt.khandygo.core.Entity;
-
-public interface Payment extends Entity {
+public interface Payment extends Approved {
 
   long when();
 
@@ -11,6 +9,4 @@ public interface Payment extends Entity {
   boolean received();
 
   Employee employee();
-
-  Payment cancel();
 }
