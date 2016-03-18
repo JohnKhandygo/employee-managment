@@ -50,4 +50,9 @@ package "core" {
   }
 }
 
+Proposal -- Employee
+Approved -- Employee
+TimeHolder -- Employee
+Payment-- Employee
+
 @enduml
