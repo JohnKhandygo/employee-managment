@@ -2,52 +2,52 @@
 
 package "core" {
 
-interface Entity {
-  + id() : int
-}
+  interface Entity {
+    + id() : int
+  }
 
-interface Group {
-  + participants() : List<Employee>
-}
+  package "entities" {
 
-interface Employee extends Entity {
-  + name() : String;
-  + paymentPlan() : PaymentPlan
-}
+  interface Employee extends Entity {
+    + name() : String;
+    + manager() : Employee
+    + paymaster() : Employee
+  }
 
-interface Meeting extends Entity {
-  + when() : long
-  + where() : MeetingLocation
-  + author() : Employee
-  + group() : Group
-}
+  interface Proposal extends Entity {
+    + when() : long
 
-interface MeetingLocation extends Entity
+    + author() : Employee
 
-interface Message extends Entity {
-  + author() : Employee
-  + origin() : long
-  + body() : Object
-}
+    + recipient() : Employee
 
-interface Payment extends Entity {
-  + when() : long
-  + amount() : long
-  + increaseBy(by : long) : Payment
-}
+    + subject() : Approved
 
-interface PaymentPlan extends Entity {
-  + next() : Payment
-  + employee() : Employee
-}
+    + pending() : boolean
 
-Employee --> PaymentPlan
-Meeting --> Employee
-Meeting --> Group
-Meeting --> MeetingLocation
-Group "*" --o "*" Employee
-PaymentPlan "1" --* "*" Payment
-Message --> Employee
+    + rejectBy(responsible : Employee) : Proposal
+
+    + approveBy(responsible : Proposal) : Proposal
+  }
+
+  interface Approved extends Entity {
+    owner() : Employee
+
+    cancelBy(owner : Employee) : Approved
+  }
+
+  package "approved" {
+
+    interface Payment extends Approved {
+      + when() : long
+      + employee() : Employee
+    }
+
+    interface TimeHolder extends Approved{
+      + when() : long
+      + employee() : Employee
+    }
+  }
 }
 
 @enduml

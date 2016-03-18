@@ -1,7 +1,7 @@
 package com.kspt.khandygo.core.apis;
 
 import com.kspt.khandygo.bl.entities.payments.Award;
-import com.kspt.khandygo.core.entities.Payment;
+import com.kspt.khandygo.core.entities.approved.Payment;
 import java.util.List;
 
 public interface PaymentsApi {

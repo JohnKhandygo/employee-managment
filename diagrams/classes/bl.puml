@@ -1,36 +1,61 @@
 @startuml
-left to right direction
+'left to right direction
 
 package "core" {
-  interface EmployeesApi
-  interface MeetingsApi
-  interface PaymentsApi
+  package "apis" {
+    interface EmployeesApi
+    interface CancelApi
+    interface PaymentsApi
+    interface ProposalApi
+    interface TimeHoldersApi
+  }
 
   interface Repository<E extends Entity>
-  interface MessageSender
+  interface Messenger
 }
 
 package "bl" {
   class EmployeesService {
-    - employeesRepository : Repository<Employee>
-    - paymentsRepository : Repository<Payment>
+    - employees : Repository<Employee>
   }
-  class MeetingsService {
-    - meetingsRepository : Repository<Meeting>
-    - messageSender : MessageSender
+  class CancelService {
+    - repository : Repository<Approved>
+    - messenger : Messenger
   }
   class PaymentsService {
-    - paymentPlansRepository : Repository<PaymentPlan>
+    - payments: Repository<Payments>
+    - messenger : Messenger
+  }
+  class ProposalService {
+    - proposals : Repository<Proposal>
+    - messenger : Messenger
+    - timeHoldersApi : TimeHoldersApi
+    - paymentsApi : PaymentsApi
+  }
+  class TimeHoldersService {
+    - ths: Repository<TimeHolder>
+    - messenger : Messenger
   }
 }
 
 EmployeesService ..|> EmployeesApi
-MeetingsService ..|> MeetingsApi
+CancelService ..|> CancelApi
+TimeHoldersService ..|> TimeHoldersApi
+ProposalService ..|> ProposalApi
 PaymentsService ..|> PaymentsApi
 
 EmployeesService ..> Repository
-MeetingsService ..> Repository
+CancelService ..> Repository
+ProposalService ..> Repository
 PaymentsService ..> Repository
-PaymentsService ..> MessageSender
+TimeHoldersService ..> Repository
+
+CancelService ..> Messenger
+ProposalService ..> Messenger
+PaymentsService ..> Messenger
+TimeHoldersService ..> Messenger
+
+ProposalService ..> TimeHoldersApi
+ProposalService ..> PaymentsApi
 
 @enduml

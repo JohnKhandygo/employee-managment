@@ -7,7 +7,7 @@ import com.kspt.khandygo.bl.entities.payments.Award;
 import com.kspt.khandygo.core.Repository;
 import com.kspt.khandygo.core.apis.PaymentsApi;
 import com.kspt.khandygo.core.entities.Employee;
-import com.kspt.khandygo.core.entities.Payment;
+import com.kspt.khandygo.core.entities.approved.Payment;
 import com.kspt.khandygo.core.sys.Messenger;
 import static com.kspt.khandygo.utils.TimeUtils.currentUTCMs;
 import javax.inject.Inject;

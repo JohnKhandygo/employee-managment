@@ -13,7 +13,7 @@ import com.kspt.khandygo.core.Repository;
 import com.kspt.khandygo.core.apis.CancelApi;
 import com.kspt.khandygo.core.entities.Approved;
 import com.kspt.khandygo.core.entities.Employee;
-import com.kspt.khandygo.core.entities.TimeHolder;
+import com.kspt.khandygo.core.entities.approved.TimeHolder;
 import com.kspt.khandygo.core.sys.Messenger;
 import static com.kspt.khandygo.utils.TimeUtils.currentUTCMs;
 import javax.inject.Inject;
