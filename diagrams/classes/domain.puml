@@ -1,58 +1,50 @@
 @startuml
+'left to right direction
 
-package "core" {
-
-  interface Entity {
-    + id() : int
-  }
-
-  package "entities" {
-
-  interface Employee extends Entity {
-    + name() : String;
-    + manager() : Employee
-    + paymaster() : Employee
-  }
-
-  interface Proposal extends Entity {
-    + when() : long
-
-    + author() : Employee
-
-    + recipient() : Employee
-
-    + subject() : Approved
-
-    + pending() : boolean
-
-    + rejectBy(responsible : Employee) : Proposal
-
-    + approveBy(responsible : Proposal) : Proposal
-  }
-
-  interface Approved extends Entity {
-    owner() : Employee
-
-    cancelBy(owner : Employee) : Approved
-  }
-
-  package "approved" {
-
-    interface Payment extends Approved {
-      + when() : long
-      + employee() : Employee
-    }
-
-    interface TimeHolder extends Approved{
-      + when() : long
-      + employee() : Employee
-    }
-  }
+class Employee {
+  name : String
 }
 
-Proposal -- Employee
-Approved -- Employee
-TimeHolder -- Employee
-Payment-- Employee
+
+class Manager {
+}
+
+class Paymaster {
+}
+
+class Worker {
+}
+
+class Proposal {
+  when : long
+  pending : boolean
+}
+
+class ScheduledItem {
+  when : long
+}
+
+class Payment {
+  amount : long
+}
+
+class TimeHolder {
+  duration : long  
+}
+
+hide class circle
+
+Payment -up-|> ScheduledItem
+TimeHolder -up-|> ScheduledItem
+Worker -down-|> Employee
+Paymaster -left-|> Employee
+
+Proposal "1" -right-> "1" ScheduledItem
+Employee "*" -- "0..1" Manager
+Employee "*" -- "1" Paymaster
+ScheduledItem "*" -down- "1" Employee : "owned by >"
+ScheduledItem "*" -right- "1" Employee : "scheduled for >"
+
+Manager -up-|> Employee
 
 @enduml

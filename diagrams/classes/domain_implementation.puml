@@ -1,0 +1,51 @@
+@startuml
+
+package "core" {
+
+  interface Entity {
+    + id() : int
+  }
+
+  package "entities" {
+
+  interface Employee extends Entity {
+    + name() : String;
+    + manager() : Employee
+    + paymaster() : Employee
+  }
+
+  interface Proposal extends Entity {
+    + when() : long
+    + author() : Employee
+    + recipient() : Employee
+    + subject() : Approved
+    + pending() : boolean
+    + rejectBy(responsible : Employee) : Proposal
+    + approveBy(responsible : Proposal) : Proposal
+  }
+
+  interface Approved extends Entity {
+    + owner() : Employee
+    + cancelBy(owner : Employee) : Approved
+  }
+
+  package "approved" {
+
+    interface Payment extends Approved {
+      + when() : long
+      + employee() : Employee
+    }
+
+    interface TimeHolder extends Approved{
+      + when() : long
+      + employee() : Employee
+    }
+  }
+}
+
+Proposal -- Employee
+Approved -- Employee
+TimeHolder -- Employee
+Payment -- Employee
+
+@enduml
