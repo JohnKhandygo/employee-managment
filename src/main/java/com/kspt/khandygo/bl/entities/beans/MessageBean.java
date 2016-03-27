@@ -10,7 +10,6 @@ import lombok.experimental.Accessors;
 @Accessors(fluent = true)
 @Getter
 public class MessageBean implements Message {
-  private final int id;
 
   private final Employee author;
 

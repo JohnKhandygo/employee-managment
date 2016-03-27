@@ -66,6 +66,6 @@ public class TimeHoldersService implements TimeHoldersApi {
         throw new RuntimeException();
       }
     }
-    messenger.send(subscribers, new MessageBean(-1, author, currentUTCMs(), subject));
+    messenger.send(subscribers, new MessageBean(author, currentUTCMs(), subject));
   }
 }

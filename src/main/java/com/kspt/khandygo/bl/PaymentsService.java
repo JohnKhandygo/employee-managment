@@ -44,7 +44,7 @@ public class PaymentsService implements PaymentsApi {
     final Payment added = payments.add(award);
     final Employee employee = added.employee();
     final ArrayList<Employee> subscribers = newArrayList(employee, employee.manager());
-    messenger.send(subscribers, new MessageBean(-1, employee.paymaster(), currentUTCMs(), added));
+    messenger.send(subscribers, new MessageBean(employee.paymaster(), currentUTCMs(), added));
     return added;
   }
 }

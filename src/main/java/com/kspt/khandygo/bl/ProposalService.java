@@ -44,7 +44,7 @@ public class ProposalService implements ProposalApi {
     Preconditions.checkState(proposal.when() > currentUTCMs());
     final Proposal added = proposals.add(proposal);
     final Employee author = added.author();
-    messenger.send(added.recipient(), new MessageBean(-1, author, currentUTCMs(), added));
+    messenger.send(added.recipient(), new MessageBean(author, currentUTCMs(), added));
     return added;
   }
 
@@ -72,7 +72,7 @@ public class ProposalService implements ProposalApi {
     checkConsistency(requester, found);
     final Proposal committed = committer.apply(found, requester);
     final Proposal updated = proposals.update(committed);
-    messenger.send(updated.recipient(), new MessageBean(-1, requester, currentUTCMs(), updated));
+    messenger.send(updated.recipient(), new MessageBean(requester, currentUTCMs(), updated));
     return updated;
   }
 

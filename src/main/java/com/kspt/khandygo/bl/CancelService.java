@@ -35,9 +35,10 @@ public class CancelService implements CancelApi {
   //TODO need to check time? if so then where and how? seems like Approved shouldn't has when().
   @Override
   public void cancel(final int id, final Employee requester) {
+    Preconditions.checkState(repository.contains(id));
     final Approved approved = repository.get(id);
     Preconditions.checkState(Objects.equal(requester, approved.owner()));
-    final Approved canceled = approved.cancelBy(requester);
+    final Approved canceled = approved.cancel();
     final Approved updated = repository.update(canceled);
     notifyAbout(updated, requester);
   }
@@ -62,6 +63,6 @@ public class CancelService implements CancelApi {
         throw new RuntimeException();
       }
     }
-    messenger.send(subscribers, new MessageBean(-1, author, currentUTCMs(), subject));
+    messenger.send(subscribers, new MessageBean(author, currentUTCMs(), subject));
   }
 }

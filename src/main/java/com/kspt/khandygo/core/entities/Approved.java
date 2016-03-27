@@ -6,5 +6,5 @@ public interface Approved extends Entity {
 
   Employee owner();
 
-  Approved cancelBy(final Employee owner);
+  Approved cancel();
 }
