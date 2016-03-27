@@ -2,6 +2,7 @@ package com.kspt.khandygo.bl;
 
 import com.google.common.base.Preconditions;
 import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Sets.newLinkedHashSet;
 import com.kspt.khandygo.bl.entities.beans.MessageBean;
 import com.kspt.khandygo.bl.entities.th.Meeting;
 import com.kspt.khandygo.bl.entities.th.OutOfOffice;
@@ -66,6 +67,6 @@ public class TimeHoldersService implements TimeHoldersApi {
         throw new RuntimeException();
       }
     }
-    messenger.send(subscribers, new MessageBean(author, currentUTCMs(), subject));
+    messenger.send(newLinkedHashSet(subscribers), new MessageBean(author, currentUTCMs(), subject));
   }
 }

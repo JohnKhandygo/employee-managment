@@ -3,6 +3,7 @@ package com.kspt.khandygo.bl;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Sets.newLinkedHashSet;
 import com.kspt.khandygo.bl.entities.beans.MessageBean;
 import com.kspt.khandygo.bl.entities.payments.Award;
 import com.kspt.khandygo.bl.entities.th.Meeting;
@@ -50,7 +51,7 @@ public class CancelService implements CancelApi {
       subscribers = newArrayList(employee.manager(), employee.paymaster());
     } else if (subject instanceof Meeting) {
       subscribers = ((Meeting) subject).participants();
-    } else {
+    } else if (subject instanceof TimeHolder) {
       final TimeHolder th = (TimeHolder) subject;
       final Employee employee = th.employee();
       if (subject instanceof OutOfOffice) {
@@ -62,7 +63,9 @@ public class CancelService implements CancelApi {
       } else {
         throw new RuntimeException();
       }
+    } else {
+      throw new RuntimeException();
     }
-    messenger.send(subscribers, new MessageBean(author, currentUTCMs(), subject));
+    messenger.send(newLinkedHashSet(subscribers), new MessageBean(author, currentUTCMs(), subject));
   }
 }

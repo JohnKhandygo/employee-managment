@@ -2,6 +2,7 @@ package com.kspt.khandygo.bl;
 
 import com.google.common.base.Preconditions;
 import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Sets.newLinkedHashSet;
 import com.kspt.khandygo.bl.entities.beans.MessageBean;
 import com.kspt.khandygo.bl.entities.payments.Award;
 import com.kspt.khandygo.core.Repository;
@@ -11,7 +12,6 @@ import com.kspt.khandygo.core.entities.approved.Payment;
 import com.kspt.khandygo.core.sys.Messenger;
 import static com.kspt.khandygo.utils.TimeUtils.currentUTCMs;
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.List;
 
 public class PaymentsService implements PaymentsApi {
@@ -43,8 +43,10 @@ public class PaymentsService implements PaymentsApi {
     Preconditions.checkState(award.when() > currentUTCMs());
     final Payment added = payments.add(award);
     final Employee employee = added.employee();
-    final ArrayList<Employee> subscribers = newArrayList(employee, employee.manager());
-    messenger.send(subscribers, new MessageBean(employee.paymaster(), currentUTCMs(), added));
+    final List<Employee> subscribers = newArrayList(employee, employee.manager());
+    messenger.send(
+        newLinkedHashSet(subscribers),
+        new MessageBean(employee.paymaster(), currentUTCMs(), added));
     return added;
   }
 }
