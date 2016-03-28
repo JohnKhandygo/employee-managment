@@ -6,6 +6,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.newLinkedHashSet;
 import com.kspt.khandygo.bl.entities.beans.MessageBean;
 import com.kspt.khandygo.bl.entities.payments.Award;
+import com.kspt.khandygo.bl.entities.payments.RegularPayment;
 import com.kspt.khandygo.bl.entities.th.Meeting;
 import com.kspt.khandygo.bl.entities.th.OutOfOffice;
 import com.kspt.khandygo.bl.entities.th.SpentTime;
@@ -46,6 +47,9 @@ public class CancelService implements CancelApi {
 
   private void notifyAbout(final Approved subject, final Employee author) {
     final List<Employee> subscribers;
+    if (subject instanceof RegularPayment) {
+      return;
+    }
     if (subject instanceof Award) {
       final Employee employee = ((Award) subject).employee();
       subscribers = newArrayList(employee.manager(), employee.paymaster());

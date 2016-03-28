@@ -3,6 +3,7 @@ package com.kspt.khandygo.bl;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.newLinkedHashSet;
 import com.kspt.khandygo.bl.entities.payments.Award;
+import com.kspt.khandygo.bl.entities.payments.RegularPayment;
 import com.kspt.khandygo.bl.entities.th.Meeting;
 import com.kspt.khandygo.bl.entities.th.OutOfOffice;
 import com.kspt.khandygo.bl.entities.th.SpentTime;
@@ -128,6 +129,26 @@ public class CancelServiceTest {
             });
       }
 
+      public class RegularPaymentContext {
+        @Mock
+        RegularPayment cancelled;
+
+        @Before
+        public void setUp() {
+          MockitoAnnotations.initMocks(this);
+          doReturn(cancelled).when(instance).cancel();
+          doReturn(cancelled).when(repository).update(eq(cancelled));
+        }
+
+        @Test
+        public void whenNormalFlow_thenAwardUpdatedAndNoMessagesSent() {
+          api.cancel(0, owner);
+          verify(instance, times(1)).cancel();
+          verify(repository, times(1)).update(eq(cancelled));
+          verifyZeroInteractions(messenger);
+        }
+      }
+
       public class AwardContext {
 
         @Mock
@@ -151,6 +172,7 @@ public class CancelServiceTest {
           verify(messenger, times(1)).send(
               eq(newLinkedHashSet(recipients)),
               matchingBody(cancelled));
+          verifyNoMoreInteractions(messenger);
         }
       }
 
@@ -174,6 +196,7 @@ public class CancelServiceTest {
           verify(messenger, times(1)).send(
               eq(newLinkedHashSet(cancelled.participants())),
               matchingBody(cancelled));
+          verifyNoMoreInteractions(messenger);
         }
       }
 
@@ -200,6 +223,7 @@ public class CancelServiceTest {
           verify(messenger, times(1)).send(
               eq(newLinkedHashSet(recipients)),
               matchingBody(cancelled));
+          verifyNoMoreInteractions(messenger);
         }
       }
 
@@ -226,6 +250,7 @@ public class CancelServiceTest {
           verify(messenger, times(1)).send(
               eq(newLinkedHashSet(recipients)),
               matchingBody(cancelled));
+          verifyNoMoreInteractions(messenger);
         }
       }
 
@@ -252,6 +277,7 @@ public class CancelServiceTest {
           verify(messenger, times(1)).send(
               eq(newLinkedHashSet(recipients)),
               matchingBody(cancelled));
+          verifyNoMoreInteractions(messenger);
         }
       }
     }
