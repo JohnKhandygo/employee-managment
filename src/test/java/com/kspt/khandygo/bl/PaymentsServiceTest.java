@@ -27,9 +27,6 @@ import java.util.List;
 public class PaymentsServiceTest {
 
   @Mock
-  private Award award;
-
-  @Mock
   private Repository<Payment> repository;
 
   @Mock
@@ -63,64 +60,71 @@ public class PaymentsServiceTest {
     }
   }
 
-  public class OutdatedAward {
-
-    @Before
-    public void setUp() {
-      doReturn(Instant.now().minusSeconds(1).toEpochMilli()).when(award).when();
-    }
-
-    @Test(expected = IllegalStateException.class)
-    public void whenAwardIsOutdated_ISEThrows() {
-      api.award(award);
-    }
-  }
-
-  public class EmployeeContext {
-
+  public class AwardContext {
     @Mock
-    private Award added;
-
-    @Mock
-    private Employee employee;
-
-    @Mock
-    private Employee manager;
+    private Award award;
 
     @Before
     public void setUp() {
       MockitoAnnotations.initMocks(this);
-      doReturn(Instant.now().plusSeconds(10).toEpochMilli()).when(award).when();
-      doReturn(added).when(repository).add(eq(award));
-      doReturn(employee).when(added).employee();
-      doReturn(manager).when(employee).manager();
     }
 
-    @Test
-    public void whenNormalFlow_thenAwardIsAddedAndMessagesSent() {
-      final Payment payment = api.award(award);
-      verify(repository, times(1)).add(eq(PaymentsServiceTest.this.award));
-      final List<Employee> recipients = newArrayList(employee, manager);
-      verify(messenger, times(1)).send(
-          eq(newLinkedHashSet(recipients)),
-          matchingBody(added));
-      verifyNoMoreInteractions(repository);
-      verifyNoMoreInteractions(messenger);
-      assertThat(payment).isEqualTo(added);
+    public class OutdatedAward {
+
+      @Before
+      public void setUp() {
+        doReturn(Instant.now().minusSeconds(1).toEpochMilli()).when(award).when();
+      }
+
+      @Test(expected = IllegalStateException.class)
+      public void whenAwardIsOutdated_ISEThrows() {
+        api.award(award);
+      }
     }
 
-    private Message matchingBody(final Award body) {
-      return Mockito.argThat(
-          new ArgumentMatcher<Message>() {
-            @Override
-            public boolean matches(final Object argument) {
-              if (argument instanceof Message) {
-                final Message m = (Message) argument;
-                return m.body().equals(body);
+    public class EmployeeContext {
+
+      @Mock
+      private Employee employee;
+
+      @Mock
+      private Employee manager;
+
+      @Before
+      public void setUp() {
+        MockitoAnnotations.initMocks(this);
+        doReturn(Instant.now().plusSeconds(10).toEpochMilli()).when(award).when();
+        doReturn(employee).when(award).employee();
+        doReturn(manager).when(employee).manager();
+        doReturn(award).when(repository).add(eq(award));
+      }
+
+      @Test
+      public void whenNormalFlow_thenAwardIsAddedAndMessagesSent() {
+        final Payment payment = api.award(award);
+        verify(repository, times(1)).add(eq(award));
+        final List<Employee> recipients = newArrayList(employee, manager);
+        verify(messenger, times(1)).send(
+            eq(newLinkedHashSet(recipients)),
+            matchingBody(award));
+        verifyNoMoreInteractions(repository);
+        verifyNoMoreInteractions(messenger);
+        assertThat(payment).isEqualTo(award);
+      }
+
+      private Message matchingBody(final Award body) {
+        return Mockito.argThat(
+            new ArgumentMatcher<Message>() {
+              @Override
+              public boolean matches(final Object argument) {
+                if (argument instanceof Message) {
+                  final Message m = (Message) argument;
+                  return m.body().equals(body);
+                }
+                return false;
               }
-              return false;
-            }
-          });
+            });
+      }
     }
   }
 }

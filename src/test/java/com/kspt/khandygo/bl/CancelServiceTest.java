@@ -42,15 +42,10 @@ public class CancelServiceTest {
     api = new CancelService(repository, messenger);
   }
 
-  public class RepositoryWithoutSearchedKey {
+  public class MissingInstanceContext {
 
-    @Before
-    public void setUp() {
-      doReturn(false).when(repository).contains(eq(0));
-    }
-
-    @Test(expected = IllegalStateException.class)
-    public void whenRepositoryDoesNotContainsApproved_ISEThrows() {
+    @Test(expected = NullPointerException.class)
+    public void whenRepositoryDoesNotContainsApproved_NPEThrows() {
       api.cancel(0, mock(Employee.class));
     }
   }
@@ -67,7 +62,6 @@ public class CancelServiceTest {
     public void setUp() {
       MockitoAnnotations.initMocks(this);
       doReturn(owner).when(instance).owner();
-      doReturn(true).when(repository).contains(eq(0));
       doReturn(instance).when(repository).get(eq(0));
     }
 
@@ -78,14 +72,10 @@ public class CancelServiceTest {
 
     public class NoConcreteContext {
 
-      @Mock
-      Approved cancelled;
-
       @Before
       public void setUp() {
-        MockitoAnnotations.initMocks(this);
-        doReturn(cancelled).when(instance).cancel();
-        doReturn(cancelled).when(repository).update(eq(cancelled));
+        doReturn(instance).when(instance).cancel();
+        doReturn(instance).when(repository).update(eq(instance));
       }
 
       @Test(expected = RuntimeException.class)
@@ -109,7 +99,6 @@ public class CancelServiceTest {
       public void setUp() {
         MockitoAnnotations.initMocks(this);
         doReturn(owner).when(instance).owner();
-        doReturn(true).when(repository).contains(eq(0));
         doReturn(instance).when(repository).get(eq(0));
         doReturn(manager).when(employee).manager();
         doReturn(paymaster).when(employee).paymaster();
