@@ -10,6 +10,7 @@ import com.kspt.khandygo.core.entities.approved.Payment;
 import com.kspt.khandygo.core.sys.Message;
 import com.kspt.khandygo.core.sys.Messenger;
 import de.bechte.junit.runners.context.HierarchicalContextRunner;
+import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -77,14 +78,15 @@ public class PaymentsServiceTest {
 
     @Test
     public void whenNormalFlow_thenAwardIsAddedAndMessagesSent() {
-      api.award(award);
-      verify(repository, times(1)).add(eq(award));
+      final Payment payment = api.award(award);
+      verify(repository, times(1)).add(eq(PaymentsServiceTest.this.award));
       final List<Employee> recipients = newArrayList(employee, manager);
       verify(messenger, times(1)).send(
           eq(newLinkedHashSet(recipients)),
           matchingBody(added));
       verifyNoMoreInteractions(repository);
       verifyNoMoreInteractions(messenger);
+      assertThat(payment).isEqualTo(added);
     }
 
     private Message matchingBody(final Award body) {

@@ -15,7 +15,7 @@ import com.kspt.khandygo.core.entities.approved.TimeHolder;
 import com.kspt.khandygo.core.sys.Messenger;
 import static com.kspt.khandygo.utils.TimeUtils.currentUTCMs;
 import javax.inject.Inject;
-import java.util.function.BiFunction;
+import java.util.function.Function;
 
 public class ProposalService implements ProposalApi {
 
@@ -50,29 +50,31 @@ public class ProposalService implements ProposalApi {
 
   @Override
   public void approve(final int id, final Employee requester) {
-    final Proposal updated = commitAndNotify(id, Proposal::approveBy, requester);
+    final Proposal updated = commitAndNotify(id, Proposal::approve, requester);
     final Approved proposalSubject = updated.subject();
     if (proposalSubject instanceof TimeHolder) {
       timeHoldersApi.reserve((TimeHolder) proposalSubject);
     } else if (proposalSubject instanceof Award) {
       paymentsApi.award((Award) proposalSubject);
+    } else {
+      throw new RuntimeException();
     }
   }
 
   @Override
   public void reject(final int id, final Employee requester) {
-    commitAndNotify(id, Proposal::rejectBy, requester);
+    commitAndNotify(id, Proposal::reject, requester);
   }
 
   private Proposal commitAndNotify(
       final int id,
-      final BiFunction<Proposal, Employee, Proposal> committer,
+      final Function<Proposal, Proposal> committer,
       final Employee requester) {
     final Proposal found = proposals.get(id);
     checkConsistency(requester, found);
-    final Proposal committed = committer.apply(found, requester);
+    final Proposal committed = committer.apply(found);
     final Proposal updated = proposals.update(committed);
-    messenger.send(updated.recipient(), new MessageBean(requester, currentUTCMs(), updated));
+    messenger.send(updated.author(), new MessageBean(requester, currentUTCMs(), updated));
     return updated;
   }
 

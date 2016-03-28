@@ -16,7 +16,7 @@ public interface Proposal extends Entity {
 
   boolean pending();
 
-  Proposal rejectBy(final Employee responsible);
+  Proposal reject();
 
-  Proposal approveBy(final Employee responsible);
+  Proposal approve();
 }
