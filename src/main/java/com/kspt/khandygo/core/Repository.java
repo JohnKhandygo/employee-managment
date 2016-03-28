@@ -9,6 +9,4 @@ public interface Repository<E extends Entity> {
   E get(final int id);
 
   E delete(final int id);
-
-  boolean contains(final int id);
 }
