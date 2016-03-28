@@ -40,10 +40,10 @@ Worker -down-|> Employee
 Paymaster -left-|> Employee
 
 Proposal "1" -right-> "1" ScheduledItem
-Employee "*" -- "0..1" Manager
-Employee "*" -- "1" Paymaster
-ScheduledItem "*" -down- "1" Employee : "owned by >"
-ScheduledItem "*" -right- "1" Employee : "scheduled for >"
+Employee "*" --> "0..1" Manager
+Employee "*" --> "1" Paymaster
+ScheduledItem "*" -right-> "1" Employee : "owned by >"
+ScheduledItem "*" -right-> "1" Employee : "scheduled for >"
 
 Manager -up-|> Employee
 
