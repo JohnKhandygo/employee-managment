@@ -18,8 +18,8 @@ import com.kspt.khandygo.core.entities.Employee;
 import com.kspt.khandygo.core.entities.approved.TimeHolder;
 import com.kspt.khandygo.core.sys.Messenger;
 import static com.kspt.khandygo.utils.TimeUtils.currentUTCMs;
+import static java.util.Collections.singletonList;
 import javax.inject.Inject;
-import java.util.Collections;
 import java.util.List;
 
 public class CancelService implements CancelApi {
@@ -39,8 +39,7 @@ public class CancelService implements CancelApi {
   public void cancel(final int id, final Employee requester) {
     final Approved approved = repository.get(id);
     Preconditions.checkState(Objects.equal(requester, approved.owner()));
-    final Approved canceled = approved.cancel();
-    final Approved updated = repository.update(canceled);
+    final Approved updated = repository.update(approved.cancel());
     notifyAbout(updated, requester);
   }
 
@@ -60,7 +59,7 @@ public class CancelService implements CancelApi {
       if (subject instanceof OutOfOffice) {
         subscribers = newArrayList(employee.manager(), employee.paymaster());
       } else if (subject instanceof SpentTime) {
-        subscribers = Collections.singletonList(employee.manager());
+        subscribers = singletonList(employee.manager());
       } else if (subject instanceof Vocation) {
         subscribers = newArrayList(employee.manager(), employee.paymaster());
       } else {

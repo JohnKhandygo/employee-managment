@@ -50,7 +50,8 @@ public class ProposalService implements ProposalApi {
 
   @Override
   public void approve(final int id, final Employee requester) {
-    final Proposal updated = commitAndNotify(id, Proposal::approve, requester);
+    final Proposal found = getProposalSafely(id, requester);
+    final Proposal updated = update(Proposal::approve, found);
     final Approved proposalSubject = updated.subject();
     if (proposalSubject instanceof TimeHolder) {
       timeHoldersApi.add((TimeHolder) proposalSubject);
@@ -63,23 +64,28 @@ public class ProposalService implements ProposalApi {
 
   @Override
   public void reject(final int id, final Employee requester) {
-    commitAndNotify(id, Proposal::reject, requester);
+    final Proposal found = getProposalSafely(id, requester);
+    final Proposal updated = update(Proposal::reject, found);
+    notify(requester, updated);
   }
 
-  private Proposal commitAndNotify(
-      final int id,
-      final Function<Proposal, Proposal> committer,
-      final Employee requester) {
+  private void notify(final Employee requester, final Proposal updated) {
+    messenger.send(updated.author(), new MessageBean(requester, currentUTCMs(), updated));
+  }
+
+  private Proposal update(final Function<Proposal, Proposal> beforeUpdate, final Proposal found) {
+    final Proposal committed = beforeUpdate.apply(found);
+    return proposals.update(committed);
+  }
+
+  private Proposal getProposalSafely(final int id, final Employee requester) {
     final Proposal found = proposals.get(id);
     checkConsistency(requester, found);
-    final Proposal committed = committer.apply(found);
-    final Proposal updated = proposals.update(committed);
-    messenger.send(updated.author(), new MessageBean(requester, currentUTCMs(), updated));
-    return updated;
+    return found;
   }
 
-  private void checkConsistency(final Employee requester, final Proposal found) {
-    Preconditions.checkState(found.pending());
-    Preconditions.checkState(Objects.equal(found.recipient(), requester));
+  private void checkConsistency(final Employee requester, final Proposal proposal) {
+    Preconditions.checkState(proposal.pending());
+    Preconditions.checkState(Objects.equal(proposal.recipient(), requester));
   }
 }

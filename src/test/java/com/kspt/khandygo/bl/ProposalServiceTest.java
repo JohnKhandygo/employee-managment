@@ -207,10 +207,9 @@ public class ProposalServiceTest {
           public void whenApprove_ProposalUpdatesThenMessageSentThenDelegateToTHApi() {
             api.approve(0, recipient);
             verify(repository, times(1)).update(proposal);
-            verify(messenger).send(eq(author), matchingAuthorAndBody(recipient, proposal));
             verify(thApi).add(eq(subject));
-            verifyNoMoreInteractions(messenger);
             verifyNoMoreInteractions(thApi);
+            verifyZeroInteractions(messenger);
             verifyZeroInteractions(pApi);
           }
         }
@@ -229,10 +228,9 @@ public class ProposalServiceTest {
           public void whenApprove_ProposalUpdatesThenMessageSentThenDelegateToPApi() {
             api.approve(0, recipient);
             verify(repository, times(1)).update(proposal);
-            verify(messenger).send(eq(author), matchingAuthorAndBody(recipient, proposal));
             verify(pApi).award(eq(subject));
-            verifyNoMoreInteractions(messenger);
             verifyNoMoreInteractions(thApi);
+            verifyZeroInteractions(messenger);
             verifyZeroInteractions(thApi);
           }
         }
