@@ -280,6 +280,32 @@ public class CancelServiceTest {
           verifyNoMoreInteractions(messenger);
         }
       }
+
+      /*public class RegularPaymentContext {
+
+        @Mock
+        RegularPayment cancelled;
+
+        @Before
+        public void setUp() {
+          MockitoAnnotations.initMocks(this);
+          doReturn(cancelled).when(instance).cancel();
+          doReturn(cancelled).when(repository).update(eq(cancelled));
+        }
+
+        @Test
+        public void whenNormalFlow_thenRegularPaymentUpdatedAndNoMessagesSent() {
+          api.cancel(0, owner);
+          verify(instance, times(1)).cancel();
+          verify(repository, times(1)).update(eq(cancelled));
+          final Employee employee = cancelled.employee();
+          final List<Employee> recipients = newArrayList(employee.manager(), employee.paymaster());
+          verify(messenger, times(1)).send(
+              eq(newLinkedHashSet(recipients)),
+              matchingBody(cancelled));
+          verifyNoMoreInteractions(messenger);
+        }
+      }*/
     }
   }
 }

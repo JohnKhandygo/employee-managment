@@ -53,7 +53,7 @@ public class ProposalService implements ProposalApi {
     final Proposal updated = commitAndNotify(id, Proposal::approve, requester);
     final Approved proposalSubject = updated.subject();
     if (proposalSubject instanceof TimeHolder) {
-      timeHoldersApi.reserve((TimeHolder) proposalSubject);
+      timeHoldersApi.add((TimeHolder) proposalSubject);
     } else if (proposalSubject instanceof Award) {
       paymentsApi.award((Award) proposalSubject);
     } else {

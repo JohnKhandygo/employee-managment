@@ -3,6 +3,7 @@ package com.kspt.khandygo.bl;
 import com.kspt.khandygo.core.Repository;
 import com.kspt.khandygo.core.apis.EmployeesApi;
 import com.kspt.khandygo.core.entities.Employee;
+import static java.util.Objects.requireNonNull;
 import javax.inject.Inject;
 
 public class EmployeesService implements EmployeesApi {
@@ -21,6 +22,8 @@ public class EmployeesService implements EmployeesApi {
 
   @Override
   public Employee get(final int id) {
-    return employees.get(id);
+
+    return requireNonNull(employees.get(id));
+
   }
 }

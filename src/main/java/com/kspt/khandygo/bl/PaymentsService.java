@@ -28,10 +28,10 @@ public class PaymentsService implements PaymentsApi {
     this.messenger = messenger;
   }
 
-  @Override
+  /*@Override
   public List<Payment> get(final int id, final long since, final long till) {
     throw new UnsupportedOperationException("not implemented yet.");
-  }
+  }*/
 
   @Override
   public Payment add(final Payment p) {

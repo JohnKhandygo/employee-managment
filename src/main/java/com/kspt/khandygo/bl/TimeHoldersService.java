@@ -1,6 +1,5 @@
 package com.kspt.khandygo.bl;
 
-import com.google.common.base.Preconditions;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.newLinkedHashSet;
 import com.kspt.khandygo.bl.entities.beans.MessageBean;
@@ -33,18 +32,7 @@ public class TimeHoldersService implements TimeHoldersApi {
   }
 
   @Override
-  public TimeHolder track(final TimeHolder th) {
-    Preconditions.checkState(th.when() < currentUTCMs());
-    return addAndNotify(th);
-  }
-
-  @Override
-  public TimeHolder reserve(final TimeHolder th) {
-    Preconditions.checkState(th.when() > currentUTCMs());
-    return addAndNotify(th);
-  }
-
-  private TimeHolder addAndNotify(final TimeHolder th) {
+  public TimeHolder add(final TimeHolder th) {
     final TimeHolder added = ths.add(th);
     final Employee employee = added.employee();
     notifyAbout(added, employee);

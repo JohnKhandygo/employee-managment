@@ -208,7 +208,7 @@ public class ProposalServiceTest {
             api.approve(0, recipient);
             verify(repository, times(1)).update(proposal);
             verify(messenger).send(eq(author), matchingAuthorAndBody(recipient, proposal));
-            verify(thApi).reserve(eq(subject));
+            verify(thApi).add(eq(subject));
             verifyNoMoreInteractions(messenger);
             verifyNoMoreInteractions(thApi);
             verifyZeroInteractions(pApi);

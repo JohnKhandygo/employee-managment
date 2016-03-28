@@ -43,6 +43,26 @@ public class PaymentsServiceTest {
     api = new PaymentsService(repository, messenger);
   }
 
+  public class PaymentContext {
+    @Mock
+    Payment payment;
+
+    @Before
+    public void setUp() {
+      MockitoAnnotations.initMocks(this);
+      doReturn(payment).when(repository).add(eq(payment));
+    }
+
+    @Test
+    public void whenAdd_PaymentAddedToRepository() {
+      final Payment added = api.add(payment);
+      verify(repository, times(1)).add(payment);
+      verifyNoMoreInteractions(repository);
+      verifyZeroInteractions(messenger);
+      assertThat(added).isEqualTo(payment);
+    }
+  }
+
   public class OutdatedAward {
 
     @Before
