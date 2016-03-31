@@ -22,7 +22,7 @@ public class ProposalEntry {
   private final long origin;
 
   @OneToOne
-  private final AttributesEntry attributes;
+  private final SubjectEntry attributes;
 
   @ManyToOne
   private final EmployeeEntry author;
@@ -33,7 +33,7 @@ public class ProposalEntry {
   public ProposalEntry(
       final Integer id,
       final long origin,
-      final AttributesEntry attributes,
+      final SubjectEntry attributes,
       final EmployeeEntry author,
       final EmployeeEntry recipient) {
     this.id = id;

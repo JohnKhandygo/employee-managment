@@ -1,7 +1,7 @@
 package com.kspt.khandygo.persistence.attributes;
 
 import com.avaje.ebean.annotation.EnumValue;
-import com.kspt.khandygo.persistence.AttributesEntry;
+import com.kspt.khandygo.persistence.SubjectEntry;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import javax.persistence.Entity;
@@ -12,7 +12,7 @@ import javax.persistence.Table;
 @Table(name = "time_holders")
 @Accessors(fluent = true)
 @Getter
-public class TimeHolderAttributesEntry extends AttributesEntry {
+public class TimeHolderEntry extends SubjectEntry {
 
   private final TimeHolderType type;
 
@@ -21,7 +21,7 @@ public class TimeHolderAttributesEntry extends AttributesEntry {
   @Lob
   private final String description;
 
-  public TimeHolderAttributesEntry(
+  public TimeHolderEntry(
       final Integer id,
       final long when,
       final TimeHolderType type,

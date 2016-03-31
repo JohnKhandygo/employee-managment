@@ -12,14 +12,14 @@ import javax.persistence.Table;
 @Table(name = "attributes")
 @Accessors(fluent = true)
 @Getter
-public class AttributesEntry {
+public class SubjectEntry {
 
   @Id
   private final Integer id;
 
   private final long when;
 
-  public AttributesEntry(final Integer id, final long when) {
+  public SubjectEntry(final Integer id, final long when) {
     this.id = id;
     this.when = when;
   }

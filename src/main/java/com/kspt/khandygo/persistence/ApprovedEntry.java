@@ -21,7 +21,7 @@ public class ApprovedEntry {
   private final Integer id;
 
   @OneToOne
-  private final AttributesEntry attributes;
+  private final SubjectEntry attributes;
 
   @ManyToOne
   private final Employee owner;
@@ -30,7 +30,7 @@ public class ApprovedEntry {
 
   public ApprovedEntry(
       final Integer id,
-      final AttributesEntry attributes,
+      final SubjectEntry attributes,
       final Employee owner,
       final Employee employee) {
     this.id = id;
