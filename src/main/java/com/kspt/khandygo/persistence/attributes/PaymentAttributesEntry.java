@@ -17,18 +17,14 @@ public class PaymentAttributesEntry extends AttributesEntry {
 
   private final long amount;
 
-  private final boolean payed;
-
   public PaymentAttributesEntry(
       final Integer id,
       final long when,
       final PaymentType type,
-      final long amount,
-      final boolean payed) {
+      final long amount) {
     super(id, when);
     this.type = type;
     this.amount = amount;
-    this.payed = payed;
   }
 
   public enum PaymentType {

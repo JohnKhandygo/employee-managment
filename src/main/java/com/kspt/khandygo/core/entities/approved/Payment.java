@@ -1,15 +1,8 @@
 package com.kspt.khandygo.core.entities.approved;
 
-import com.kspt.khandygo.core.entities.Approved;
-import com.kspt.khandygo.core.entities.Employee;
+import com.kspt.khandygo.core.entities.Subject;
 
-public interface Payment extends Approved {
-
-  long when();
+public interface Payment extends Subject {
 
   long amount();
-
-  boolean received();
-
-  Employee employee();
 }

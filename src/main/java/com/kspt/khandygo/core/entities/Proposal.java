@@ -6,17 +6,15 @@ public interface Proposal extends Entity {
 
   long origin();
 
-  long when();
+  Subject subject();
 
   Employee author();
 
   Employee recipient();
 
-  Approved subject();
-
-  boolean pending();
+  /*boolean pending();
 
   Proposal reject();
 
-  Proposal approve();
+  Proposal approve();*/
 }

@@ -1,13 +1,10 @@
 package com.kspt.khandygo.core.entities.approved;
 
-import com.kspt.khandygo.core.entities.Approved;
-import com.kspt.khandygo.core.entities.Employee;
+import com.kspt.khandygo.core.entities.Subject;
 
-public interface TimeHolder extends Approved {
-
-  long when();
+public interface TimeHolder extends Subject {
 
   long duration();
 
-  Employee employee();
+  String description();
 }

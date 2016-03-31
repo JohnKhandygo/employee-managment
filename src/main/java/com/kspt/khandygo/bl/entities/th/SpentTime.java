@@ -4,7 +4,7 @@ import com.kspt.khandygo.core.entities.approved.TimeHolder;
 
 public interface SpentTime extends TimeHolder {
 
-  long origin();
+  /*long origin();
 
-  String description();
+  String description();*/
 }

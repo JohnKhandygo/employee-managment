@@ -4,5 +4,5 @@ import com.kspt.khandygo.core.entities.approved.TimeHolder;
 
 public interface OutOfOffice extends TimeHolder {
 
-  String reason();
+  /*String reason();*/
 }
