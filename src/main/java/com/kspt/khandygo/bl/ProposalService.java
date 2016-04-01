@@ -4,7 +4,6 @@ import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Verify;
 import com.kspt.khandygo.bl.entities.beans.MessageBean;
-import com.kspt.khandygo.core.Entity;
 import com.kspt.khandygo.core.Repository;
 import com.kspt.khandygo.core.apis.ApprovedApi;
 import com.kspt.khandygo.core.apis.ProposalApi;
@@ -38,17 +37,15 @@ public class ProposalService implements ProposalApi {
 
   @Override
   public int propose(final Employee author, final Subject subject) {
-    final Proposal added = addOnBehalfOf(author, subject);
-    messenger.send(subject.employee(), new MessageBean(author, currentUTCMs(), added));
-    return added.id();
+    final int id = addOnBehalfOf(author, subject);
+    messenger.send(subject.employee(), new MessageBean(author, currentUTCMs(), subject));
+    return id;
   }
 
-  private Proposal addOnBehalfOf(final Employee author, final Subject subject) {
+  private int addOnBehalfOf(final Employee author, final Subject subject) {
     Preconditions.checkState(subject.when() > currentUTCMs());
     final Proposal proposal = new Proposal(-1, currentUTCMs(), author, subject);
-    final Proposal added = repository.add(proposal);
-    Verify.verify(Objects.equal(proposal, added));
-    return added;
+    return repository.add(proposal);
   }
 
   @Override
@@ -74,7 +71,7 @@ public class ProposalService implements ProposalApi {
   @AllArgsConstructor(access = AccessLevel.PRIVATE)
   @Accessors(fluent = true)
   @Getter
-  private static class Proposal implements Entity {
+  private static class Proposal {
 
     private final int id;
 

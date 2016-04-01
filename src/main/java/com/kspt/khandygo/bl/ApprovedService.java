@@ -11,7 +11,6 @@ import com.kspt.khandygo.bl.entities.subjects.th.Meeting;
 import com.kspt.khandygo.bl.entities.subjects.th.OutOfOffice;
 import com.kspt.khandygo.bl.entities.subjects.th.SpentTime;
 import com.kspt.khandygo.bl.entities.subjects.th.Vocation;
-import com.kspt.khandygo.core.Entity;
 import com.kspt.khandygo.core.Repository;
 import com.kspt.khandygo.core.apis.ApprovedApi;
 import com.kspt.khandygo.core.entities.Employee;
@@ -67,11 +66,9 @@ public class ApprovedService implements ApprovedApi {
       throw new RuntimeException();
     }
     final Approved approved = new Approved(-1, owner, subject);
-    final Approved added = repository.add(approved);
-    Verify.verify(Objects.equal(approved.owner(), added.owner()));
-    Verify.verify(Objects.equal(approved.subject(), added.subject()));
-    notifyAboutNew(added, author);
-    return added.id();
+    final int id = repository.add(approved);
+    notifyAboutNew(approved, author);
+    return id;
   }
 
   private void notifyAboutNew(final Approved added, final Employee author) {
@@ -121,7 +118,7 @@ public class ApprovedService implements ApprovedApi {
   @AllArgsConstructor(access = AccessLevel.PRIVATE)
   @Accessors(fluent = true)
   @Getter
-  private static class Approved implements Entity {
+  private static class Approved {
 
     private final int id;
 

@@ -1,12 +1,12 @@
 package com.kspt.khandygo.core;
 
-public interface Repository<E extends Entity> {
+public interface Repository<T> {
 
-  E update(final E e);
+  int add(final T t);
 
-  E add(final E e);
+  T get(final int id);
 
-  E get(final int id);
+  void update(final int id, final T t);
 
-  E delete(final int id);
+  T delete(final int id);
 }

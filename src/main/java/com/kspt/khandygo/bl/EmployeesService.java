@@ -16,14 +16,13 @@ public class EmployeesService implements EmployeesApi {
   }
 
   @Override
-  public Employee update(final Employee e) {
-    return employees.update(e);
+  public void update(final int id, final Employee e) {
+    employees.update(id, e);
   }
 
   @Override
   public Employee get(final int id) {
 
     return requireNonNull(employees.get(id));
-
   }
 }

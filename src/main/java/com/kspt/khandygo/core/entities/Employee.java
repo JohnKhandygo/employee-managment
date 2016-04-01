@@ -1,8 +1,6 @@
 package com.kspt.khandygo.core.entities;
 
-import com.kspt.khandygo.core.Entity;
-
-public interface Employee extends Entity {
+public interface Employee {
 
   String name();
 
