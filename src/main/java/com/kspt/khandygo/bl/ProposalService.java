@@ -2,84 +2,86 @@ package com.kspt.khandygo.bl;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Verify;
 import com.kspt.khandygo.bl.entities.beans.MessageBean;
-import com.kspt.khandygo.bl.entities.payments.Award;
+import com.kspt.khandygo.core.Entity;
 import com.kspt.khandygo.core.Repository;
-import com.kspt.khandygo.core.apis.PaymentsApi;
+import com.kspt.khandygo.core.apis.ApprovedApi;
 import com.kspt.khandygo.core.apis.ProposalApi;
-import com.kspt.khandygo.core.apis.TimeHoldersApi;
-import com.kspt.khandygo.core.entities.Approved;
 import com.kspt.khandygo.core.entities.Employee;
-import com.kspt.khandygo.core.entities.Proposal;
-import com.kspt.khandygo.core.entities.approved.TimeHolder;
+import com.kspt.khandygo.core.entities.Subject;
 import com.kspt.khandygo.core.sys.Messenger;
 import static com.kspt.khandygo.utils.TimeUtils.currentUTCMs;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.experimental.Accessors;
 import javax.inject.Inject;
 
 public class ProposalService implements ProposalApi {
 
-  private final Repository<Proposal> proposals;
+  private final Repository<Proposal> repository;
 
   private final Messenger messenger;
 
-  private final TimeHoldersApi timeHoldersApi;
-
-  private final PaymentsApi paymentsApi;
+  private final ApprovedApi approvedApi;
 
   @Inject
-  public ProposalService(
-      final Repository<Proposal> proposals,
+  ProposalService(
+      final Repository<Proposal> repository,
       final Messenger messenger,
-      final TimeHoldersApi timeHoldersApi,
-      final PaymentsApi paymentsApi) {
-    this.proposals = proposals;
+      final ApprovedApi approvedApi) {
+    this.repository = repository;
     this.messenger = messenger;
-    this.timeHoldersApi = timeHoldersApi;
-    this.paymentsApi = paymentsApi;
+    this.approvedApi = approvedApi;
   }
 
   @Override
-  public Proposal propose(final Proposal proposal) {
-    Preconditions.checkState(proposal.when() > currentUTCMs());
-    final Proposal added = proposals.add(proposal);
-    final Employee author = added.author();
-    messenger.send(added.recipient(), new MessageBean(author, currentUTCMs(), added));
+  public int propose(final Employee author, final Subject subject) {
+    final Proposal added = addOnBehalfOf(author, subject);
+    messenger.send(subject.employee(), new MessageBean(author, currentUTCMs(), added));
+    return added.id();
+  }
+
+  private Proposal addOnBehalfOf(final Employee author, final Subject subject) {
+    Preconditions.checkState(subject.when() > currentUTCMs());
+    final Proposal proposal = new Proposal(-1, currentUTCMs(), author, subject);
+    final Proposal added = repository.add(proposal);
+    Verify.verify(Objects.equal(proposal, added));
     return added;
   }
 
   @Override
-  public void approve(final int id, final Employee requester) {
-    final Proposal found = getProposalSafely(id, requester);
-    final Proposal updated = proposals.update(found.approve());
-    final Approved proposalSubject = updated.subject();
-    if (proposalSubject instanceof TimeHolder) {
-      timeHoldersApi.add((TimeHolder) proposalSubject);
-    } else if (proposalSubject instanceof Award) {
-      paymentsApi.award((Award) proposalSubject);
-    } else {
-      throw new RuntimeException();
-    }
+  public int approve(final int id, final Employee requester) {
+    final Proposal deleted = deleteOnBehalfOf(id, requester);
+    return approvedApi.add(deleted.subject(), requester);
   }
 
   @Override
   public void reject(final int id, final Employee requester) {
-    final Proposal found = getProposalSafely(id, requester);
-    final Proposal updated = proposals.update(found.reject());
-    notifyAbout(updated);
+    final Proposal deleted = deleteOnBehalfOf(id, requester);
+    messenger.send(deleted.author(), new MessageBean(requester, currentUTCMs(), deleted));
   }
 
-  private void notifyAbout(final Proposal updated) {
-    messenger.send(updated.author(), new MessageBean(updated.recipient(), currentUTCMs(), updated));
+  private Proposal deleteOnBehalfOf(final int id, final Employee requester) {
+    final Proposal found = repository.get(id);
+    Verify.verify(Objects.equal(found.subject().employee(), requester));
+    final Proposal deleted = repository.delete(id);
+    Verify.verify(Objects.equal(found, deleted));
+    return deleted;
   }
 
-  private Proposal getProposalSafely(final int id, final Employee requester) {
-    final Proposal found = proposals.get(id);
-    checkConsistency(requester, found);
-    return found;
-  }
+  @AllArgsConstructor(access = AccessLevel.PRIVATE)
+  @Accessors(fluent = true)
+  @Getter
+  private static class Proposal implements Entity {
 
-  private void checkConsistency(final Employee requester, final Proposal proposal) {
-    Preconditions.checkState(proposal.pending());
-    Preconditions.checkState(Objects.equal(proposal.recipient(), requester));
+    private final int id;
+
+    private final long origin;
+
+    private final Employee author;
+
+    private final Subject subject;
   }
 }

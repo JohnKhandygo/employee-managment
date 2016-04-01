@@ -1,4 +1,4 @@
-package com.kspt.khandygo.core.entities.approved;
+package com.kspt.khandygo.bl.entities.subjects;
 
 import com.kspt.khandygo.core.entities.Subject;
 

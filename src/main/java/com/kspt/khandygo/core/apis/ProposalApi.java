@@ -1,13 +1,13 @@
 package com.kspt.khandygo.core.apis;
 
 import com.kspt.khandygo.core.entities.Employee;
-import com.kspt.khandygo.core.entities.Proposal;
+import com.kspt.khandygo.core.entities.Subject;
 
 public interface ProposalApi {
 
-  Proposal propose(final Proposal proposal);
+  int propose(final Employee author, final Subject subject);
 
-  void approve(final int id, final Employee requester);
+  int approve(final int id, final Employee requester);
 
   void reject(final int id, final Employee requester);
 }
