@@ -6,11 +6,11 @@ public interface Proposal extends Entity {
 
   long origin();
 
-  Subject subject();
-
   Employee author();
 
-  Employee recipient();
+  Subject subject();
+
+  /*Employee recipient();*/
 
   /*boolean pending();
 

@@ -7,4 +7,6 @@ public interface Subject extends Entity {
   int id();
 
   long when();
+
+  Employee employee();
 }

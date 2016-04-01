@@ -4,11 +4,12 @@ import com.kspt.khandygo.core.Entity;
 
 public interface Approved extends Entity {
 
-  Subject subject();
-
   Employee owner();
 
-  Employee employee();
+  Subject subject();
+
+
+  /*Employee employee();*/
 
   /*Approved cancel();*/
 }
