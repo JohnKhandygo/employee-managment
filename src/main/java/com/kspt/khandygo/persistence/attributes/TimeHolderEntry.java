@@ -23,11 +23,12 @@ public class TimeHolderEntry extends SubjectEntry {
 
   public TimeHolderEntry(
       final Integer id,
+      final boolean deleted,
       final long when,
       final TimeHolderType type,
       final long duration,
       final String description) {
-    super(id, when);
+    super(id, deleted, when);
     this.type = type;
     this.duration = duration;
     this.description = description;

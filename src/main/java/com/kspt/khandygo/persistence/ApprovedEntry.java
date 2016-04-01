@@ -4,24 +4,18 @@ import com.kspt.khandygo.core.entities.Employee;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
-@MappedSuperclass
 @Table(name = "approved")
 @Accessors(fluent = true)
 @Getter
-public class ApprovedEntry {
-
-  @Id
-  private final Integer id;
+public class ApprovedEntry extends Entry {
 
   @OneToOne
-  private final SubjectEntry attributes;
+  private final SubjectEntry subject;
 
   @ManyToOne
   private final Employee owner;
@@ -30,11 +24,12 @@ public class ApprovedEntry {
 
   public ApprovedEntry(
       final Integer id,
-      final SubjectEntry attributes,
+      final boolean deleted,
+      final SubjectEntry subject,
       final Employee owner,
       final Employee employee) {
-    this.id = id;
-    this.attributes = attributes;
+    super(id, deleted);
+    this.subject = subject;
     this.owner = owner;
     this.employee = employee;
   }

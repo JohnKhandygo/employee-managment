@@ -19,10 +19,11 @@ public class PaymentEntry extends SubjectEntry {
 
   public PaymentEntry(
       final Integer id,
+      final boolean deleted,
       final long when,
       final PaymentType type,
       final long amount) {
-    super(id, when);
+    super(id, deleted, when);
     this.type = type;
     this.amount = amount;
   }
