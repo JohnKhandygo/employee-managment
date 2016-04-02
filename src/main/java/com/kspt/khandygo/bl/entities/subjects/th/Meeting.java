@@ -10,7 +10,7 @@ public interface Meeting extends TimeHolder {
   List<Employee> participants();
 
   @Override
-  default void accept(final SubjectVisitor v) {
-    v.visit(this);
+  default <T> T accept(final SubjectVisitor<T> v) {
+    return v.visit(this);
   }
 }

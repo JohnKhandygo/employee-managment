@@ -6,7 +6,7 @@ import com.kspt.khandygo.core.SubjectVisitor;
 public interface Award extends Payment {
 
   @Override
-  default void accept(final SubjectVisitor v) {
-    v.visit(this);
+  default <T> T accept(final SubjectVisitor<T> v) {
+    return v.visit(this);
   }
 }

@@ -10,5 +10,5 @@ public interface Subject {
 
   Employee employee();
 
-  void accept(final SubjectVisitor v);
+  <T> T accept(final SubjectVisitor<T> v);
 }

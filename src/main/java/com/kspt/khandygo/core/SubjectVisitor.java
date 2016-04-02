@@ -7,17 +7,17 @@ import com.kspt.khandygo.bl.entities.subjects.th.OutOfOffice;
 import com.kspt.khandygo.bl.entities.subjects.th.SpentTime;
 import com.kspt.khandygo.bl.entities.subjects.th.Vocation;
 
-public interface SubjectVisitor {
+public interface SubjectVisitor<T> {
 
-  void visit(final RegularPayment subject);
+  T visit(final RegularPayment subject);
 
-  void visit(final Award subject);
+  T visit(final Award subject);
 
-  void visit(final Meeting subject);
+  T visit(final Meeting subject);
 
-  void visit(final OutOfOffice subject);
+  T visit(final OutOfOffice subject);
 
-  void visit(final SpentTime subject);
+  T visit(final SpentTime subject);
 
-  void visit(final Vocation subject);
+  T visit(final Vocation subject);
 }

@@ -3,13 +3,12 @@ package com.kspt.khandygo.bl;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Verify;
-import com.kspt.khandygo.bl.entities.beans.MessageBean;
+import com.kspt.khandygo.core.Notifier;
 import com.kspt.khandygo.core.Repository;
 import com.kspt.khandygo.core.apis.ApprovedApi;
 import com.kspt.khandygo.core.apis.ProposalApi;
 import com.kspt.khandygo.core.entities.Employee;
 import com.kspt.khandygo.core.entities.Subject;
-import com.kspt.khandygo.core.sys.Messenger;
 import static com.kspt.khandygo.utils.TimeUtils.currentUTCMs;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -21,24 +20,24 @@ public class ProposalService implements ProposalApi {
 
   private final Repository<Proposal> repository;
 
-  private final Messenger messenger;
+  private final Notifier notifier;
 
   private final ApprovedApi approvedApi;
 
   @Inject
   ProposalService(
       final Repository<Proposal> repository,
-      final Messenger messenger,
+      final Notifier notifier,
       final ApprovedApi approvedApi) {
     this.repository = repository;
-    this.messenger = messenger;
+    this.notifier = notifier;
     this.approvedApi = approvedApi;
   }
 
   @Override
   public int propose(final Employee author, final Subject subject) {
     final int id = addOnBehalfOf(author, subject);
-    messenger.send(subject.employee(), new MessageBean(author, subject));
+    notifier.notifyThat(subject).hasBeenProposed().onBehalfOf(author);
     return id;
   }
 
@@ -51,13 +50,14 @@ public class ProposalService implements ProposalApi {
   @Override
   public int approve(final int id, final Employee requester) {
     final Proposal deleted = deleteOnBehalfOf(id, requester);
+    notifier.notifyThat(deleted.subject()).hasBeenApproved().onBehalfOf(requester);
     return approvedApi.add(deleted.subject(), requester);
   }
 
   @Override
   public void reject(final int id, final Employee requester) {
     final Proposal deleted = deleteOnBehalfOf(id, requester);
-    messenger.send(deleted.author(), new MessageBean(requester, deleted));
+    notifier.notifyThat(deleted.subject()).hasBeenRejected().onBehalfOf(requester);
   }
 
   private Proposal deleteOnBehalfOf(final int id, final Employee requester) {
