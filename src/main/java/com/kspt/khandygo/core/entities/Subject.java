@@ -4,8 +4,6 @@ import com.kspt.khandygo.core.SubjectVisitor;
 
 public interface Subject {
 
-  int id();
-
   long when();
 
   Employee employee();
