@@ -8,12 +8,9 @@ import com.kspt.khandygo.core.Repository;
 import com.kspt.khandygo.core.apis.ApprovedApi;
 import com.kspt.khandygo.core.apis.ProposalApi;
 import com.kspt.khandygo.core.entities.Employee;
+import com.kspt.khandygo.core.entities.Proposal;
 import com.kspt.khandygo.core.entities.Subject;
 import static com.kspt.khandygo.utils.TimeUtils.currentUTCMs;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.experimental.Accessors;
 import javax.inject.Inject;
 
 public class ProposalService implements ProposalApi {
@@ -43,7 +40,7 @@ public class ProposalService implements ProposalApi {
 
   private int addOnBehalfOf(final Employee author, final Subject subject) {
     Preconditions.checkState(subject.when() > currentUTCMs());
-    final Proposal proposal = new Proposal(-1, currentUTCMs(), author, subject);
+    final Proposal proposal = new Proposal(currentUTCMs(), author, subject);
     return repository.add(proposal);
   }
 
@@ -66,19 +63,5 @@ public class ProposalService implements ProposalApi {
     final Proposal deleted = repository.delete(id);
     Verify.verify(Objects.equal(found, deleted));
     return deleted;
-  }
-
-  @AllArgsConstructor(access = AccessLevel.PRIVATE)
-  @Accessors(fluent = true)
-  @Getter
-  private static class Proposal {
-
-    private final int id;
-
-    private final long origin;
-
-    private final Employee author;
-
-    private final Subject subject;
   }
 }

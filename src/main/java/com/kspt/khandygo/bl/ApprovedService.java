@@ -11,12 +11,9 @@ import com.kspt.khandygo.bl.entities.subjects.th.Vocation;
 import com.kspt.khandygo.core.Notifier;
 import com.kspt.khandygo.core.Repository;
 import com.kspt.khandygo.core.apis.ApprovedApi;
+import com.kspt.khandygo.core.entities.Approved;
 import com.kspt.khandygo.core.entities.Employee;
 import com.kspt.khandygo.core.entities.Subject;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.experimental.Accessors;
 import javax.inject.Inject;
 
 public class ApprovedService implements ApprovedApi {
@@ -64,15 +61,5 @@ public class ApprovedService implements ApprovedApi {
     final int id = repository.add(approved);
     notifier.notifyThat(subject).hasBeenCreated().onBehalfOf(author);
     return id;
-  }
-
-  @AllArgsConstructor(access = AccessLevel.PRIVATE)
-  @Accessors(fluent = true)
-  @Getter
-  private static class Approved {
-
-    private final Employee owner;
-
-    private final Subject subject;
   }
 }
