@@ -1,11 +1,11 @@
 package com.kspt.khandygo.core.sys;
 
 import com.kspt.khandygo.core.entities.Employee;
-import java.util.Set;
+import java.util.List;
 
 public interface Messenger {
 
-  default void send(final Set<Employee> recipients, final Message message) {
+  default void sendToAll(final List<Employee> recipients, final Message message) {
     recipients.stream().forEach(r -> send(r, message));
   }
 

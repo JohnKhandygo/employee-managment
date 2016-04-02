@@ -38,7 +38,7 @@ public class ProposalService implements ProposalApi {
   @Override
   public int propose(final Employee author, final Subject subject) {
     final int id = addOnBehalfOf(author, subject);
-    messenger.send(subject.employee(), new MessageBean(author, currentUTCMs(), subject));
+    messenger.send(subject.employee(), new MessageBean(author, subject));
     return id;
   }
 
@@ -57,7 +57,7 @@ public class ProposalService implements ProposalApi {
   @Override
   public void reject(final int id, final Employee requester) {
     final Proposal deleted = deleteOnBehalfOf(id, requester);
-    messenger.send(deleted.author(), new MessageBean(requester, currentUTCMs(), deleted));
+    messenger.send(deleted.author(), new MessageBean(requester, deleted));
   }
 
   private Proposal deleteOnBehalfOf(final int id, final Employee requester) {

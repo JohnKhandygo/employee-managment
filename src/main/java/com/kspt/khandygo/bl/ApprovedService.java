@@ -3,7 +3,6 @@ package com.kspt.khandygo.bl;
 import com.google.common.base.Objects;
 import com.google.common.base.Verify;
 import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Sets.newLinkedHashSet;
 import com.kspt.khandygo.bl.entities.beans.MessageBean;
 import com.kspt.khandygo.bl.entities.subjects.payments.Award;
 import com.kspt.khandygo.bl.entities.subjects.payments.RegularPayment;
@@ -16,7 +15,6 @@ import com.kspt.khandygo.core.apis.ApprovedApi;
 import com.kspt.khandygo.core.entities.Employee;
 import com.kspt.khandygo.core.entities.Subject;
 import com.kspt.khandygo.core.sys.Messenger;
-import static com.kspt.khandygo.utils.TimeUtils.currentUTCMs;
 import static java.util.Collections.singletonList;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -90,7 +88,7 @@ public class ApprovedService implements ApprovedApi {
     } else {
       throw new RuntimeException();
     }
-    messenger.send(newLinkedHashSet(subscribers), new MessageBean(author, currentUTCMs(), added));
+    messenger.sendToAll(subscribers, new MessageBean(author, added));
   }
 
   private void notifyAboutDeletion(final Approved deleted, final Employee author) {
@@ -112,7 +110,7 @@ public class ApprovedService implements ApprovedApi {
     } else {
       throw new RuntimeException();
     }
-    messenger.send(newLinkedHashSet(subscribers), new MessageBean(author, currentUTCMs(), deleted));
+    messenger.sendToAll(subscribers, new MessageBean(author, deleted));
   }
 
   @AllArgsConstructor(access = AccessLevel.PRIVATE)

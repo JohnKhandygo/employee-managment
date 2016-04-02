@@ -6,7 +6,5 @@ public interface Message {
 
   Employee author();
 
-  long origin();
-
   Object body();
 }

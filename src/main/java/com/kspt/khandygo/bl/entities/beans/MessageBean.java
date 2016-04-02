@@ -13,7 +13,5 @@ public class MessageBean implements Message {
 
   private final Employee author;
 
-  private final long origin;
-
   private final Object body;
 }

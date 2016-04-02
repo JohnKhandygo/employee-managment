@@ -12,8 +12,8 @@ package com.kspt.khandygo.bl.messages.decorators;
   }
 
   @Override
-  public void send(final Employee recipient, final Message message) {
-    super.send(recipient, message);
+  public void sendToAll(final Employee recipient, final Message message) {
+    super.sendToAll(recipient, message);
     messages.add(message);
   }
 }*/
