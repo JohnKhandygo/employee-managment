@@ -163,7 +163,7 @@ public class Notifier {
       }
 
       public void onBehalfOf(final Employee author) {
-        final Notification notification = new Notification(even, subject, author);
+        final Notification notification = new Notification(subject, author);
         sender.notifyAll(recipients, notification);
       }
     }
@@ -180,15 +180,85 @@ abstract class NotificationSender {
 }
 
 class Notification {
-  private final String about;
 
   private final Subject subject;
 
   private final Employee author;
 
-  Notification(final String about, final Subject subject, final Employee author) {
-    this.about = about;
+  Notification(final Subject subject, final Employee author) {
     this.subject = subject;
     this.author = author;
+  }
+
+  public Subject subject() {
+    return subject;
+  }
+
+  public Employee author() {
+    return author;
+  }
+
+  public static class ProposeCreated extends Notification {
+    ProposeCreated(
+        final Subject subject,
+        final Employee author) {
+      super(subject, author);
+    }
+  }
+
+  public static class ProposeUpdated extends Notification {
+    ProposeUpdated(
+        final Subject subject,
+        final Employee author) {
+      super(subject, author);
+    }
+  }
+
+  public static class ProposeApproved extends Notification {
+    ProposeApproved(
+        final Subject subject,
+        final Employee author) {
+      super(subject, author);
+    }
+  }
+
+  public static class ProposeRejected extends Notification {
+    ProposeRejected(
+        final Subject subject,
+        final Employee author) {
+      super(subject, author);
+    }
+  }
+
+  public static class ProposeCancelled extends Notification {
+    ProposeCancelled(
+        final Subject subject,
+        final Employee author) {
+      super(subject, author);
+    }
+  }
+
+  public static class ApprovedCreated extends Notification {
+    ApprovedCreated(
+        final Subject subject,
+        final Employee author) {
+      super(subject, author);
+    }
+  }
+
+  public static class ApprovedUpdated extends Notification {
+    ApprovedUpdated(
+        final Subject subject,
+        final Employee author) {
+      super(subject, author);
+    }
+  }
+
+  public static class ApprovedCancelled extends Notification {
+    ApprovedCancelled(
+        final Subject subject,
+        final Employee author) {
+      super(subject, author);
+    }
   }
 }
