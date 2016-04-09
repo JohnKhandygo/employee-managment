@@ -49,13 +49,6 @@ abstract class NotifyStation implements SubjectVisitor<List<Employee>> {
     }
 
     @Override
-    boolean match(final Notification notification) {
-      return notification instanceof ProposeCreated
-          || notification instanceof ProposeUpdated
-          || notification instanceof ProposeCancelled;
-    }
-
-    @Override
     public List<Employee> visit(final Award subject) {
       return singletonList(subject.employee().paymaster());
     }
@@ -78,6 +71,13 @@ abstract class NotifyStation implements SubjectVisitor<List<Employee>> {
     @Override
     public List<Employee> visit(final Vocation subject) {
       return singletonList(subject.employee().manager());
+    }
+
+    @Override
+    boolean match(final Notification notification) {
+      return notification instanceof ProposeCreated
+          || notification instanceof ProposeUpdated
+          || notification instanceof ProposeCancelled;
     }
   }
 
@@ -129,11 +129,6 @@ abstract class NotifyStation implements SubjectVisitor<List<Employee>> {
     }
 
     @Override
-    boolean match(final Notification notification) {
-      return notification instanceof ApprovedCreated || notification instanceof ApprovedUpdated;
-    }
-
-    @Override
     public List<Employee> visit(final RegularPayment subject) {
       return singletonList(subject.employee());
     }
@@ -162,16 +157,16 @@ abstract class NotifyStation implements SubjectVisitor<List<Employee>> {
     public List<Employee> visit(final Vocation subject) {
       return singletonList(subject.employee().paymaster());
     }
+
+    @Override
+    boolean match(final Notification notification) {
+      return notification instanceof ApprovedCreated || notification instanceof ApprovedUpdated;
+    }
   }
 
   public static class ApprovedDNotifyStation extends NotifyStation {
     public ApprovedDNotifyStation(final NotifyStation next) {
       super(next);
-    }
-
-    @Override
-    boolean match(final Notification notification) {
-      return notification instanceof ApprovedCancelled;
     }
 
     @Override
@@ -202,6 +197,11 @@ abstract class NotifyStation implements SubjectVisitor<List<Employee>> {
     @Override
     public List<Employee> visit(final Vocation subject) {
       return newArrayList(subject.employee().manager(), subject.employee().paymaster());
+    }
+
+    @Override
+    boolean match(final Notification notification) {
+      return notification instanceof ApprovedCancelled;
     }
   }
 }

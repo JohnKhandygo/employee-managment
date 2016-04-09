@@ -1,17 +1,8 @@
 package com.kspt.khandygo.core.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.experimental.Accessors;
+public interface Proposal extends Thing {
 
-@AllArgsConstructor
-@Accessors(fluent = true)
-@Getter
-public class Proposal {
+  long when();
 
-  private final long origin;
-
-  private final Employee author;
-
-  private final Subject subject;
+  Employee recipient();
 }

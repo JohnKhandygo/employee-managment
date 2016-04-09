@@ -1,15 +1,8 @@
 package com.kspt.khandygo.core.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.experimental.Accessors;
+public interface Approved extends Thing {
 
-@AllArgsConstructor
-@Accessors(fluent = true)
-@Getter
-public class Approved {
+  long when();
 
-  private final Employee owner;
-
-  private final Subject subject;
+  Employee employee();
 }
