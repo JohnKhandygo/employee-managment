@@ -7,9 +7,9 @@ import java.util.List;
 
 public class Notifier {
 
-  private final NewSender sender;
+  private final Sender sender;
 
-  public Notifier(final NewSender sender) {
+  public Notifier(final Sender sender) {
     this.sender = sender;
   }
 
@@ -27,11 +27,11 @@ public class Notifier {
 
   public static class NewSpecifySubject {
 
-    private final NewSender sender;
+    private final Sender sender;
 
     private final List<Employee> recipients;
 
-    private NewSpecifySubject(final NewSender sender, final List<Employee> recipients) {
+    private NewSpecifySubject(final Sender sender, final List<Employee> recipients) {
       this.sender = sender;
       this.recipients = recipients;
     }
@@ -42,14 +42,14 @@ public class Notifier {
 
     public static class SpecifyDoneModification {
 
-      private final NewSender sender;
+      private final Sender sender;
 
       private final List<Employee> recipients;
 
       private final Object subject;
 
       private SpecifyDoneModification(
-          final NewSender sender,
+          final Sender sender,
           final List<Employee> recipients,
           final Object subject) {
         this.sender = sender;
@@ -63,7 +63,7 @@ public class Notifier {
 
       public static class NewSpecifyAuthor {
 
-        private final NewSender sender;
+        private final Sender sender;
 
         private final List<Employee> recipients;
 
@@ -72,7 +72,7 @@ public class Notifier {
         private final String doneModification;
 
         private NewSpecifyAuthor(
-            final NewSender sender, final List<Employee> recipients,
+            final Sender sender, final List<Employee> recipients,
             final Object subject,
             final String doneModification) {
           this.sender = sender;
