@@ -14,6 +14,7 @@ import com.kspt.khandygo.core.entities.Subject.Proposal.ProposableSubjectVisitor
 import com.kspt.khandygo.core.entities.Subject.Proposal.Vocation;
 import static java.util.Collections.singletonList;
 import lombok.extern.slf4j.Slf4j;
+import javax.inject.Inject;
 import java.util.List;
 import java.util.Objects;
 
@@ -55,6 +56,7 @@ class ProposalsService implements ProposalsApi {
 
   private final SubjectsApi subjectsApi;
 
+  @Inject
   ProposalsService(
       final Repository<Proposal> repository,
       final Notifier notifier,
@@ -81,7 +83,7 @@ class ProposalsService implements ProposalsApi {
     final Proposal toApprove = repository.get(id);
     Verify.verify(ProposalsService.AccessRightsChecker.onApprove().check(toApprove, requester),
         "access rights check failed for %s on approving %s.", requester, toApprove);
-    notifier.notify(toApprove.accept(ON_PROPOSE_SUBSCRIBERS_AUDIT))
+    notifier.notify(toApprove.accept(ON_APPROVE_SUBSCRIBERS_AUDIT))
         .that(toApprove).hasBeen("approved").onBehalfOf(requester);
     subjectsApi.add(toApprove, requester);
     repository.delete(id);

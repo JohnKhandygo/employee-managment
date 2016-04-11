@@ -17,36 +17,50 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.List;
 
-@MappedSuperclass
-@Accessors(fluent = true)
-@Getter
-public class Entry {
+public interface Entry {
 
-  @Id
-  private Integer id;
+  Entry id(final int id);
 
-  private boolean deleted;
+  Entry markAsDeleted();
 
-  public Entry(final Integer id, final boolean deleted) {
-    this.id = id;
-    this.deleted = deleted;
-  }
+  int id();
 
-  Entry id(final int id) {
-    Preconditions.checkState(this.id == null);
-    this.id = id;
-    return this;
-  }
+  boolean deleted();
 
-  Entry markAsDeleted() {
-    this.deleted = true;
-    return this;
-  }
+  @MappedSuperclass
+  abstract class SubjectEntry implements Entry, Subject {
 
-  public abstract static class SubjectEntry extends Entry implements Subject {
+    @Id
+    private Integer id;
+
+    private boolean deleted;
 
     public SubjectEntry(final Integer id, final boolean deleted) {
-      super(id, deleted);
+      this.id = id;
+      this.deleted = deleted;
+    }
+
+    @Override
+    public Entry id(final int id) {
+      Preconditions.checkState(this.id == null);
+      this.id = id;
+      return this;
+    }
+
+    @Override
+    public Entry markAsDeleted() {
+      this.deleted = deleted();
+      return this;
+    }
+
+    @Override
+    public boolean deleted() {
+      return deleted;
+    }
+
+    @Override
+    public int id() {
+      return id;
     }
 
     @Entity
@@ -368,10 +382,39 @@ public class Entry {
     }
   }
 
-  public static abstract class ProposalEntry extends Entry implements Proposal {
+  public static abstract class ProposalEntry implements Entry, Proposal {
+
+    @Id
+    private Integer id;
+
+    private boolean deleted;
 
     public ProposalEntry(final Integer id, final boolean deleted) {
-      super(id, deleted);
+      this.id = id;
+      this.deleted = deleted;
+    }
+
+    @Override
+    public Entry id(final int id) {
+      Preconditions.checkState(this.id == null);
+      this.id = id;
+      return this;
+    }
+
+    @Override
+    public Entry markAsDeleted() {
+      this.deleted = deleted();
+      return this;
+    }
+
+    @Override
+    public boolean deleted() {
+      return deleted;
+    }
+
+    @Override
+    public int id() {
+      return id;
     }
 
     @Entity

@@ -15,6 +15,7 @@ import com.kspt.khandygo.core.entities.Subject.SpentTime;
 import com.kspt.khandygo.core.entities.Subject.SubjectVisitor;
 import static java.util.Collections.singletonList;
 import lombok.extern.slf4j.Slf4j;
+import javax.inject.Inject;
 import java.util.List;
 import java.util.Objects;
 
@@ -42,6 +43,7 @@ class SubjectsService implements SubjectsApi {
 
   private final Notifier notifier;
 
+  @Inject
   SubjectsService(final Repository<Subject> repository, final Notifier notifier) {
     this.repository = repository;
     this.notifier = notifier;
