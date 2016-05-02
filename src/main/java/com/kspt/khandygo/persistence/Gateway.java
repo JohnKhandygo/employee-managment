@@ -1,10 +1,26 @@
 package com.kspt.khandygo.persistence;
 
-public interface Gateway<E extends Entry> {
+import com.kspt.khandygo.persistence.Finder.SelectAllOrSpecifyCondition;
+import lombok.AllArgsConstructor;
 
-  E get(final int id);
+@AllArgsConstructor
+class Gateway {
 
-  E save(final Entry toSave);
+  private final Finder finder;
 
-  E update(final Entry toUpdate);
+  private final Writer writer;
+
+  /*private final SqlServer server;*/
+
+  <T> SelectAllOrSpecifyCondition<T> find(final Class<T> toFind) {
+    return finder.find(toFind);
+  }
+
+  <T> T save(final T toSave) {
+    return writer.save(toSave);
+  }
+
+  <T> T update(final T toUpdate) {
+    return writer.update(toUpdate);
+  }
 }

@@ -2,11 +2,11 @@ package com.kspt.khandygo.persistence;
 
 public interface Entry {
 
-  Entry id(final int id);
+  Entry id(final long id);
 
   Entry markAsDeleted();
 
-  int id();
+  long id();
 
   boolean deleted();
 }
