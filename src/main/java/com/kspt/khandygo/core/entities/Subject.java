@@ -1,12 +1,11 @@
 package com.kspt.khandygo.core.entities;
 
+import com.google.common.base.Preconditions;
 import com.kspt.khandygo.core.entities.Subject.Proposal.Award;
-import com.kspt.khandygo.core.entities.Subject.Proposal.Meeting;
 import com.kspt.khandygo.core.entities.Subject.Proposal.Vocation;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.Accessors;
-import java.util.List;
 import java.util.function.Function;
 
 public interface Subject {
@@ -14,41 +13,61 @@ public interface Subject {
 
   <T> T accept(final SubjectVisitor<T> visitor);
 
+  @AllArgsConstructor
+  @Accessors(fluent = true)
+  @Getter
+  class OutOfOffice implements Subject {
+    private final long origin;
+
+    private final long when;
+
+    private final long duration;
+
+    private final String reason;
+
+    private final Employee employee;
+
+    @Override
+    public <T> T accept(final SubjectVisitor<T> visitor) {
+      return visitor.visit(this);
+    }
+  }
+
   interface SubjectVisitor<T> {
-    T visit(final Meeting subject);
+    /*T visit(final Meeting subject);*/
 
     T visit(final OutOfOffice subject);
 
-    T visit(final SpentTime subject);
+    /*T visit(final SpentTime subject);*/
 
     T visit(final Vocation subject);
 
     T visit(final Award subject);
 
-    T visit(final RegularPayment subject);
+    /*T visit(final RegularPayment subject);*/
 
     static <T> SubjectVisitor<T> from(
-        final Function<Meeting, T> onMeeting,
+        /*final Function<Meeting, T> onMeeting,*/
         final Function<OutOfOffice, T> onOutOfOffice,
-        final Function<SpentTime, T> onSpentTime,
+        /*final Function<SpentTime, T> onSpentTime,*/
         final Function<Vocation, T> onVocation,
-        final Function<Award, T> onAward,
-        final Function<RegularPayment, T> onRegularPayment) {
+        final Function<Award, T> onAward/*,*/
+        /*final Function<RegularPayment, T> onRegularPayment*/) {
       return new SubjectVisitor<T>() {
-        @Override
+        /*@Override
         public T visit(final Meeting subject) {
           return onMeeting.apply(subject);
-        }
+        }*/
 
         @Override
         public T visit(final OutOfOffice subject) {
           return onOutOfOffice.apply(subject);
         }
 
-        @Override
+        /*@Override
         public T visit(final SpentTime subject) {
           return onSpentTime.apply(subject);
-        }
+        }*/
 
         @Override
         public T visit(final Vocation subject) {
@@ -60,10 +79,10 @@ public interface Subject {
           return onAward.apply(subject);
         }
 
-        @Override
+        /*@Override
         public T visit(final RegularPayment subject) {
           return onRegularPayment.apply(subject);
-        }
+        }*/
       };
     }
   }
@@ -72,37 +91,30 @@ public interface Subject {
 
     <T> T accept(final ProposableSubjectVisitor<T> visitor);
 
-    interface ProposableSubjectVisitor<T> {
-      T visit(final Meeting proposable);
+    @AllArgsConstructor
+    @Accessors(fluent = true)
+    @Getter
+    class Vocation implements Proposal {
+      private final long origin;
 
-      T visit(final Vocation proposable);
+      private final long when;
 
-      T visit(final Award proposable);
+      private final long duration;
 
-      static <T> ProposableSubjectVisitor<T> from(
-          final Function<Meeting, T> onMeeting,
-          final Function<Vocation, T> onVocation,
-          final Function<Award, T> onAward) {
-        return new ProposableSubjectVisitor<T>() {
-          @Override
-          public T visit(final Meeting subject) {
-            return onMeeting.apply(subject);
-          }
+      private final Employee employee;
 
-          @Override
-          public T visit(final Vocation subject) {
-            return onVocation.apply(subject);
-          }
+      @Override
+      public <T> T accept(final ProposableSubjectVisitor<T> visitor) {
+        return visitor.visit(this);
+      }
 
-          @Override
-          public T visit(final Award subject) {
-            return onAward.apply(subject);
-          }
-        };
+      @Override
+      public <T> T accept(final SubjectVisitor<T> visitor) {
+        return visitor.visit(this);
       }
     }
 
-    @AllArgsConstructor
+    /*@AllArgsConstructor
     @Accessors(fluent = true)
     @Getter
     class Meeting implements Proposal {
@@ -132,36 +144,12 @@ public interface Subject {
       public <T> T accept(final SubjectVisitor<T> visitor) {
         return visitor.visit(this);
       }
-    }
-
-    @AllArgsConstructor
-    @Accessors(fluent = true)
-    @Getter
-    class Vocation implements Proposal {
-      private final long origin;
-
-      private final long when;
-
-      private final long duration;
-
-      private final Employee employee;
-
-      @Override
-      public <T> T accept(final ProposableSubjectVisitor<T> visitor) {
-        return visitor.visit(this);
-      }
-
-      @Override
-      public <T> T accept(final SubjectVisitor<T> visitor) {
-        return visitor.visit(this);
-      }
-    }
+    }*/
 
     @AllArgsConstructor
     @Accessors(fluent = true)
     @Getter
     class Award implements Proposal {
-      private final long origin;
 
       private final long when;
 
@@ -169,6 +157,22 @@ public interface Subject {
 
       private final Employee employee;
 
+      private final boolean approved;
+
+      private final boolean rejected;
+
+      public Award approve() {
+        Preconditions.checkState(!approved);
+        Preconditions.checkState(!rejected);
+        return new Award(when, amount(), employee(), true, false);
+      }
+
+      public Award reject() {
+        Preconditions.checkState(!approved);
+        Preconditions.checkState(!rejected);
+        return new Award(when, amount(), employee(), false, true);
+      }
+
       @Override
       public <T> T accept(final ProposableSubjectVisitor<T> visitor) {
         return visitor.visit(this);
@@ -179,29 +183,39 @@ public interface Subject {
         return visitor.visit(this);
       }
     }
-  }
 
-  @AllArgsConstructor
-  @Accessors(fluent = true)
-  @Getter
-  class OutOfOffice implements Subject {
-    private final long origin;
+    interface ProposableSubjectVisitor<T> {
+      /*T visit(final Meeting proposable);*/
 
-    private final long when;
+      T visit(final Vocation proposable);
 
-    private final long duration;
+      T visit(final Award proposable);
 
-    private final String reason;
+      static <T> ProposableSubjectVisitor<T> from(
+          /*final Function<Meeting, T> onMeeting,*/
+          final Function<Vocation, T> onVocation,
+          final Function<Award, T> onAward) {
+        return new ProposableSubjectVisitor<T>() {
+          /*@Override
+          public T visit(final Meeting subject) {
+            return onMeeting.apply(subject);
+          }*/
 
-    private final Employee employee;
+          @Override
+          public T visit(final Vocation subject) {
+            return onVocation.apply(subject);
+          }
 
-    @Override
-    public <T> T accept(final SubjectVisitor<T> visitor) {
-      return visitor.visit(this);
+          @Override
+          public T visit(final Award subject) {
+            return onAward.apply(subject);
+          }
+        };
+      }
     }
   }
 
-  @AllArgsConstructor
+  /*@AllArgsConstructor
   @Accessors(fluent = true)
   @Getter
   class SpentTime implements Subject {
@@ -237,5 +251,5 @@ public interface Subject {
     public <T> T accept(final SubjectVisitor<T> visitor) {
       return visitor.visit(this);
     }
-  }
+  }*/
 }

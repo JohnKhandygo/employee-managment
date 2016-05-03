@@ -9,44 +9,45 @@ import com.kspt.khandygo.core.apis.ProposalsApi;
 import com.kspt.khandygo.core.apis.SubjectsApi;
 import com.kspt.khandygo.core.entities.Employee;
 import com.kspt.khandygo.core.entities.Subject.Proposal;
-import com.kspt.khandygo.core.entities.Subject.Proposal.Meeting;
 import com.kspt.khandygo.core.entities.Subject.Proposal.ProposableSubjectVisitor;
 import com.kspt.khandygo.core.entities.Subject.Proposal.Vocation;
 import static java.util.Collections.singletonList;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Objects;
 
+@AllArgsConstructor(onConstructor = @__({@Inject}))
 class ProposalsService implements ProposalsApi {
 
   private static final ProposableSubjectVisitor<List<Employee>> ON_PROPOSE_SUBSCRIBERS_AUDIT =
       ProposableSubjectVisitor.from(
-          Meeting::participants,
+          /*Meeting::participants,*/
           vocation -> singletonList(vocation.employee().manager()),
           award -> singletonList(award.employee().paymaster()));
 
   private static final ProposableSubjectVisitor<List<Employee>> ON_APPROVE_SUBSCRIBERS_AUDIT =
       ProposableSubjectVisitor.from(
-          Meeting::participants,
+          /*Meeting::participants,*/
           vocation -> newArrayList(vocation.employee(), vocation.employee().paymaster()),
           award -> newArrayList(award.employee(), award.employee().manager()));
 
   private static final ProposableSubjectVisitor<List<Employee>> ON_REJECT_SUBSCRIBERS_AUDIT =
       ProposableSubjectVisitor.from(
-          Meeting::participants,
+          /*Meeting::participants,*/
           vocation -> singletonList(vocation.employee()),
           award -> singletonList(award.employee().manager()));
 
   private static final ProposableSubjectVisitor<List<Employee>> ON_UPDATE_SUBSCRIBERS_AUDIT =
       ProposableSubjectVisitor.from(
-          Meeting::participants,
+          /*Meeting::participants,*/
           vocation -> singletonList(vocation.employee().manager()),
           award -> singletonList(award.employee().paymaster()));
 
   private static final ProposableSubjectVisitor<List<Employee>> ON_CANCEL_SUBSCRIBERS_AUDIT =
       ProposableSubjectVisitor.from(
-          Meeting::participants,
+          /*Meeting::participants,*/
           vocation -> singletonList(vocation.employee().manager()),
           award -> singletonList(award.employee().paymaster()));
 
@@ -55,16 +56,6 @@ class ProposalsService implements ProposalsApi {
   private final Notifier notifier;
 
   private final SubjectsApi subjectsApi;
-
-  @Inject
-  ProposalsService(
-      final Repository<Proposal> repository,
-      final Notifier notifier,
-      final SubjectsApi subjectsApi) {
-    this.repository = repository;
-    this.notifier = notifier;
-    this.subjectsApi = subjectsApi;
-  }
 
   @Override
   public int propose(final Proposal toPropose, final Employee author) {
@@ -145,7 +136,7 @@ class ProposalsService implements ProposalsApi {
     static ProposalsService.AccessRightsChecker onPropose() {
       return new ProposalsService.AccessRightsChecker(
           ProposableSubjectVisitor.from(
-              Meeting::author,
+              /*Meeting::author,*/
               Vocation::employee,
               award -> award.employee().manager()));
     }
@@ -153,7 +144,7 @@ class ProposalsService implements ProposalsApi {
     static ProposalsService.AccessRightsChecker onApprove() {
       return new ProposalsService.AccessRightsChecker(
           ProposableSubjectVisitor.from(
-              Meeting::employee,
+              /*Meeting::employee,*/
               vocation -> vocation.employee().manager(),
               award -> award.employee().paymaster()));
     }
@@ -161,7 +152,7 @@ class ProposalsService implements ProposalsApi {
     static ProposalsService.AccessRightsChecker onReject() {
       return new ProposalsService.AccessRightsChecker(
           ProposableSubjectVisitor.from(
-              Meeting::employee,
+              /*Meeting::employee,*/
               vocation -> vocation.employee().manager(),
               award -> award.employee().paymaster()));
     }
@@ -169,7 +160,7 @@ class ProposalsService implements ProposalsApi {
     static ProposalsService.AccessRightsChecker onUpdate() {
       return new ProposalsService.AccessRightsChecker(
           ProposableSubjectVisitor.from(
-              Meeting::author,
+              /*Meeting::author,*/
               Vocation::employee,
               award -> award.employee().manager()));
     }
@@ -177,7 +168,7 @@ class ProposalsService implements ProposalsApi {
     static ProposalsService.AccessRightsChecker onCancel() {
       return new ProposalsService.AccessRightsChecker(
           ProposableSubjectVisitor.from(
-              Meeting::author,
+              /*Meeting::author,*/
               Vocation::employee,
               award -> award.employee().manager()));
     }

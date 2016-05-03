@@ -9,9 +9,7 @@ import com.kspt.khandygo.core.apis.SubjectsApi;
 import com.kspt.khandygo.core.entities.Employee;
 import com.kspt.khandygo.core.entities.Subject;
 import com.kspt.khandygo.core.entities.Subject.OutOfOffice;
-import com.kspt.khandygo.core.entities.Subject.Proposal.Meeting;
 import com.kspt.khandygo.core.entities.Subject.Proposal.Vocation;
-import com.kspt.khandygo.core.entities.Subject.SpentTime;
 import com.kspt.khandygo.core.entities.Subject.SubjectVisitor;
 import static java.util.Collections.singletonList;
 import lombok.extern.slf4j.Slf4j;
@@ -23,21 +21,21 @@ class SubjectsService implements SubjectsApi {
 
   private static final SubjectVisitor<List<Employee>> ON_ADD_SUBSCRIBERS_AUDIT =
       SubjectVisitor.from(
-          Meeting::participants,
+          /*Meeting::participants,*/
           outOfOffice -> singletonList(outOfOffice.employee().manager()),
-          spentTime -> singletonList(spentTime.employee().manager()),
+          /*spentTime -> singletonList(spentTime.employee().manager()),*/
           vocation -> singletonList(vocation.employee()),
-          award -> singletonList(award.employee().paymaster()),
-          regularPayment -> singletonList(regularPayment.employee()));
+          award -> singletonList(award.employee().paymaster())/*,
+          regularPayment -> singletonList(regularPayment.employee())*/);
 
   private static final SubjectVisitor<List<Employee>> ON_CANCEL_SUBSCRIBERS_AUDIT =
       SubjectVisitor.from(
-          Meeting::participants,
+          /*Meeting::participants,*/
           outOfOffice -> singletonList(outOfOffice.employee().manager()),
-          spentTime -> singletonList(spentTime.employee().manager()),
+          /*spentTime -> singletonList(spentTime.employee().manager()),*/
           vocation -> newArrayList(vocation.employee().manager(), vocation.employee().paymaster()),
-          award -> newArrayList(award.employee().manager(), award.employee().paymaster()),
-          regularPayment -> singletonList(regularPayment.employee()));
+          award -> newArrayList(award.employee().manager(), award.employee().paymaster())/*,
+          regularPayment -> singletonList(regularPayment.employee())*/);
 
   private final Repository<Subject> repository;
 
@@ -92,23 +90,23 @@ class SubjectsService implements SubjectsApi {
     static SubjectsService.AccessRightsChecker onAdd() {
       return new SubjectsService.AccessRightsChecker(
           SubjectVisitor.from(
-              Meeting::author,
+              /*Meeting::author,*/
               OutOfOffice::employee,
-              SpentTime::employee,
+              /*SpentTime::employee,*/
               vocation -> vocation.employee().manager(),
-              award -> award.employee().paymaster(),
-              regularPayment -> regularPayment.employee().paymaster()));
+              award -> award.employee().paymaster()/*,
+              regularPayment -> regularPayment.employee().paymaster()*/));
     }
 
     static SubjectsService.AccessRightsChecker onCancel() {
       return new SubjectsService.AccessRightsChecker(
           SubjectVisitor.from(
-              Meeting::employee,
+              /*Meeting::employee,*/
               OutOfOffice::employee,
-              SpentTime::employee,
+              /*SpentTime::employee,*/
               Vocation::employee,
-              award -> award.employee().manager(),
-              regularPayment -> regularPayment.employee().paymaster()));
+              award -> award.employee().manager()/*,
+              regularPayment -> regularPayment.employee().paymaster()*/));
     }
   }
 }

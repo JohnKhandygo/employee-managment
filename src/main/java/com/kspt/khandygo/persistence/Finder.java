@@ -121,40 +121,39 @@ class Finder {
   }
 
   @AllArgsConstructor
-  class SelectAllOrSpecifyCondition<T> {
+  public class SelectAllOrSpecifyCondition<T> {
     private final Class<T> clazz;
 
-    ConditionBuilder where() {
+    public ConditionBuilder where() {
       return new ConditionBuilder("WHERE ");
     }
 
-    List<T> all()
-    throws SQLException {
+    public List<T> all() {
       return tryFindAll(clazz, "");
     }
 
     @AllArgsConstructor
-    class ConditionBuilder {
+    public class ConditionBuilder {
 
       private final String conditionString;
 
-      ConditionBuilder eq(final String parameter, final Object o) {
+      public ConditionBuilder eq(final String parameter, final Object o) {
         return new ConditionBuilder(format("%s %s=%s", conditionString, parameter, o));
       }
 
-      ConditionBuilder and() {
+      public ConditionBuilder and() {
         return new ConditionBuilder(format("%s AND", conditionString));
       }
 
-      ConditionBuilder or() {
+      public ConditionBuilder or() {
         return new ConditionBuilder(format("%s OR", conditionString));
       }
 
-      T unique() {
+      public T unique() {
         return tryFindTheOnlyOne(clazz, conditionString);
       }
 
-      List<T> list() {
+      public List<T> list() {
         return tryFindAll(clazz, conditionString);
       }
     }
