@@ -12,40 +12,30 @@ import com.kspt.khandygo.core.entities.Subject.OutOfOffice;
 import com.kspt.khandygo.core.entities.Subject.Proposal.Vocation;
 import com.kspt.khandygo.core.entities.Subject.SubjectVisitor;
 import static java.util.Collections.singletonList;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Objects;
 
+@AllArgsConstructor(onConstructor = @__({@Inject}))
 class SubjectsService implements SubjectsApi {
 
   private static final SubjectVisitor<List<Employee>> ON_ADD_SUBSCRIBERS_AUDIT =
       SubjectVisitor.from(
-          /*Meeting::participants,*/
           outOfOffice -> singletonList(outOfOffice.employee().manager()),
-          /*spentTime -> singletonList(spentTime.employee().manager()),*/
           vocation -> singletonList(vocation.employee()),
-          award -> singletonList(award.employee().paymaster())/*,
-          regularPayment -> singletonList(regularPayment.employee())*/);
+          award -> singletonList(award.employee().paymaster()));
 
   private static final SubjectVisitor<List<Employee>> ON_CANCEL_SUBSCRIBERS_AUDIT =
       SubjectVisitor.from(
-          /*Meeting::participants,*/
           outOfOffice -> singletonList(outOfOffice.employee().manager()),
-          /*spentTime -> singletonList(spentTime.employee().manager()),*/
           vocation -> newArrayList(vocation.employee().manager(), vocation.employee().paymaster()),
-          award -> newArrayList(award.employee().manager(), award.employee().paymaster())/*,
-          regularPayment -> singletonList(regularPayment.employee())*/);
+          award -> newArrayList(award.employee().manager(), award.employee().paymaster()));
 
   private final Repository<Subject> repository;
 
   private final Notifier notifier;
-
-  @Inject
-  SubjectsService(final Repository<Subject> repository, final Notifier notifier) {
-    this.repository = repository;
-    this.notifier = notifier;
-  }
 
   @Override
   public int add(final Subject toAdd, final Employee author) {
@@ -90,23 +80,17 @@ class SubjectsService implements SubjectsApi {
     static SubjectsService.AccessRightsChecker onAdd() {
       return new SubjectsService.AccessRightsChecker(
           SubjectVisitor.from(
-              /*Meeting::author,*/
               OutOfOffice::employee,
-              /*SpentTime::employee,*/
               vocation -> vocation.employee().manager(),
-              award -> award.employee().paymaster()/*,
-              regularPayment -> regularPayment.employee().paymaster()*/));
+              award -> award.employee().paymaster()));
     }
 
     static SubjectsService.AccessRightsChecker onCancel() {
       return new SubjectsService.AccessRightsChecker(
           SubjectVisitor.from(
-              /*Meeting::employee,*/
               OutOfOffice::employee,
-              /*SpentTime::employee,*/
               Vocation::employee,
-              award -> award.employee().manager()/*,
-              regularPayment -> regularPayment.employee().paymaster()*/));
+              award -> award.employee().manager()));
     }
   }
 }
