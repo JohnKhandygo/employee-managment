@@ -15,7 +15,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @AllArgsConstructor
-class Finder {
+public class Finder {
   private final SqlServer server;
 
   private <T> T tryFindTheOnlyOne(final Class<T> clazz, final String condition) {
@@ -100,7 +100,7 @@ class Finder {
     }
   }
 
-  <T> SelectAllOrSpecifyCondition<T> find(final Class<T> clazz) {
+  public <T> SelectAllOrSpecifyCondition<T> find(final Class<T> clazz) {
     Preconditions.checkState(clazz.isAnnotationPresent(Table.class),
         "Class, you want to search not annotated with Table.");
     return new SelectAllOrSpecifyCondition<>(clazz);
