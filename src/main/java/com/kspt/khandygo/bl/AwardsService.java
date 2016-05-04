@@ -7,8 +7,10 @@ import com.kspt.khandygo.persistence.dao.AwardsDAO;
 import com.kspt.khandygo.persistence.dao.EmployeesDAO;
 import lombok.AllArgsConstructor;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 @AllArgsConstructor(onConstructor = @__({@Inject}))
+@Singleton
 public class AwardsService {
 
   private final EmployeesDAO employeesDAO;

@@ -4,8 +4,10 @@ import com.kspt.khandygo.core.entities.Employee;
 import com.kspt.khandygo.persistence.Gateway;
 import lombok.AllArgsConstructor;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 @AllArgsConstructor(onConstructor = @__({@Inject}))
+@Singleton
 public class EmployeesDAO {
 
   private final Gateway gateway;

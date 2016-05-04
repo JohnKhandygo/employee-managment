@@ -1,10 +1,21 @@
 package com.kspt.khandygo.core.entities;
 
-public interface Employee {
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
+import lombok.experimental.Accessors;
 
-  String name();
+@AllArgsConstructor
+@Accessors(fluent = true)
+@Getter
+@EqualsAndHashCode
+@ToString
+public class Employee {
 
-  Employee manager();
+  private final String name;
 
-  Employee paymaster();
+  private final Employee manager;
+
+  private final Employee paymaster;
 }

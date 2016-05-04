@@ -5,11 +5,13 @@ import com.kspt.khandygo.core.entities.OutOfOffice;
 import com.kspt.khandygo.persistence.Gateway;
 import lombok.AllArgsConstructor;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @AllArgsConstructor(onConstructor = @__({@Inject}))
+@Singleton
 public class OutOfOfficesDAO {
 
   private final Gateway gateway;

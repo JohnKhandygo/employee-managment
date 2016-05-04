@@ -7,8 +7,10 @@ import com.kspt.khandygo.persistence.dao.EmployeesDAO;
 import com.kspt.khandygo.persistence.dao.OutOfOfficesDAO;
 import lombok.AllArgsConstructor;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 @AllArgsConstructor(onConstructor = @__({@Inject}))
+@Singleton
 public class OutOfOfficesService {
 
   private final EmployeesDAO employeesDAO;

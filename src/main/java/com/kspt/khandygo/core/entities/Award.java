@@ -2,12 +2,16 @@ package com.kspt.khandygo.core.entities;
 
 import com.google.common.base.Preconditions;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 @AllArgsConstructor
 @Accessors(fluent = true)
 @Getter
+@EqualsAndHashCode
+@ToString
 public class Award {
 
   private final Employee employee;
