@@ -1,11 +1,11 @@
 package com.kspt.khandygo.bl;
 
-import com.google.common.collect.BiMap;
 import com.kspt.khandygo.core.entities.Employee;
 import com.kspt.khandygo.persistence.dao.AuthDAO;
 import lombok.AllArgsConstructor;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 
@@ -13,7 +13,7 @@ import java.util.UUID;
 @Singleton
 public class AuthService {
 
-  private final BiMap<String, Employee> authorizedUsers;
+  private final Map<String, Employee> authorizedUsers;
 
   private final AuthDAO authDAO;
 

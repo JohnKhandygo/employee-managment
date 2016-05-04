@@ -1,18 +1,25 @@
 package com.kspt.khandygo.web.resources;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.kspt.khandygo.bl.AuthService;
 import com.kspt.khandygo.bl.VocationsService;
 import com.kspt.khandygo.core.entities.Employee;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import javax.inject.Inject;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 
 @Path("/vocations")
+@Produces(MediaType.APPLICATION_JSON)
 @AllArgsConstructor(onConstructor = @__({@Inject}))
+@Api(value = "/vocations")
 public class VocationsResource {
 
   private final AuthService authService;
@@ -21,7 +28,8 @@ public class VocationsResource {
 
   @Path("/propose")
   @POST
-  VocationProposed propose(
+  @ApiOperation(value = "propose vocation.")
+  public VocationProposed propose(
       final @HeaderParam("session_id") String session,
       final @QueryParam("when") long when,
       final @QueryParam("duration") long duration,
@@ -33,7 +41,8 @@ public class VocationsResource {
 
   @Path("/approve/{vocation_id}")
   @POST
-  VocationApproved approve(
+  @ApiOperation(value = "approve vocation.")
+  public VocationApproved approve(
       final @HeaderParam("session_id") String session,
       final @PathParam("vocation_id") int vocationId) {
     final Employee requester = authService.bySession(session);
@@ -43,7 +52,8 @@ public class VocationsResource {
 
   @Path("/reject/{vocation_id}")
   @POST
-  VocationRejected reject(
+  @ApiOperation(value = "reject vocation.")
+  public VocationRejected reject(
       final @HeaderParam("session_id") String session,
       final @PathParam("vocation_id") int vocationId) {
     final Employee requester = authService.bySession(session);
@@ -53,7 +63,8 @@ public class VocationsResource {
 
   @Path("/cancel/{vocation_id}")
   @POST
-  VocationCancelled cancel(
+  @ApiOperation(value = "cancel vocation.")
+  public VocationCancelled cancel(
       final @HeaderParam("session_id") String session,
       final @PathParam("vocation_id") int vocationId) {
     final Employee requester = authService.bySession(session);
@@ -61,14 +72,22 @@ public class VocationsResource {
     return new VocationCancelled();
   }
 
+  @ResourceRepresentationWithType
+  @JsonTypeName(".vocation_proposed")
   @AllArgsConstructor
   private static class VocationProposed {
     private final int id;
   }
 
+  @ResourceRepresentationWithType
+  @JsonTypeName(".vocation_approved")
   private static class VocationApproved {}
 
+  @ResourceRepresentationWithType
+  @JsonTypeName(".vocation_rejected")
   private static class VocationRejected {}
 
+  @ResourceRepresentationWithType
+  @JsonTypeName(".vocation_cancelled")
   private static class VocationCancelled {}
 }

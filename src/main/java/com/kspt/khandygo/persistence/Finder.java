@@ -17,7 +17,7 @@ import java.util.List;
 
 @AllArgsConstructor(onConstructor = @__({@Inject}))
 public class Finder {
-  private final SqlServer server;
+  private final SQLServer server;
 
   private <T> T tryFindTheOnlyOne(final Class<T> clazz, final String condition) {
     final ResultSet selected = server.select(queryForClassWithCondition(clazz, condition));

@@ -10,14 +10,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-interface SqlServer {
+public interface SQLServer {
   ResultSet select(final String query);
 
   int insert(final String query);
 
   void update(final String query);
 
-  static SqlServer newMySQLServer(
+  static SQLServer newMySQLServer(
       final String host,
       final String port,
       final String scheme,
@@ -35,7 +35,7 @@ interface SqlServer {
   }
 
   @AllArgsConstructor(access = AccessLevel.PRIVATE)
-  class MysqlServer implements SqlServer {
+  class MysqlServer implements SQLServer {
     private final Connection connection;
 
     @Override

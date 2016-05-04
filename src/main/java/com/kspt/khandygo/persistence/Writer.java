@@ -11,7 +11,7 @@ import java.lang.reflect.Field;
 
 @AllArgsConstructor(onConstructor = @__({@Inject}))
 public class Writer {
-  private final SqlServer server;
+  private final SQLServer server;
 
   <T> T save(final T toSave) {
     final Class<?> clazz = toSave.getClass();
