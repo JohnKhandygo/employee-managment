@@ -2,6 +2,7 @@ package com.kspt.khandygo.persistence;
 
 import com.google.common.base.Preconditions;
 import static java.lang.String.format;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -15,78 +16,8 @@ interface SqlServer {
   int insert(final String query);
 
   void update(final String query);
-}
 
-@AllArgsConstructor
-class MysqlServer implements SqlServer {
-  private final Connection connection;
-
-  @Override
-  public ResultSet select(final String query) {
-    final Statement statement = createStatement();
-    final ResultSet resultSet;
-    try {
-      resultSet = statement.executeQuery(query);
-    } catch (SQLException e) {
-      throw new RuntimeException("Cannot execute query.");
-    }
-    closeStatement(statement);
-    return resultSet;
-  }
-
-  private void closeStatement(final Statement statement) {
-    try {
-      statement.close();
-    } catch (SQLException e) {
-      throw new RuntimeException("Cannot close createStatement.");
-    }
-  }
-
-  private Statement createStatement() {
-    final Statement statement;
-    try {
-      statement = connection.createStatement();
-    } catch (SQLException e) {
-      throw new RuntimeException("Cannot create createStatement.", e);
-    }
-    return statement;
-  }
-
-  @Override
-  public int insert(final String query) {
-    final Statement statement;
-    try {
-      statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-    } catch (SQLException e) {
-      throw new RuntimeException("Cannot create createStatement.", e);
-    }
-    try {
-      statement.executeUpdate(query);
-    } catch (SQLException e) {
-      throw new RuntimeException("Cannot execute query.", e);
-    }
-    final int generatedKey;
-    try {
-      final ResultSet generatedKeys = statement.getGeneratedKeys();
-      Preconditions.checkState(generatedKeys.next());
-      generatedKey = ((Long) generatedKeys.getObject(1)).intValue();
-    } catch (SQLException e) {
-      throw new RuntimeException("Cannot fetch generated keys.", e);
-    }
-    return generatedKey;
-  }
-
-  @Override
-  public void update(final String query) {
-    final Statement statement = createStatement();
-    try {
-      statement.executeUpdate(query);
-    } catch (SQLException e) {
-      throw new RuntimeException("Cannot execute query.", e);
-    }
-  }
-
-  public static SqlServer newOne(
+  static SqlServer newMySQLServer(
       final String host,
       final String port,
       final String scheme,
@@ -100,6 +31,76 @@ class MysqlServer implements SqlServer {
       return new MysqlServer(connection);
     } catch (SQLException e) {
       throw new RuntimeException("Cannot login to mysql database via provided parameters.");
+    }
+  }
+
+  @AllArgsConstructor(access = AccessLevel.PRIVATE)
+  class MysqlServer implements SqlServer {
+    private final Connection connection;
+
+    @Override
+    public ResultSet select(final String query) {
+      final Statement statement = createStatement();
+      final ResultSet resultSet;
+      try {
+        resultSet = statement.executeQuery(query);
+      } catch (SQLException e) {
+        throw new RuntimeException("Cannot execute query.");
+      }
+      closeStatement(statement);
+      return resultSet;
+    }
+
+    private void closeStatement(final Statement statement) {
+      try {
+        statement.close();
+      } catch (SQLException e) {
+        throw new RuntimeException("Cannot close createStatement.");
+      }
+    }
+
+    private Statement createStatement() {
+      final Statement statement;
+      try {
+        statement = connection.createStatement();
+      } catch (SQLException e) {
+        throw new RuntimeException("Cannot create createStatement.", e);
+      }
+      return statement;
+    }
+
+    @Override
+    public int insert(final String query) {
+      final Statement statement;
+      try {
+        statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+      } catch (SQLException e) {
+        throw new RuntimeException("Cannot create createStatement.", e);
+      }
+      try {
+        statement.executeUpdate(query);
+      } catch (SQLException e) {
+        throw new RuntimeException("Cannot execute query.", e);
+      }
+      final int generatedKey;
+      try {
+        final ResultSet generatedKeys = statement.getGeneratedKeys();
+        Preconditions.checkState(generatedKeys.next());
+        generatedKey = ((Long) generatedKeys.getObject(1)).intValue();
+      } catch (SQLException e) {
+        throw new RuntimeException("Cannot fetch generated keys.", e);
+      }
+      return generatedKey;
+    }
+
+    @Override
+    public void update(final String query) {
+      final Statement statement = createStatement();
+      try {
+        statement.executeUpdate(query);
+      } catch (SQLException e) {
+        throw new RuntimeException("Cannot execute query.", e);
+      }
     }
   }
 }

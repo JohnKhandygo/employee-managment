@@ -2,8 +2,9 @@ package com.kspt.khandygo.persistence;
 
 import com.kspt.khandygo.persistence.Finder.SelectAllOrSpecifyCondition;
 import lombok.AllArgsConstructor;
+import javax.inject.Inject;
 
-@AllArgsConstructor
+@AllArgsConstructor(onConstructor = @__({@Inject}))
 public class Gateway {
 
   private final Finder finder;

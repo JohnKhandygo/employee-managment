@@ -6,6 +6,7 @@ import com.google.common.collect.Lists;
 import static com.kspt.khandygo.persistence.PersistenceUtils.*;
 import static java.lang.String.format;
 import lombok.AllArgsConstructor;
+import javax.inject.Inject;
 import javax.persistence.Table;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -14,7 +15,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-@AllArgsConstructor
+@AllArgsConstructor(onConstructor = @__({@Inject}))
 public class Finder {
   private final SqlServer server;
 

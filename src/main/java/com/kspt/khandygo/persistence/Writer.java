@@ -4,11 +4,12 @@ import com.google.common.base.Preconditions;
 import static com.kspt.khandygo.persistence.PersistenceUtils.*;
 import static java.lang.String.format;
 import lombok.AllArgsConstructor;
+import javax.inject.Inject;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.lang.reflect.Field;
 
-@AllArgsConstructor
+@AllArgsConstructor(onConstructor = @__({@Inject}))
 public class Writer {
   private final SqlServer server;
 
