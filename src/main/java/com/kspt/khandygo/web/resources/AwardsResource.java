@@ -1,4 +1,4 @@
-package com.kspt.khandygo.resources;
+package com.kspt.khandygo.web.resources;
 
 import com.kspt.khandygo.bl.AuthService;
 import com.kspt.khandygo.bl.AwardsService;
