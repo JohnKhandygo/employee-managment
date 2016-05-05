@@ -45,7 +45,7 @@ public interface SQLServer {
       try {
         resultSet = statement.executeQuery(query);
       } catch (SQLException e) {
-        throw new RuntimeException("Cannot execute query.");
+        throw new RuntimeException("Cannot execute query.", e);
       }
       closeStatement(statement);
       return resultSet;

@@ -7,6 +7,7 @@ import static com.kspt.khandygo.persistence.PersistenceUtils.*;
 import static java.lang.String.format;
 import lombok.AllArgsConstructor;
 import javax.inject.Inject;
+import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -19,7 +20,7 @@ import java.util.List;
 public class Finder {
   private final SQLServer server;
 
-  private <T> T tryFindTheOnlyOne(final Class<T> clazz, final String condition) {
+  private <T> T tryFindUnique(final Class<? extends T> clazz, final String condition) {
     final ResultSet selected = server.select(queryForClassWithCondition(clazz, condition));
     try {
       Verify.verify(selected.next(), "There is no entries satisfying condition.");
@@ -43,6 +44,7 @@ public class Finder {
     final Constructor<?> constructor = findTheOnlyOneConstructorOf(clazz);
     final Object[] args = extractArgsForConstructor(rs, constructor);
     try {
+      constructor.setAccessible(true);
       return (T) constructor.newInstance(args);
     } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
       throw new RuntimeException(
@@ -68,16 +70,34 @@ public class Finder {
   private Object extractArgForConstructorParameter(final ResultSet rs, final Parameter parameter) {
     final Class<?> parameterType = parameter.getType();
     if (isEntity(parameterType)) {
-      return find(parameterType)
-          .where()
-          .eq("id", extractNonNullValueFor(rs, referenceKeyColumnName(parameter.getName())))
-          .unique();
+
+      final String referenceKeyColumnName = referenceKeyColumnName(parameter.getName());
+      final Object extracted = extractValueFor(rs, referenceKeyColumnName);
+      /*if (parameter.isAnnotationPresent(Column.class)) {
+        final Column columnSpecification = parameter.getAnnotation(Column.class);
+        if (!columnSpecification.nullable() && extracted == null)
+          throw new RuntimeException(
+              format(
+                  "Expecting non null value for field %s.",
+                  referenceKeyColumnName));
+      }*/
+      if (extracted == null) return null;
+      final Class<?> entityParameterType = entityClassFor(parameterType);
+      /*return parameterType.cast(Proxy.newProxyInstance(
+          parameterType.getClassLoader(),
+          new Class[] {parameterType},
+          new EntityProxyInvocationHandler<>(this, (int) extracted, entityParameterType, null)
+      ));*/
+      return find(entityParameterType).where().eq("id", extracted).unique();
     } else {
       final Object extracted = extractValueFor(rs, parameter.getName());
       if (!parameter.getType().isAssignableFrom(extracted.getClass())) {
         if (extracted instanceof Number) {
+          final int extractedAsInt = ((Number) extracted).intValue();
           if (parameter.getType().equals(Integer.class)) {
-            return ((Number) extracted).intValue();
+            return extractedAsInt;
+          } else if (parameter.getType().equals(Boolean.class)) {
+            return extractedAsInt == 1;
           } else {
             throw new RuntimeException(
                 format(
@@ -102,12 +122,25 @@ public class Finder {
   }
 
   public <T> SelectAllOrSpecifyCondition<T> find(final Class<T> clazz) {
-    Preconditions.checkState(clazz.isAnnotationPresent(Table.class),
+    final Class<? extends T> toFind;
+    if (clazz.isAnnotationPresent(Entity.class)) {
+      toFind = clazz;
+    } else {
+      try {
+        toFind = (Class<? extends T>) Class.forName(format("%sEntity", clazz.getName()));
+      } catch (ClassNotFoundException e) {
+        throw new RuntimeException(
+            format(
+                "Cannot search for class %s: it is not an entity and has no entity subclass.",
+                clazz.getSimpleName()));
+      }
+    }
+    Preconditions.checkState(toFind.isAnnotationPresent(Table.class),
         "Class, you want to search not annotated with Table.");
-    return new SelectAllOrSpecifyCondition<>(clazz);
+    return new SelectAllOrSpecifyCondition<>(toFind);
   }
 
-  private <T> List<T> tryFindAll(final Class<T> clazz, final String condition) {
+  private <T> List<T> tryFindAll(final Class<? extends T> clazz, final String condition) {
     final ResultSet selected = server.select(queryForClassWithCondition(clazz, condition));
     final List<T> mapped = Lists.newArrayList();
     try {
@@ -123,7 +156,7 @@ public class Finder {
 
   @AllArgsConstructor
   public class SelectAllOrSpecifyCondition<T> {
-    private final Class<T> clazz;
+    private final Class<? extends T> clazz;
 
     public ConditionBuilder where() {
       return new ConditionBuilder("WHERE ");
@@ -139,7 +172,12 @@ public class Finder {
       private final String conditionString;
 
       public ConditionBuilder eq(final String parameter, final Object o) {
-        return new ConditionBuilder(format("%s %s=%s", conditionString, parameter, o));
+        final String continuationFormat;
+        if (o instanceof String)
+          continuationFormat = "%s %s=\"%s\"";
+        else
+          continuationFormat = "%s %s=%s";
+        return new ConditionBuilder(format(continuationFormat, conditionString, parameter, o));
       }
 
       public ConditionBuilder and() {
@@ -151,7 +189,7 @@ public class Finder {
       }
 
       public T unique() {
-        return tryFindTheOnlyOne(clazz, conditionString);
+        return tryFindUnique(clazz, conditionString);
       }
 
       public List<T> list() {

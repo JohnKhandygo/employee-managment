@@ -1,21 +1,21 @@
 package com.kspt.khandygo.core.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-import lombok.experimental.Accessors;
-
-@AllArgsConstructor
+/*@AllArgsConstructor
 @Accessors(fluent = true)
 @Getter
 @EqualsAndHashCode
-@ToString
-public class Employee {
+@ToString*/
+public interface Employee {
 
-  private final String name;
+  /*private final String name;
 
   private final Employee manager;
 
-  private final Employee paymaster;
+  private final Employee paymaster;*/
+
+  String name();
+
+  Employee manager();
+
+  Employee paymaster();
 }

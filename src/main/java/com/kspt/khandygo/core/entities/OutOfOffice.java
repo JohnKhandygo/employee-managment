@@ -23,16 +23,16 @@ public class OutOfOffice {
 
   private final boolean cancelled;
 
-  public com.kspt.khandygo.core.entities.OutOfOffice cancel() {
+  public OutOfOffice cancel() {
     Preconditions.checkState(!cancelled);
-    return new com.kspt.khandygo.core.entities.OutOfOffice(employee, when, duration, reason, true);
+    return new OutOfOffice(employee, when, duration, reason, true);
   }
 
-  public static com.kspt.khandygo.core.entities.OutOfOffice newOne(
+  public static OutOfOffice newOne(
       final Employee employee,
       final long when,
       final long duration,
       final String reason) {
-    return new com.kspt.khandygo.core.entities.OutOfOffice(employee, when, duration, reason, false);
+    return new OutOfOffice(employee, when, duration, reason, false);
   }
 }

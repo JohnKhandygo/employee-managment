@@ -1,9 +1,11 @@
 package com.kspt.khandygo.persistence.dao;
 
-import com.kspt.khandygo.core.entities.Employee;
+import com.google.common.base.Preconditions;
 import com.kspt.khandygo.core.entities.Vocation;
 import com.kspt.khandygo.persistence.Gateway;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.persistence.Entity;
@@ -32,12 +34,14 @@ public class VocationsDAO {
 
   @Entity
   @Table(name = "vocations")
+  @EqualsAndHashCode(callSuper = true)
+  @ToString
   private static class VocationEntity extends Vocation {
     @Id
     private final Integer id;
 
     private VocationEntity(
-        final Employee employee,
+        final EmployeeEntity employee,
         final long when,
         final long duration,
         final boolean approved,
@@ -49,8 +53,10 @@ public class VocationsDAO {
     }
 
     static VocationEntity newOne(final Vocation vocation) {
+      Preconditions.checkState(vocation.employee() instanceof EmployeeEntity,
+          "There is no sufficient type information to save %s.", vocation);
       return new VocationEntity(
-          vocation.employee(),
+          (EmployeeEntity) vocation.employee(),
           vocation.when(),
           vocation.duration(),
           vocation.approved(),
@@ -60,8 +66,10 @@ public class VocationsDAO {
     }
 
     static VocationEntity existedOne(final int id, final Vocation vocation) {
+      Preconditions.checkState(vocation.employee() instanceof EmployeeEntity,
+          "There is no sufficient type information to save %s.", vocation);
       return new VocationEntity(
-          vocation.employee(),
+          (EmployeeEntity) vocation.employee(),
           vocation.when(),
           vocation.duration(),
           vocation.approved(),

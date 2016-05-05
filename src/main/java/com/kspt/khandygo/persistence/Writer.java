@@ -14,7 +14,8 @@ public class Writer {
   private final SQLServer server;
 
   <T> T save(final T toSave) {
-    final Class<?> clazz = toSave.getClass();
+    Class<?> clazz = toSave.getClass();
+    final String tableName = clazz.getAnnotation(Table.class).name();
     Preconditions.checkState(isEntity(clazz),
         "Class %s not annotated with Entity. Cannot save.",
         clazz.getSimpleName());
@@ -23,23 +24,33 @@ public class Writer {
         "Entry %s already has id. Cannot save. Use update method instead.", toSave);
     final StringBuilder columnNamesBuilder = new StringBuilder();
     final StringBuilder columnValueBuilder = new StringBuilder();
-    for (final Field field : clazz.getDeclaredFields()) {
-      field.setAccessible(true);
-      if (isEntity(field.getType())) {
-        columnNamesBuilder.append(referenceKeyColumnName(field.getName())).append(",");
-        columnValueBuilder.append(extractKeyValueOrSaveIfNull(toSave, field)).append(",");
-      } else {
-        columnNamesBuilder.append(field.getName()).append(",");
-        if (field.getType().equals(String.class)) {
-          columnValueBuilder.append("'").append(getFieldValueOf(toSave, field)).append("'")
-              .append(",");
+    while (true) {
+      for (final Field field : clazz.getDeclaredFields()) {
+        field.setAccessible(true);
+        if (isEntity(field.getType())) {
+          columnNamesBuilder.append(referenceKeyColumnName(field.getName())).append(",");
+          columnValueBuilder.append(extractKeyValueOrSaveIfNull(toSave, field)).append(",");
         } else {
-          columnValueBuilder.append(getFieldValueOf(toSave, field)).append(",");
+          columnNamesBuilder.append(field.getName()).append(",");
+          if (field.getType().equals(String.class)) {
+            columnValueBuilder
+                .append("'")
+                .append(getFieldValueOf(toSave, field))
+                .append("'")
+                .append(",");
+          } else if (field.getType().equals(Boolean.class)) {
+            final Boolean fieldValue = (Boolean) getFieldValueOf(toSave, field);
+            columnValueBuilder.append(fieldValue ? 1 : 0).append(",");
+          } else {
+            columnValueBuilder.append(getFieldValueOf(toSave, field)).append(",");
+          }
         }
       }
+      if (clazz.getSuperclass() == null) break;
+      clazz = clazz.getSuperclass();
     }
     String insert = format("INSERT INTO %s(%s) VALUES(%s)",
-        clazz.getAnnotation(Table.class).name(),
+        tableName,
         columnNamesBuilder.deleteCharAt(columnNamesBuilder.length() - 1).toString(),
         columnValueBuilder.deleteCharAt(columnValueBuilder.length() - 1).toString());
     final int key = server.insert(insert);
@@ -68,8 +79,14 @@ public class Writer {
       } else if (!field.isAnnotationPresent(Id.class)) {
         updateStatements.append(field.getName()).append("=");
         if (field.getType().equals(String.class)) {
-          updateStatements.append("'").append(getFieldValueOf(toUpdate, field)).append("'")
+          updateStatements
+              .append("'")
+              .append(getFieldValueOf(toUpdate, field))
+              .append("'")
               .append(",");
+        } else if (field.getType().equals(Boolean.class)) {
+          final Boolean fieldValue = (Boolean) getFieldValueOf(toUpdate, field);
+          updateStatements.append(fieldValue ? 1 : 0).append(",");
         } else {
           updateStatements.append(getFieldValueOf(toUpdate, field)).append(",");
         }

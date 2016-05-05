@@ -25,35 +25,31 @@ public class Vocation {
 
   private final boolean cancelled;
 
-  public com.kspt.khandygo.core.entities.Vocation approve() {
+  public Vocation approve() {
     Preconditions.checkState(!approved);
     Preconditions.checkState(!rejected);
     Preconditions.checkState(!cancelled);
-    return new com.kspt.khandygo.core.entities.Vocation(employee, when, duration, true, false,
-        false);
+    return new Vocation(employee, when, duration, true, false, false);
   }
 
-  public com.kspt.khandygo.core.entities.Vocation reject() {
+  public Vocation reject() {
     Preconditions.checkState(!approved);
     Preconditions.checkState(!rejected);
     Preconditions.checkState(!cancelled);
-    return new com.kspt.khandygo.core.entities.Vocation(employee, when, duration, false, true,
-        false);
+    return new Vocation(employee, when, duration, false, true, false);
   }
 
-  public com.kspt.khandygo.core.entities.Vocation cancel() {
+  public Vocation cancel() {
     Preconditions.checkState(!approved);
     Preconditions.checkState(!rejected);
     Preconditions.checkState(!cancelled);
-    return new com.kspt.khandygo.core.entities.Vocation(employee, when, duration, false, false,
-        true);
+    return new Vocation(employee, when, duration, false, false, true);
   }
 
-  public static com.kspt.khandygo.core.entities.Vocation newOne(
+  public static Vocation newOne(
       final Employee employee,
       final long when,
       final long duration) {
-    return new com.kspt.khandygo.core.entities.Vocation(employee, when, duration, false, false,
-        false);
+    return new Vocation(employee, when, duration, false, false, false);
   }
 }

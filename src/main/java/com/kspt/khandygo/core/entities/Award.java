@@ -26,31 +26,31 @@ public class Award {
 
   private final boolean cancelled;
 
-  public com.kspt.khandygo.core.entities.Award approve() {
+  public Award approve() {
     Preconditions.checkState(!approved);
     Preconditions.checkState(!rejected);
     Preconditions.checkState(!cancelled);
     return new com.kspt.khandygo.core.entities.Award(employee, when, amount, true, false, false);
   }
 
-  public com.kspt.khandygo.core.entities.Award reject() {
+  public Award reject() {
     Preconditions.checkState(!approved);
     Preconditions.checkState(!rejected);
     Preconditions.checkState(!cancelled);
     return new com.kspt.khandygo.core.entities.Award(employee, when, amount, false, true, false);
   }
 
-  public com.kspt.khandygo.core.entities.Award cancel() {
+  public Award cancel() {
     Preconditions.checkState(!approved);
     Preconditions.checkState(!rejected);
     Preconditions.checkState(!cancelled);
     return new com.kspt.khandygo.core.entities.Award(employee, when, amount, false, false, true);
   }
 
-  public static com.kspt.khandygo.core.entities.Award newOne(
+  public static Award newOne(
       final Employee employee,
       final long when,
       final long amount) {
-    return new com.kspt.khandygo.core.entities.Award(employee, when, amount, false, false, false);
+    return new Award(employee, when, amount, false, false, false);
   }
 }

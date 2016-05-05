@@ -62,7 +62,32 @@ public class PersistenceUtils {
   }
 
   static boolean isEntity(final Class<?> clazz) {
-    return clazz.isAnnotationPresent(Entity.class);
+    return clazz.isAnnotationPresent(Entity.class) || classExists(dualEntityClassName(clazz));
+  }
+
+  private static String dualEntityClassName(final Class<?> clazz) {
+    return format("%sEntity", clazz.getName());
+  }
+
+  private static boolean classExists(final String fullClassName) {
+    try {
+      Class.forName(fullClassName);
+    } catch (ClassNotFoundException e) {
+      return false;
+    }
+    return true;
+  }
+
+  static <T> Class<? extends T> entityClassFor(final Class<T> clazz) {
+    if (clazz.isAnnotationPresent(Entity.class)) return clazz;
+    try {
+      return (Class<? extends T>) Class.forName(dualEntityClassName(clazz));
+    } catch (ClassNotFoundException e) {
+      throw new RuntimeException(
+          format(
+              "Cannot get dual entity class for class %s.",
+              clazz.getName()));
+    }
   }
 
   static Object getFieldValueOf(final Object object, final Field field) {

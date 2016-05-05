@@ -39,7 +39,7 @@ public class AwardsResource {
     return new AwardProposed(id);
   }
 
-  @Path("/approve/{award_id}")
+  @Path("/{award_id}/approve")
   @POST
   @ApiOperation(value = "approve award.")
   public AwardApproved approve(
@@ -50,7 +50,7 @@ public class AwardsResource {
     return new AwardApproved();
   }
 
-  @Path("/reject/{award_id}")
+  @Path("/{award_id}/reject")
   @POST
   @ApiOperation(value = "reject award.")
   public AwardRejected reject(
@@ -61,7 +61,7 @@ public class AwardsResource {
     return new AwardRejected();
   }
 
-  @Path("/cancel/{award_id}")
+  @Path("/{award_id}/cancel")
   @POST
   @ApiOperation(value = "cancel award.")
   public AwardCancelled cancel(

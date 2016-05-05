@@ -1,9 +1,11 @@
 package com.kspt.khandygo.persistence.dao;
 
-import com.kspt.khandygo.core.entities.Employee;
+import com.google.common.base.Preconditions;
 import com.kspt.khandygo.core.entities.OutOfOffice;
 import com.kspt.khandygo.persistence.Gateway;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.persistence.Entity;
@@ -32,12 +34,14 @@ public class OutOfOfficesDAO {
 
   @Entity
   @Table(name = "out_of_offices")
+  @EqualsAndHashCode(callSuper = true)
+  @ToString
   private static class OutOfOfficeEntity extends OutOfOffice {
     @Id
     private final Integer id;
 
     private OutOfOfficeEntity(
-        final Employee employee,
+        final EmployeeEntity employee,
         final long when,
         final long duration,
         final String reason,
@@ -48,8 +52,10 @@ public class OutOfOfficesDAO {
     }
 
     static OutOfOfficeEntity newOne(final OutOfOffice outOfOffice) {
+      Preconditions.checkState(outOfOffice.employee() instanceof EmployeeEntity,
+          "There is no sufficient type information to save %s.", outOfOffice);
       return new OutOfOfficeEntity(
-          outOfOffice.employee(),
+          (EmployeeEntity) outOfOffice.employee(),
           outOfOffice.when(),
           outOfOffice.duration(),
           outOfOffice.reason(),
@@ -58,8 +64,10 @@ public class OutOfOfficesDAO {
     }
 
     static OutOfOfficeEntity existedOne(final int id, final OutOfOffice outOfOffice) {
+      Preconditions.checkState(outOfOffice.employee() instanceof EmployeeEntity,
+          "There is no sufficient type information to save %s.", outOfOffice);
       return new OutOfOfficeEntity(
-          outOfOffice.employee(),
+          (EmployeeEntity) outOfOffice.employee(),
           outOfOffice.when(),
           outOfOffice.duration(),
           outOfOffice.reason(),

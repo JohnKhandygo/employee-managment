@@ -12,6 +12,7 @@ public class Gateway {
   private final Writer writer;
 
   public <T> SelectAllOrSpecifyCondition<T> find(final Class<T> toFind) {
+
     return finder.find(toFind);
   }
 
