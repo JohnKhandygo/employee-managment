@@ -3,6 +3,8 @@ package com.kspt.khandygo.persistence.dao;
 import com.google.common.base.Preconditions;
 import com.kspt.khandygo.core.entities.Vocation;
 import com.kspt.khandygo.persistence.Gateway;
+import com.kspt.khandygo.utils.Tuple2;
+import static java.util.stream.Collectors.toList;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -12,6 +14,7 @@ import javax.inject.Singleton;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.List;
 
 @AllArgsConstructor(onConstructor = @__({@Inject}))
 @Singleton
@@ -33,12 +36,24 @@ public class VocationsDAO {
     return gateway.update(vocationEntity).toVocation();
   }
 
+  public List<Tuple2<Integer, Vocation>> approvedFor(final int employeeId) {
+    final List<VocationEntity> vocationEntities = gateway.find(VocationEntity.class)
+        .where()
+        .eq("employee_id", employeeId)
+        .and()
+        .eq("approved", 1)
+        .list();
+    return vocationEntities.stream()
+        .map(entity -> new Tuple2<>(entity.id, entity.toVocation()))
+        .collect(toList());
+  }
+
   @Entity
   @Table(name = "vocations")
   @AllArgsConstructor(access = AccessLevel.PRIVATE)
   @EqualsAndHashCode
   @ToString
-  private static class VocationEntity /*extends Vocation*/ {
+  private static class VocationEntity {
     @Id
     private final Integer id;
 
@@ -53,21 +68,6 @@ public class VocationsDAO {
     private final Boolean rejected;
 
     private final Boolean cancelled;
-
-    /*public VocationEntity(
-        final Integer id,
-        final EmployeeEntity employee,
-        final Long timestamp,
-        final Long duration,
-        final Boolean approved, final Boolean rejected, final Boolean cancelled) {
-      this.id = id;
-      this.employee = employee;
-      this.timestamp = timestamp;
-      this.duration = duration;
-      this.approved = approved;
-      this.rejected = rejected;
-      this.cancelled = cancelled;
-    }*/
 
     static VocationEntity newOne(final Vocation vocation) {
       Preconditions.checkState(vocation.employee() instanceof UserEntity,

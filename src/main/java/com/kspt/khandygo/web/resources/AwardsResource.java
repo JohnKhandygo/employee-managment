@@ -36,13 +36,13 @@ public class AwardsResource {
   @ApiOperation(value = "get approved awards for employee.")
   public List<AwardRepresentation> get(final @HeaderParam("session_id") String session) {
     final int requesterId = authService.employeeIdBySession(session);
-    final List<Tuple2<Integer, Award>> awards = awardsService.getForEmployee(requesterId);
+    final List<Tuple2<Integer, Award>> awards = awardsService.approvedFor(requesterId);
     return awards.stream()
         .map(t2 -> new AwardRepresentation(t2._1, t2._2.when(), t2._2.amount()))
         .collect(toList());
   }
 
-  @Path("/approved/{award_id}")
+  /*@Path("/approved/{award_id}")
   @GET
   @ApiOperation(value = "get award info by id.")
   public AwardRepresentation get(
@@ -51,7 +51,7 @@ public class AwardsResource {
     final Employee requester = authService.employeeBySession(session);
     final Award award = awardsService.get(requester, awardId);
     return new AwardRepresentation(awardId, award.when(), award.amount());
-  }
+  }*/
 
   @Path("/propose")
   @POST

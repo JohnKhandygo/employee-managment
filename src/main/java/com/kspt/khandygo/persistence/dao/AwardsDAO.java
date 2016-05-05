@@ -22,7 +22,7 @@ public class AwardsDAO {
 
   private final Gateway gateway;
 
-  public List<Tuple2<Integer, Award>> getForEmployee(final int employeeId) {
+  public List<Tuple2<Integer, Award>> approvedFor(final int employeeId) {
     final List<AwardEntity> awardEntities = gateway.find(AwardEntity.class).where()
         .eq("employee_id", employeeId)
         .and()

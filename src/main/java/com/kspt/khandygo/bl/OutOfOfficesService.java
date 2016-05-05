@@ -5,9 +5,11 @@ import com.kspt.khandygo.core.entities.Employee;
 import com.kspt.khandygo.core.entities.OutOfOffice;
 import com.kspt.khandygo.persistence.dao.EmployeesDAO;
 import com.kspt.khandygo.persistence.dao.OutOfOfficesDAO;
+import com.kspt.khandygo.utils.Tuple2;
 import lombok.AllArgsConstructor;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.List;
 
 @AllArgsConstructor(onConstructor = @__({@Inject}))
 @Singleton
@@ -46,5 +48,9 @@ public class OutOfOfficesService {
     Preconditions.checkState(requester.equals(outOfOffice.employee()));
     final OutOfOffice cancelledVocation = outOfOffice.cancel();
     outOfOfficesDAO.update(id, cancelledVocation);
+  }
+
+  public List<Tuple2<Integer, OutOfOffice>> approvedFor(final int employeeId) {
+    return outOfOfficesDAO.approvedFor(employeeId);
   }
 }

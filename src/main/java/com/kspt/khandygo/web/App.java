@@ -36,7 +36,7 @@ public class App extends Application<AppConfiguration> {
     filter.addMappingForUrlPatterns(
         EnumSet.of(DispatcherType.REQUEST), false,
         environment.getApplicationContext().getContextPath() + "*");
-    filter.setInitParameter(ALLOWED_METHODS_PARAM, "GET,PUT,POST,OPTIONS");
+    filter.setInitParameter(ALLOWED_METHODS_PARAM, "GET,PUT,POST,OPTIONS,DELETE");
     filter.setInitParameter(ALLOWED_HEADERS_PARAM, "Origin, Content-Type, Accept, session_id");
     filter.setInitParameter(ALLOWED_ORIGINS_PARAM, "null,localhost,http://localhost:*");
     filter.setInitParameter(ALLOW_CREDENTIALS_PARAM, "true");

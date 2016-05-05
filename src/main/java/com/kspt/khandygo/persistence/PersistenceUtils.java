@@ -85,7 +85,7 @@ public class PersistenceUtils {
     } catch (ClassNotFoundException e) {
       throw new RuntimeException(
           format(
-              "Cannot getForEmployee dual entity class for class %s.",
+              "Cannot approvedFor dual entity class for class %s.",
               clazz.getName()));
     }
   }

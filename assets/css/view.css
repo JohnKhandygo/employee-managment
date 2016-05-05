@@ -2,6 +2,25 @@ div.award-item {
   background: #ADD8E6
 }
 
-div.award-item > div.cell > div {
+div.out-of-office-item {
+  background: #87CEFA
+}
+
+div.vocation-item {
+  background: #87CEFA
+}
+
+div.item-info {
   font-size: 16pt
+}
+
+/*div.out-of-office-item > div.cell > div {
+  font-size: 16pt
+}*/
+
+.item-type {
+  font-size: 10pt;
+  color: gray;
+  margin-right: 10px;
+  margin-bottom: 5px;
 }

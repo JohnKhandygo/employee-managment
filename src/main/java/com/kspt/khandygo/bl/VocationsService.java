@@ -5,9 +5,11 @@ import com.kspt.khandygo.core.entities.Employee;
 import com.kspt.khandygo.core.entities.Vocation;
 import com.kspt.khandygo.persistence.dao.EmployeesDAO;
 import com.kspt.khandygo.persistence.dao.VocationsDAO;
+import com.kspt.khandygo.utils.Tuple2;
 import lombok.AllArgsConstructor;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.List;
 
 @AllArgsConstructor(onConstructor = @__({@Inject}))
 @Singleton
@@ -47,5 +49,9 @@ public class VocationsService {
     Preconditions.checkState(requester.equals(vocation.employee()));
     final Vocation cancelledVocation = vocation.cancel();
     vocationsDAO.update(id, cancelledVocation);
+  }
+
+  public List<Tuple2<Integer, Vocation>> approvedFor(final int employeeId) {
+    return vocationsDAO.approvedFor(employeeId);
   }
 }

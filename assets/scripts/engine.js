@@ -1,5 +1,5 @@
 var address = "http://localhost:8080";
-var session = "ee7684b2-c97d-4a49-8dfc-70dc13dffd0b"
+var session = "c134b3d7-f7c5-49b0-8ba8-d355489c79e3"
 
 $(document).ready(function() {
   var contentDiv = $("div#content")
@@ -17,11 +17,9 @@ $(document).ready(function() {
 
     $(contentDiv).append(wrapWithTag("div", "", "row cells2",
       [
-        wrapWithTag("div", "awards", "cell padding20", [""]),
-        wrapWithTag("div", "schedule", "cell padding20", [""])
+        wrapWithTag("div", "awards", "cell padding20", [wrapWithTag("h3", "", "", "PAYMENTS")]),
+        wrapWithTag("div", "schedule", "cell padding20", [wrapWithTag("h3", "", "", "SCHEDULE")])
       ]))
-
-
 
     $.ajax({
         url: address + "/api/awards/approved",
@@ -32,8 +30,53 @@ $(document).ready(function() {
         },
         success: function(d) {
           for (var i = 0; i < d.length; ++i) {
-            //$(contentDiv).append(buildAwardItemView(d[i]))
-            $("div#awards").append(buildAwardItemView(d[i]))
+            $("div#awards").append(buildAwardView(d[i]))
+          }
+        }
+      })
+
+    $.ajax({
+        url: address + "/api/out_of_offices/approved",
+        method: "GET",
+        contentType: "application/json",
+        headers: {
+          session_id: session
+        },
+        success: function(d) {
+          for (var i = 0; i < d.length; ++i) {
+            $("div#schedule").append(buildOutOfOfficeView(d[i]))
+            var buttons = $("div#schedule").find("button.button")
+            var lastAddedButton = buttons[buttons.length - 1];
+            $(lastAddedButton).click(function(event) {
+              var parentView = $(this).closest("div.out-of-office-item")
+              var id = $(parentView).attr("id")
+              $.ajax({
+                url: address + "/api/out_of_offices/" + id + "/cancel",
+                method: "DELETE",
+                contentType: "application/json",
+                headers: {
+                  session_id: session
+                },
+                success: function(r) {
+                  alert(JSON.stringify(r));
+                  $(parentView).remove();
+                }
+              })
+            })
+          }
+        }
+      })
+
+    $.ajax({
+        url: address + "/api/vocations/approved",
+        method: "GET",
+        contentType: "application/json",
+        headers: {
+          session_id: session
+        },
+        success: function(d) {
+          for (var i = 0; i < d.length; ++i) {
+            $("div#schedule").append(buildVocationView(d[i]))
           }
         }
       })

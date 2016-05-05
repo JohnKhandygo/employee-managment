@@ -19,8 +19,8 @@ public class AwardsService {
 
   private final AwardsDAO awardsDAO;
 
-  public List<Tuple2<Integer, Award>> getForEmployee(final int employeeId) {
-    return awardsDAO.getForEmployee(employeeId);
+  public List<Tuple2<Integer, Award>> approvedFor(final int employeeId) {
+    return awardsDAO.approvedFor(employeeId);
   }
 
   public Award get(final Employee requester, final int awardId) {

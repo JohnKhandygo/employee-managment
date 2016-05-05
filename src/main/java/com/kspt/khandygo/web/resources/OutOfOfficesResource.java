@@ -4,10 +4,15 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.kspt.khandygo.bl.AuthService;
 import com.kspt.khandygo.bl.OutOfOfficesService;
 import com.kspt.khandygo.core.entities.Employee;
+import com.kspt.khandygo.core.entities.OutOfOffice;
+import com.kspt.khandygo.utils.Tuple2;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import static java.util.stream.Collectors.toList;
 import lombok.AllArgsConstructor;
 import javax.inject.Inject;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -15,6 +20,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import java.util.List;
 
 @Path("/out_of_offices")
 @Produces(MediaType.APPLICATION_JSON)
@@ -25,6 +31,18 @@ public class OutOfOfficesResource {
   private final AuthService authService;
 
   private final OutOfOfficesService outOfOfficesService;
+
+  @Path("/approved")
+  @GET
+  @ApiOperation(value = "get approved out of office reservations for employee.")
+  public List<OutOfOfficeRepresentation> get(final @HeaderParam("session_id") String session) {
+    final int requesterId = authService.employeeIdBySession(session);
+    final List<Tuple2<Integer, OutOfOffice>> awards = outOfOfficesService.approvedFor(requesterId);
+    return awards.stream()
+        .map(t2 ->
+            new OutOfOfficeRepresentation(t2._1, t2._2.when(), t2._2.duration(), t2._2.reason()))
+        .collect(toList());
+  }
 
   @Path("/create")
   @POST
@@ -55,7 +73,7 @@ public class OutOfOfficesResource {
   }
 
   @Path("/{out_of_office_id}/cancel")
-  @POST
+  @DELETE
   @ApiOperation(value = "cancel out of office.")
   public OutOfOfficeCancelled cancel(
       final @HeaderParam("session_id") String session,
@@ -63,6 +81,19 @@ public class OutOfOfficesResource {
     final Employee requester = authService.employeeBySession(session);
     outOfOfficesService.cancel(requester, outOfOfficeId);
     return new OutOfOfficeCancelled();
+  }
+
+  @ResourceRepresentationWithType
+  @JsonTypeName(".out_of_office")
+  @AllArgsConstructor
+  private static class OutOfOfficeRepresentation {
+    private final int id;
+
+    private final long when;
+
+    private final long duration;
+
+    private final String reason;
   }
 
   @ResourceRepresentationWithType

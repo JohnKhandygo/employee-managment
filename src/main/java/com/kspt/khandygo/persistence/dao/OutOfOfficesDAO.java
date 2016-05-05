@@ -3,6 +3,8 @@ package com.kspt.khandygo.persistence.dao;
 import com.google.common.base.Preconditions;
 import com.kspt.khandygo.core.entities.OutOfOffice;
 import com.kspt.khandygo.persistence.Gateway;
+import com.kspt.khandygo.utils.Tuple2;
+import static java.util.stream.Collectors.toList;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -12,6 +14,7 @@ import javax.inject.Singleton;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.List;
 
 @AllArgsConstructor(onConstructor = @__({@Inject}))
 @Singleton
@@ -33,12 +36,24 @@ public class OutOfOfficesDAO {
     return gateway.update(outOfOfficeEntity).toOuOfOffice();
   }
 
+  public List<Tuple2<Integer, OutOfOffice>> approvedFor(final int employeeId) {
+    final List<OutOfOfficeEntity> outOfOfficeEntities = gateway.find(OutOfOfficeEntity.class)
+        .where()
+        .eq("employee_id", employeeId)
+        .and()
+        .eq("cancelled", 0)
+        .list();
+    return outOfOfficeEntities.stream()
+        .map(entity -> new Tuple2<>(entity.id, entity.toOuOfOffice()))
+        .collect(toList());
+  }
+
   @Entity
   @Table(name = "out_of_offices")
   @AllArgsConstructor(access = AccessLevel.PRIVATE)
   @EqualsAndHashCode
   @ToString
-  private static class OutOfOfficeEntity /*extends OutOfOffice*/ {
+  private static class OutOfOfficeEntity {
     @Id
     private final Integer id;
 
@@ -51,17 +66,6 @@ public class OutOfOfficesDAO {
     private final String reason;
 
     private final Boolean cancelled;
-
-    /*private OutOfOfficeEntity(
-        final EmployeeEntity employee,
-        final long timestamp,
-        final long duration,
-        final String reason,
-        final boolean cancelled,
-        final Integer id) {
-      super(employee, timestamp, duration, reason, cancelled);
-      this.id = id;
-    }*/
 
     OutOfOffice toOuOfOffice() {
       return new OutOfOffice(employee, timestamp, duration, reason, cancelled);
