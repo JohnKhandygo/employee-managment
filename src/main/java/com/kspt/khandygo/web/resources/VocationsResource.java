@@ -39,7 +39,7 @@ public class VocationsResource {
     return new VocationProposed(id);
   }
 
-  @Path("/approve/{vocation_id}")
+  @Path("/{vocation_id}/approve")
   @POST
   @ApiOperation(value = "approve vocation.")
   public VocationApproved approve(
@@ -50,7 +50,7 @@ public class VocationsResource {
     return new VocationApproved();
   }
 
-  @Path("/reject/{vocation_id}")
+  @Path("/{vocation_id}/reject")
   @POST
   @ApiOperation(value = "reject vocation.")
   public VocationRejected reject(
@@ -61,7 +61,7 @@ public class VocationsResource {
     return new VocationRejected();
   }
 
-  @Path("/cancel/{vocation_id}")
+  @Path("/{vocation_id}/cancel")
   @POST
   @ApiOperation(value = "cancel vocation.")
   public VocationCancelled cancel(

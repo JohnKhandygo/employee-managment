@@ -40,7 +40,7 @@ public class OutOfOfficesResource {
     return new OutOfOfficeCreated(id);
   }
 
-  @Path("/update/{out_of_office_id}")
+  @Path("/{out_of_office_id}/update")
   @POST
   @ApiOperation(value = "update out of office.")
   public OutOfOfficeUpdated cancel(
@@ -54,7 +54,7 @@ public class OutOfOfficesResource {
     return new OutOfOfficeUpdated();
   }
 
-  @Path("/cancel/{out_of_office_id}")
+  @Path("/{out_of_office_id}/cancel")
   @POST
   @ApiOperation(value = "cancel out of office.")
   public OutOfOfficeCancelled cancel(
