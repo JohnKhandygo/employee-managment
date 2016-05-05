@@ -7,7 +7,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -19,19 +18,15 @@ import javax.persistence.Table;
 @Getter
 @EqualsAndHashCode
 @ToString
-class EmployeeEntity implements Employee {
+class UserEntity implements Employee {
   @Id
   private final Integer id;
 
-  @Column(nullable = false)
   private final String login;
 
-  @Column(nullable = false)
   private final String name;
 
-  @Column(nullable = true)
-  private final EmployeeEntity manager;
+  private final UserEntity manager;
 
-  @Column(nullable = true)
-  private final EmployeeEntity paymaster;
+  private final UserEntity paymaster;
 }

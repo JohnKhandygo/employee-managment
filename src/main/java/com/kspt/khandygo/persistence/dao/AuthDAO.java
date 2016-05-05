@@ -15,7 +15,7 @@ public class AuthDAO {
   private final Finder finder;
 
   public Employee get(final String login, final String password) {
-    return finder.find(EmployeeEntity.class).where()
+    return finder.find(UserEntity.class).where()
         .eq("login", login)
         .and()
         .eq("password", hash(password))

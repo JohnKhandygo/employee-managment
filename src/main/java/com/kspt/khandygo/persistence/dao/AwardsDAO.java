@@ -42,7 +42,7 @@ public class AwardsDAO {
     @Id
     private final Integer id;
 
-    private final EmployeeEntity employee;
+    private final UserEntity employee;
 
     private final Long timestamp;
 
@@ -71,11 +71,11 @@ public class AwardsDAO {
     }
 
     static AwardEntity newOne(final Award award) {
-      Preconditions.checkState(award.employee() instanceof EmployeeEntity,
+      Preconditions.checkState(award.employee() instanceof UserEntity,
           "There is no sufficient type information to save %s.", award);
       return new AwardEntity(
           null,
-          (EmployeeEntity) award.employee(),
+          (UserEntity) award.employee(),
           award.when(),
           award.amount(),
           award.approved(),
@@ -84,11 +84,11 @@ public class AwardsDAO {
     }
 
     static AwardEntity existedOne(final int id, final Award award) {
-      Preconditions.checkState(award.employee() instanceof EmployeeEntity,
+      Preconditions.checkState(award.employee() instanceof UserEntity,
           "There is no sufficient type information to save %s.", award);
       return new AwardEntity(
           id,
-          (EmployeeEntity) award.employee(),
+          (UserEntity) award.employee(),
           award.when(),
           award.amount(),
           award.approved(),

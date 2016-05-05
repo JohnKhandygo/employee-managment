@@ -3,6 +3,7 @@ package com.kspt.khandygo.persistence.dao;
 import com.google.common.base.Preconditions;
 import com.kspt.khandygo.core.entities.Vocation;
 import com.kspt.khandygo.persistence.Gateway;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -24,58 +25,78 @@ public class VocationsDAO {
   }
 
   public Vocation get(final int id) {
-    return gateway.find(VocationEntity.class).where().eq("id", id).unique();
+    return gateway.find(VocationEntity.class).where().eq("id", id).unique().toVocation();
   }
 
   public Vocation update(final int id, final Vocation model) {
     final VocationEntity vocationEntity = VocationEntity.existedOne(id, model);
-    return gateway.update(vocationEntity);
+    return gateway.update(vocationEntity).toVocation();
   }
 
   @Entity
   @Table(name = "vocations")
-  @EqualsAndHashCode(callSuper = true)
+  @AllArgsConstructor(access = AccessLevel.PRIVATE)
+  @EqualsAndHashCode
   @ToString
-  private static class VocationEntity extends Vocation {
+  private static class VocationEntity /*extends Vocation*/ {
     @Id
     private final Integer id;
 
-    private VocationEntity(
+    private final UserEntity employee;
+
+    private final Long timestamp;
+
+    private final Long duration;
+
+    private final Boolean approved;
+
+    private final Boolean rejected;
+
+    private final Boolean cancelled;
+
+    /*public VocationEntity(
+        final Integer id,
         final EmployeeEntity employee,
-        final long when,
-        final long duration,
-        final boolean approved,
-        final boolean rejected,
-        final boolean cancelled,
-        final Integer id) {
-      super(employee, when, duration, approved, rejected, cancelled);
+        final Long timestamp,
+        final Long duration,
+        final Boolean approved, final Boolean rejected, final Boolean cancelled) {
       this.id = id;
-    }
+      this.employee = employee;
+      this.timestamp = timestamp;
+      this.duration = duration;
+      this.approved = approved;
+      this.rejected = rejected;
+      this.cancelled = cancelled;
+    }*/
 
     static VocationEntity newOne(final Vocation vocation) {
-      Preconditions.checkState(vocation.employee() instanceof EmployeeEntity,
+      Preconditions.checkState(vocation.employee() instanceof UserEntity,
           "There is no sufficient type information to save %s.", vocation);
       return new VocationEntity(
-          (EmployeeEntity) vocation.employee(),
+          null,
+          (UserEntity) vocation.employee(),
           vocation.when(),
           vocation.duration(),
           vocation.approved(),
           vocation.rejected(),
-          vocation.cancelled(),
-          null);
+          vocation.cancelled());
     }
 
     static VocationEntity existedOne(final int id, final Vocation vocation) {
-      Preconditions.checkState(vocation.employee() instanceof EmployeeEntity,
+      Preconditions.checkState(vocation.employee() instanceof UserEntity,
           "There is no sufficient type information to save %s.", vocation);
       return new VocationEntity(
-          (EmployeeEntity) vocation.employee(),
+          id,
+          (UserEntity) vocation.employee(),
           vocation.when(),
           vocation.duration(),
           vocation.approved(),
           vocation.rejected(),
-          vocation.cancelled(),
-          id);
+          vocation.cancelled());
+    }
+
+    Vocation toVocation() {
+      return new Vocation(employee, timestamp, duration, approved, rejected, cancelled);
     }
   }
 }

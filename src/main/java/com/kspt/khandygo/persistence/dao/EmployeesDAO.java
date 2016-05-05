@@ -13,6 +13,6 @@ public class EmployeesDAO {
   private final Gateway gateway;
 
   public Employee get(final int id) {
-    return gateway.find(EmployeeEntity.class).where().eq("id", id).unique();
+    return gateway.find(UserEntity.class).where().eq("id", id).unique();
   }
 }
