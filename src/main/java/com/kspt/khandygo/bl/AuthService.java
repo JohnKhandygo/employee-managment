@@ -2,6 +2,7 @@ package com.kspt.khandygo.bl;
 
 import com.kspt.khandygo.core.entities.Employee;
 import com.kspt.khandygo.persistence.dao.AuthDAO;
+import com.kspt.khandygo.utils.Tuple2;
 import lombok.AllArgsConstructor;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -13,24 +14,28 @@ import java.util.UUID;
 @Singleton
 public class AuthService {
 
-  private final Map<String, Employee> authorizedUsers;
+  private final Map<String, Tuple2<Integer, Employee>> authorizedUsers;
 
   private final AuthDAO authDAO;
 
-  public Employee bySession(final String session) {
-    return authorizedUsers.get(session);
+  public Employee employeeBySession(final String session) {
+    return authorizedUsers.get(session)._2;
+  }
+
+  public Integer employeeIdBySession(final String session) {
+    return authorizedUsers.get(session)._1;
   }
 
   public String auth(final String login, final String password) {
-    final Employee user = authDAO.get(login, password);
-    if (authorizedUsers.containsValue(user))
+    final Tuple2<Integer, Employee> userWithId = authDAO.get(login, password);
+    if (authorizedUsers.containsValue(userWithId))
       return authorizedUsers.entrySet().stream()
-          .filter(e -> e.getValue().equals(user))
+          .filter(e -> e.getValue().equals(userWithId))
           .map(Entry::getKey)
           .findFirst()
           .get();
     final String session = UUID.randomUUID().toString();
-    authorizedUsers.put(session, user);
+    authorizedUsers.put(session, userWithId);
     return session;
   }
 }

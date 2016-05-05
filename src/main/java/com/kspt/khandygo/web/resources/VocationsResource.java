@@ -34,7 +34,7 @@ public class VocationsResource {
       final @QueryParam("when") long when,
       final @QueryParam("duration") long duration,
       final @QueryParam("employee_id") int employeeId) {
-    final Employee requester = authService.bySession(session);
+    final Employee requester = authService.employeeBySession(session);
     final int id = vocationsService.propose(requester, when, duration, employeeId);
     return new VocationProposed(id);
   }
@@ -45,7 +45,7 @@ public class VocationsResource {
   public VocationApproved approve(
       final @HeaderParam("session_id") String session,
       final @PathParam("vocation_id") int vocationId) {
-    final Employee requester = authService.bySession(session);
+    final Employee requester = authService.employeeBySession(session);
     vocationsService.approve(requester, vocationId);
     return new VocationApproved();
   }
@@ -56,7 +56,7 @@ public class VocationsResource {
   public VocationRejected reject(
       final @HeaderParam("session_id") String session,
       final @PathParam("vocation_id") int vocationId) {
-    final Employee requester = authService.bySession(session);
+    final Employee requester = authService.employeeBySession(session);
     vocationsService.reject(requester, vocationId);
     return new VocationRejected();
   }
@@ -67,7 +67,7 @@ public class VocationsResource {
   public VocationCancelled cancel(
       final @HeaderParam("session_id") String session,
       final @PathParam("vocation_id") int vocationId) {
-    final Employee requester = authService.bySession(session);
+    final Employee requester = authService.employeeBySession(session);
     vocationsService.cancel(requester, vocationId);
     return new VocationCancelled();
   }

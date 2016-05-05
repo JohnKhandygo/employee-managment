@@ -1,0 +1,7 @@
+div.award-item {
+  background: #ADD8E6
+}
+
+div.award-item > div.cell > div {
+  font-size: 16pt
+}

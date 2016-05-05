@@ -3,6 +3,8 @@ package com.kspt.khandygo.persistence.dao;
 import com.google.common.base.Preconditions;
 import com.kspt.khandygo.core.entities.Award;
 import com.kspt.khandygo.persistence.Gateway;
+import com.kspt.khandygo.utils.Tuple2;
+import static java.util.stream.Collectors.toList;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -12,12 +14,24 @@ import javax.inject.Singleton;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.List;
 
 @AllArgsConstructor(onConstructor = @__({@Inject}))
 @Singleton
 public class AwardsDAO {
 
   private final Gateway gateway;
+
+  public List<Tuple2<Integer, Award>> getForEmployee(final int employeeId) {
+    final List<AwardEntity> awardEntities = gateway.find(AwardEntity.class).where()
+        .eq("employee_id", employeeId)
+        .and()
+        .eq("approved", 1)
+        .list();
+    return awardEntities.stream()
+        .map(awardEntity -> new Tuple2<>(awardEntity.id, awardEntity.toAward()))
+        .collect(toList());
+  }
 
   public int save(final Award award) {
     final AwardEntity awardEntity = AwardEntity.newOne(award);

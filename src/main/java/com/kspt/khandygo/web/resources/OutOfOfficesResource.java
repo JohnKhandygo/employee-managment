@@ -35,7 +35,7 @@ public class OutOfOfficesResource {
       final @QueryParam("duration") long duration,
       final @QueryParam("reason") String reason,
       final @QueryParam("employee_id") int employeeId) {
-    final Employee requester = authService.bySession(session);
+    final Employee requester = authService.employeeBySession(session);
     final int id = outOfOfficesService.create(requester, when, duration, reason, employeeId);
     return new OutOfOfficeCreated(id);
   }
@@ -49,7 +49,7 @@ public class OutOfOfficesResource {
       final @QueryParam("when") long when,
       final @QueryParam("duration") long duration,
       final @QueryParam("reason") String reason) {
-    final Employee requester = authService.bySession(session);
+    final Employee requester = authService.employeeBySession(session);
     outOfOfficesService.update(requester, outOfOfficeId, when, duration, reason);
     return new OutOfOfficeUpdated();
   }
@@ -60,7 +60,7 @@ public class OutOfOfficesResource {
   public OutOfOfficeCancelled cancel(
       final @HeaderParam("session_id") String session,
       final @PathParam("out_of_office_id") int outOfOfficeId) {
-    final Employee requester = authService.bySession(session);
+    final Employee requester = authService.employeeBySession(session);
     outOfOfficesService.cancel(requester, outOfOfficeId);
     return new OutOfOfficeCancelled();
   }

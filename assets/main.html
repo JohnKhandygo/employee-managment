@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="scripts/jquery.js"></script>
+
+    <script src="scripts/metro.js"></script>
+    <link href="css/metro.css" rel="stylesheet">
+    <link href="css/metro-responsive.css" rel="stylesheet">
+    <link href="css/metro-rtl.css" rel="stylesheet">
+    <link href="css/metro-schemes.css" rel="stylesheet">
+
+    <script src="scripts/engine.js"></script>
+    <script src="scripts/view.js"></script>
+    <script src="scripts/utils.js"></script>
+    <link href="css/view.css" rel="stylesheet">
+</head>
+<body>
+<div class="app-bar">
+    <a class="app-bar-element" href="...">Home</a>
+    <span class="app-bar-divider"></span>
+</div>
+<div class="grid">
+    <div class="row cells5">
+        <div class="cell padding20">
+            <ul class="v-menu" style="width:100%">
+                <li class="divider"></li>
+                <li id="home" class="active">
+                    <a href="#"> Home</a>
+                </li>
+                <li id="stuff">
+                    <a href="#"> Stuff</a>
+                </li>
+                <li id="proposals">
+                    <a href="#"> Proposals</a>
+                </li>
+                <li class="divider"></li>
+                <!--<li class="menu-title"> Actions</li>
+                <li><a href="#"><span class="mif-calendar icon"></span> Propose Vocation</a></li>
+                <li><a href="#"><span class="mif-calendar icon"></span> Reserve Out Of Office
+                Days</a></li>-->
+            </ul>
+            <button class="button primary" style="width:100%"> Propose Vocation</button>
+            <button class="button primary" style="width:100%"> Reserve Out Of Office Days</button>
+        </div>
+        <div class="cell colspan4 padding20">
+            <div id="content" class="grid">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
