@@ -10,17 +10,36 @@ div.vocation-item {
   background: #87CEFA
 }
 
+div.manager-item {
+  background: #ADD8E6
+}
+div.paymaster-item {
+  background: #ADD8E6
+}
+div.teammate-item {
+  background: #ADD8E6
+}
+div.patronaged-item {
+  background: #87CEFA
+}
+
+
 div.item-info {
   font-size: 16pt
 }
-
-/*div.out-of-office-item > div.cell > div {
-  font-size: 16pt
-}*/
 
 .item-type {
   font-size: 10pt;
   color: gray;
   margin-right: 10px;
   margin-bottom: 5px;
+}
+
+.half-size {
+  width: 50% !important;
+  float: left;
+}
+
+div.award-form {
+  display: none;
 }

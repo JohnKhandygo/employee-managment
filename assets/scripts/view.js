@@ -3,7 +3,7 @@ function wrapWithTag(tag, idValue, classValue, contentArray) {
   var idArg = idValue == "" ? "" : "id=\"" + idValue + "\""
   var openTag = "<" + tag + " " + classArg + " " + idArg + ">"
   var content = ""
-  for(i = 0; i < contentArray.length; ++i) {
+  for(var i = 0; i < contentArray.length; ++i) {
     content += contentArray[i]
   }
   var closeTag = "</" + tag + ">"
@@ -27,9 +27,6 @@ function buildAwardView(award) {
 function buildOutOfOfficeView(outOfOffice) {
   return wrapWithTag("div", outOfOffice.id, "out-of-office-item row cells5",
       [
-        /*wrapWithTag("div", "", "align-right",
-          [wrapWithTag("span", "", "",
-            [wrapWithTag("i", "", "fa fa-times fa-2x", [""])])]),*/
         wrapWithTag("div", "", "cell colspan2 padding20",
           [wrapWithTag("div", "", "item-info align-left",
             [
@@ -68,4 +65,76 @@ function buildVocationView(vocation) {
         wrapWithTag("div", "", "",
           [wrapWithTag("div", "", "item-type align-right", ["vocation"])])
       ])
+}
+
+function buildManagerView(manager) {
+  return wrapWithTag("div", "", "manager-item row",
+    [
+      wrapWithTag("div", "", "cell padding20",
+        [wrapWithTag("div", "", "item-info align-left", [manager.name])]),
+      wrapWithTag("div", "", "",
+        [wrapWithTag("div", "", "item-type align-right", ["manager"])])
+    ])
+}
+
+function buildPaymasterView(paymaster) {
+  return wrapWithTag("div", "", "paymaster-item row",
+    [
+      wrapWithTag("div", "", "cell padding20",
+        [wrapWithTag("div", "", "item-info align-left", [paymaster.name])]),
+      wrapWithTag("div", "", "",
+        [wrapWithTag("div", "", "item-type align-right", ["paymaster"])])
+    ])
+}
+
+function buildTeammateView(teammate) {
+  return wrapWithTag("div", "", "teammate-item row",
+    [
+      wrapWithTag("div", "", "cell padding20",
+        [wrapWithTag("div", "", "item-info align-left", [teammate.name])]),
+      wrapWithTag("div", "", "",
+        [wrapWithTag("div", "", "item-type align-right", ["teammate"])])
+    ])
+}
+
+function buildPatronagedEmployeeView(patronaged) {
+  return wrapWithTag("div", patronaged.id, "patronaged-item row",
+    [
+      wrapWithTag("div", "", "cell padding20",
+        [wrapWithTag("div", "", "item-info align-left", [patronaged.name])]),
+      wrapWithTag("div", "", "",
+        [
+          wrapWithTag("div", "", "award-form login-form padding20",
+            [
+              wrapWithTag("form", "", "",
+                [
+                  wrapWithTag("h4", "", "text-light", ["Award form"]),
+                  wrapWithTag("hr", "", "thin", [""]),
+                  wrapWithTag("br", "", "", [""]),
+                  "<div class=\"align-left half-size\">",
+                  "<div class=\"input-control text full-size\" data-role=\"input\">",
+                  "<label class=\"text-light\" for=\"award-amount\">Award amount:</label>",
+                  "<input type=\"text\" name=\"award-amount\">",
+                  "<button class=\"button helper-button clear\" type=\"button\">",
+                  wrapWithTag("span", "", "fa fa-times", [""]),
+                  "</button>",
+                  "</div>",
+                  "</div>",
+                  "<div class=\"align-right half-size\">",
+                  "<div class=\"input-control text full-size\" data-role=\"datepicker\">",
+                  "<label class=\"text-light\" for=\"award-date\">Award date:</label>",
+                  "<input type=\"text\" name=\"award-date\">",
+                  wrapWithTag("button", "", "button",
+                    [wrapWithTag("span", "", "fa fa-calendar", [])]),
+                  "</div>",
+                  "</div>"
+                ])
+            ]),
+          wrapWithTag("div", "", "item-type align-right",
+           [
+             wrapWithTag("span", "", "item-type v-align-bottom", ["patronaged"]),
+             wrapWithTag("button", "", "award-button button success", ["Award"])
+           ])
+        ])
+    ])
 }
