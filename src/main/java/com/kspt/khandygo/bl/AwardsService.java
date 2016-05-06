@@ -6,6 +6,8 @@ import com.kspt.khandygo.core.entities.Employee;
 import com.kspt.khandygo.persistence.dao.AwardsDAO;
 import com.kspt.khandygo.persistence.dao.EmployeesDAO;
 import com.kspt.khandygo.utils.Tuple2;
+import static java.util.Comparator.comparingLong;
+import static java.util.stream.Collectors.toList;
 import lombok.AllArgsConstructor;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -21,6 +23,24 @@ public class AwardsService {
 
   public List<Tuple2<Integer, Award>> approvedFor(final int employeeId) {
     return awardsDAO.approvedFor(employeeId);
+  }
+
+  public List<Tuple2<Integer, Award>> pendingInboxFor(final int employeeId) {
+    return employeesDAO.getAllMasteredBy(employeeId).stream()
+        .map(t2 -> t2._1)
+        .map(awardsDAO::pendingFor)
+        .flatMap(List::stream)
+        .sorted(comparingLong(t2 -> t2._2.when()))
+        .collect(toList());
+  }
+
+  public List<Tuple2<Integer, Award>> pendingOutboxFor(final int employeeId) {
+    return employeesDAO.getAllUnderThePatronageOf(employeeId).stream()
+        .map(t2 -> t2._1)
+        .map(awardsDAO::pendingFor)
+        .flatMap(List::stream)
+        .sorted(comparingLong(t2 -> t2._2.when()))
+        .collect(toList());
   }
 
   public Award get(final Employee requester, final int awardId) {

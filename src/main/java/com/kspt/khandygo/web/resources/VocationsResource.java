@@ -38,9 +38,33 @@ public class VocationsResource {
   public List<VocationRepresentation> get(final @HeaderParam("session_id") String session) {
     final int requesterId = authService.employeeIdBySession(session);
     final List<Tuple2<Integer, Vocation>> awards = vocationsService.approvedFor(requesterId);
+    return represent(awards);
+  }
+
+  private List<VocationRepresentation> represent(final List<Tuple2<Integer, Vocation>> awards) {
     return awards.stream()
         .map(t2 -> new VocationRepresentation(t2._1, t2._2.when(), t2._2.duration()))
         .collect(toList());
+  }
+
+  @Path("/pending/inbox")
+  @GET
+  @ApiOperation(value = "get pending vocations awaiting for employee decision.")
+  public List<VocationRepresentation> getPendingInbox(
+      final @HeaderParam("session_id") String session) {
+    final int requesterId = authService.employeeIdBySession(session);
+    final List<Tuple2<Integer, Vocation>> awards = vocationsService.pendingInboxFor(requesterId);
+    return represent(awards);
+  }
+
+  @Path("/pending/outbox")
+  @GET
+  @ApiOperation(value = "get pending vocations proposed by employee.")
+  public List<VocationRepresentation> getPendingOutbox(
+      final @HeaderParam("session_id") String session) {
+    final int requesterId = authService.employeeIdBySession(session);
+    final List<Tuple2<Integer, Vocation>> awards = vocationsService.pendingOutboxFor(requesterId);
+    return represent(awards);
   }
 
   @Path("/propose")

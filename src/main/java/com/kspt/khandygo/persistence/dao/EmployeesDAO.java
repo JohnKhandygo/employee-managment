@@ -32,4 +32,25 @@ public class EmployeesDAO {
         .map(entity -> new Tuple2<>(entity.id(), entity))
         .collect(toList());
   }
+
+  public List<Tuple2<Integer, ? extends Employee>> getAllUnderThePatronageOf(
+      final int managerId) {
+    return gateway.find(UserEntity.class)
+        .where()
+        .eq("manager_id", managerId)
+        .list()
+        .stream()
+        .map(entity -> new Tuple2<>(entity.id(), entity))
+        .collect(toList());
+  }
+
+  public List<Tuple2<Integer, ? extends Employee>> getAllMasteredBy(final int paymasterId) {
+    return gateway.find(UserEntity.class)
+        .where()
+        .eq("paymaster_id", paymasterId)
+        .list()
+        .stream()
+        .map(entity -> new Tuple2<>(entity.id(), entity))
+        .collect(toList());
+  }
 }

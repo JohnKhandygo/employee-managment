@@ -23,6 +23,18 @@ div.patronaged-item {
   background: #87CEFA
 }
 
+div.award-inbox-item {
+  background: #ADD8E6
+}
+div.award-outbox-item {
+  background: #87CEFA
+}
+div.vocation-inbox-item {
+  background: #ADD8E6
+}
+div.vocation-outbox-item {
+  background: #87CEFA
+}
 
 div.item-info {
   font-size: 16pt

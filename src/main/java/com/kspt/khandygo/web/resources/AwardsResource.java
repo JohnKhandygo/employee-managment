@@ -34,12 +34,36 @@ public class AwardsResource {
   @Path("/approved")
   @GET
   @ApiOperation(value = "get approved awards for employee.")
-  public List<AwardRepresentation> get(final @HeaderParam("session_id") String session) {
+  public List<AwardRepresentation> getApproved(final @HeaderParam("session_id") String session) {
     final int requesterId = authService.employeeIdBySession(session);
     final List<Tuple2<Integer, Award>> awards = awardsService.approvedFor(requesterId);
+    return represent(awards);
+  }
+
+  private List<AwardRepresentation> represent(final List<Tuple2<Integer, Award>> awards) {
     return awards.stream()
         .map(t2 -> new AwardRepresentation(t2._1, t2._2.when(), t2._2.amount()))
         .collect(toList());
+  }
+
+  @Path("/pending/inbox")
+  @GET
+  @ApiOperation(value = "get pending awards awaiting for employee decision.")
+  public List<AwardRepresentation> getPendingInbox(
+      final @HeaderParam("session_id") String session) {
+    final int requesterId = authService.employeeIdBySession(session);
+    final List<Tuple2<Integer, Award>> awards = awardsService.pendingInboxFor(requesterId);
+    return represent(awards);
+  }
+
+  @Path("/pending/outbox")
+  @GET
+  @ApiOperation(value = "get pending awards proposed by employee.")
+  public List<AwardRepresentation> getPendingOutbox(
+      final @HeaderParam("session_id") String session) {
+    final int requesterId = authService.employeeIdBySession(session);
+    final List<Tuple2<Integer, Award>> awards = awardsService.pendingOutboxFor(requesterId);
+    return represent(awards);
   }
 
   @Path("/propose")

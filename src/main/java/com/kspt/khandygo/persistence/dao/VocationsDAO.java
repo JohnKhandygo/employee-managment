@@ -48,6 +48,21 @@ public class VocationsDAO {
         .collect(toList());
   }
 
+  public List<Tuple2<Integer, Vocation>> pendingFor(final Integer employeeId) {
+    final List<VocationEntity> awardEntities = gateway.find(VocationEntity.class).where()
+        .eq("employee_id", employeeId)
+        .and()
+        .eq("approved", 0)
+        .and()
+        .eq("rejected", 0)
+        .and()
+        .eq("cancelled", 0)
+        .list();
+    return awardEntities.stream()
+        .map(entity -> new Tuple2<>(entity.id, entity.toVocation()))
+        .collect(toList());
+  }
+
   @Entity
   @Table(name = "vocations")
   @AllArgsConstructor(access = AccessLevel.PRIVATE)

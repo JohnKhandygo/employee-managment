@@ -6,6 +6,8 @@ import com.kspt.khandygo.core.entities.Vocation;
 import com.kspt.khandygo.persistence.dao.EmployeesDAO;
 import com.kspt.khandygo.persistence.dao.VocationsDAO;
 import com.kspt.khandygo.utils.Tuple2;
+import static java.util.Comparator.comparingLong;
+import static java.util.stream.Collectors.toList;
 import lombok.AllArgsConstructor;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -53,5 +55,18 @@ public class VocationsService {
 
   public List<Tuple2<Integer, Vocation>> approvedFor(final int employeeId) {
     return vocationsDAO.approvedFor(employeeId);
+  }
+
+  public List<Tuple2<Integer, Vocation>> pendingInboxFor(final int employeeId) {
+    return employeesDAO.getAllMasteredBy(employeeId).stream()
+        .map(t2 -> t2._1)
+        .map(vocationsDAO::pendingFor)
+        .flatMap(List::stream)
+        .sorted(comparingLong(t2 -> t2._2.when()))
+        .collect(toList());
+  }
+
+  public List<Tuple2<Integer, Vocation>> pendingOutboxFor(final int employeeId) {
+    return vocationsDAO.pendingFor(employeeId);
   }
 }

@@ -11,9 +11,7 @@ function wrapWithTag(tag, idValue, classValue, contentArray) {
 }
 
 function buildAwardView(award) {
-  /*return wrapWithTag("div", "", "grid condensed",
-    [*/
-  return    wrapWithTag("div", "", "award-item row cells2",
+  return wrapWithTag("div", "", "award-item row cells2",
         [
           wrapWithTag("div", "", "cell padding20",
             [wrapWithTag("div", "", "item-info align-left", [toHumanReadableDate(award.when)])]),
@@ -135,6 +133,104 @@ function buildPatronagedEmployeeView(patronaged) {
              wrapWithTag("span", "", "item-type v-align-bottom", ["patronaged"]),
              wrapWithTag("button", "", "award-button button success", ["Award"])
            ])
+        ])
+    ])
+}
+
+function buildAwardsInboxView(award) {
+  return wrapWithTag("div", award.id, "award-inbox-item row cells2",
+    [
+      wrapWithTag("div", "", "cell padding20",
+        [wrapWithTag("div", "", "item-info align-left", [toHumanReadableDate(award.when)])]),
+      wrapWithTag("div", "", "cell padding20",
+        [wrapWithTag("div", "", "item-info align-right", [award.amount])]),
+
+      wrapWithTag("div", "", "",
+        [
+          wrapWithTag("div", "", "item-type align-right",
+            [
+              wrapWithTag("span", "", "item-type v-align-bottom", ["award"]),
+              wrapWithTag("button", "", "approve-button button success", ["Approve"]),
+              wrapWithTag("button", "", "reject-button button danger", ["Reject"])
+            ])
+        ])
+    ])
+}
+
+function buildAwardsOutboxView(award) {
+  return wrapWithTag("div", award.id, "award-outbox-item row cells2",
+    [
+      wrapWithTag("div", "", "cell padding20",
+        [wrapWithTag("div", "", "item-info align-left", [toHumanReadableDate(award.when)])]),
+      wrapWithTag("div", "", "cell padding20",
+        [wrapWithTag("div", "", "item-info align-right", [award.amount])]),
+
+      wrapWithTag("div", "", "",
+        [
+          wrapWithTag("div", "", "item-type align-right",
+            [
+              wrapWithTag("span", "", "item-type v-align-bottom", ["award"]),
+              wrapWithTag("button", "", "cancel-button button danger", ["Cancel"])
+            ])
+        ])
+    ])
+}
+
+function buildVocationInboxView(vocation) {
+  return wrapWithTag("div", vocation.id, "vocation-inbox-item row cells2",
+    [
+      wrapWithTag("div", "", "cell padding20",
+        [wrapWithTag("div", "", "item-info align-left",
+          [
+            "since",
+            " <br/> ",
+            toHumanReadableDate(vocation.when),
+          ])]),
+      wrapWithTag("div", "", "cell padding20",
+        [wrapWithTag("div", "", "item-info align-right",
+          [
+            "till",
+            "<br/>",
+            toHumanReadableDate(vocation.when + vocation.duration)
+          ])]),
+
+      wrapWithTag("div", "", "",
+        [
+          wrapWithTag("div", "", "item-type align-right",
+            [
+              wrapWithTag("span", "", "item-type v-align-bottom", ["vocation"]),
+              wrapWithTag("button", "", "approve-button button success", ["Approve"]),
+              wrapWithTag("button", "", "reject-button button danger", ["Reject"])
+            ])
+        ])
+    ])
+}
+
+function buildVocationOutboxView(vocation) {
+  return wrapWithTag("div", vocation.id, "vocation-outbox-item row cells2",
+    [
+      wrapWithTag("div", "", "cell padding20",
+        [wrapWithTag("div", "", "item-info align-left",
+          [
+            "since",
+            "<br/>",
+            toHumanReadableDate(vocation.when)
+          ])]),
+      wrapWithTag("div", "", "cell padding20",
+        [wrapWithTag("div", "", "item-info align-right",
+          [
+            "till",
+            "<br/>",
+            toHumanReadableDate(vocation.when + vocation.duration)
+          ])]),
+
+      wrapWithTag("div", "", "",
+        [
+          wrapWithTag("div", "", "item-type align-right",
+            [
+              wrapWithTag("span", "", "item-type v-align-bottom", ["vocation"]),
+              wrapWithTag("button", "", "cancel-button button danger", ["Cancel"])
+            ])
         ])
     ])
 }

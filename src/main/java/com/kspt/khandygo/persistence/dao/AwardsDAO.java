@@ -33,6 +33,21 @@ public class AwardsDAO {
         .collect(toList());
   }
 
+  public List<Tuple2<Integer, Award>> pendingFor(final int employeeId) {
+    final List<AwardEntity> awardEntities = gateway.find(AwardEntity.class).where()
+        .eq("employee_id", employeeId)
+        .and()
+        .eq("approved", 0)
+        .and()
+        .eq("rejected", 0)
+        .and()
+        .eq("cancelled", 0)
+        .list();
+    return awardEntities.stream()
+        .map(awardEntity -> new Tuple2<>(awardEntity.id, awardEntity.toAward()))
+        .collect(toList());
+  }
+
   public int save(final Award award) {
     final AwardEntity awardEntity = AwardEntity.newOne(award);
     return gateway.save(awardEntity).id;

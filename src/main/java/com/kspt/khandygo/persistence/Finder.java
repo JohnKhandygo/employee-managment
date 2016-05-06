@@ -1,10 +1,12 @@
 package com.kspt.khandygo.persistence;
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Verify;
 import com.google.common.collect.Lists;
 import static com.kspt.khandygo.persistence.PersistenceUtils.*;
 import static java.lang.String.format;
+import static java.util.stream.Collectors.toList;
 import lombok.AllArgsConstructor;
 import javax.inject.Inject;
 import javax.persistence.Entity;
@@ -178,6 +180,16 @@ public class Finder {
         else
           continuationFormat = "%s %s=%s";
         return new ConditionBuilder(format(continuationFormat, conditionString, parameter, o));
+      }
+
+      public <T> ConditionBuilder in(final String parameter, final List<T> os) {
+        final List<Object> formattedElements = os.stream()
+            .map(o -> o instanceof String ? format("'%s'", o) : o)
+            .collect(toList());
+        final String sequence = Joiner.on(",").join(formattedElements).toString();
+        final String continuationFormat = "%s %s in (%s)";
+        return new ConditionBuilder(
+            format(continuationFormat, conditionString, parameter, sequence));
       }
 
       public ConditionBuilder and() {

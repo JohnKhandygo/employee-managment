@@ -1,6 +1,6 @@
 var address = "http://localhost:8080";
-var session = "bea8e1f8-88ea-4894-bbcd-7c5dc5e21601"
-//var session = "3ea3e127-7455-4272-bbbf-5f47be377e56"
+//var session = "0f470947-5a6e-4dfa-8a9e-71e4e3622c05"
+var session = "6468538b-5a32-407a-b2dc-e80c453a3825"
 
 $(document).ready(function() {
   var contentDiv = $("div#content")
@@ -97,9 +97,8 @@ $(document).ready(function() {
           [wrapWithTag("h3", "", "", "PATRONAGED")])
       ]))
 
-    $.ajax({
+    $.get({
       url: address + "/api/employees/manager",
-      method: "GET",
       contentType: "application/json",
       headers: {
         session_id: session
@@ -142,9 +141,8 @@ $(document).ready(function() {
       }
     })
 
-    $.ajax({
+    $.get({
       url: address + "/api/employees/patronaged",
-      method: "GET",
       contentType: "application/json",
       headers: {
         session_id: session
@@ -179,6 +177,8 @@ $(document).ready(function() {
                 },
                 success: function(d) {
                   alert(JSON.stringify(d))
+                  $(awardAmountField).val("")
+                  $(awardDateField  ).val("")
                 }
               })
               $(awardForm).css("display", "none")
@@ -195,5 +195,170 @@ $(document).ready(function() {
     $(homeSection).removeClass("active")
     $(stuffSection).removeClass("active")
     $(proposalsSection).addClass("active")
+
+    $(contentDiv).append(wrapWithTag("div", "", "row cells2",
+      [
+        wrapWithTag("div", "inbox", "cell padding20", [wrapWithTag("h3", "", "", "INBOX")]),
+        wrapWithTag("div", "outbox", "cell padding20", [wrapWithTag("h3", "", "", "OUTBOX")])
+      ]))
+
+    $.get({
+      url: address + "/api/awards/pending/inbox",
+      contentType: "application/json",
+      headers: {
+        session_id: session
+      },
+      success: function(d) {
+        for (var i = 0; i < d.length; ++i) {
+          $("div#inbox").append(buildAwardsInboxView(d[i]))
+
+          var approveButtons = $("div#inbox").find("button.approve-button")
+          var lastAddedApproveButton = approveButtons[approveButtons.length - 1];
+          $(lastAddedApproveButton).click(function(event) {
+            var parentView = $(this).closest("div.award-inbox-item")[0]
+            var id = parseInt($(parentView).attr("id"))
+            $.post({
+              url: address + "/api/awards/" + id + "/approve",
+              headers: {
+                session_id: session
+              },
+              success: function(d) {
+                alert(JSON.stringify(d))
+                $(parentView).remove()
+              }
+            })
+          })
+
+          var rejectButtons = $("div#inbox").find("button.reject-button")
+          var lastAddedRejectButton = rejectButtons[rejectButtons.length - 1];
+          $(lastAddedRejectButton).click(function(event) {
+            var parentView = $(this).closest("div.award-inbox-item")[0]
+            var id = parseInt($(parentView).attr("id"))
+            $.post({
+              url: address + "/api/awards/" + id + "/reject",
+              headers: {
+                session_id: session
+              },
+              success: function(d) {
+                alert(JSON.stringify(d))
+                $(parentView).remove()
+              }
+            })
+          })
+
+        }
+      }
+    })
+
+    $.get({
+      url: address + "/api/awards/pending/outbox",
+      headers: {
+        session_id: session
+      },
+      success: function(d) {
+        for (var i = 0; i < d.length; ++i) {
+          $("div#outbox").append(buildAwardsOutboxView(d[i]))
+
+          var cancelButtons = $("div#outbox").find("button.cancel-button")
+          var lastAddedCancelButton = cancelButtons[cancelButtons.length - 1];
+          $(lastAddedCancelButton).click(function(event) {
+            var parentView = $(this).closest("div.award-outbox-item")[0]
+            var id = parseInt($(parentView).attr("id"))
+            $.ajax({
+              url: address + "/api/awards/" + id + "/cancel",
+              method : "DELETE",
+              headers: {
+                session_id: session
+              },
+              success: function(d) {
+                alert(JSON.stringify(d))
+                $(parentView).remove()
+              }
+            })
+          })
+
+        }
+      }
+    })
+
+    $.get({
+      url: address + "/api/vocations/pending/inbox",
+      headers: {
+        session_id: session
+      },
+      success: function(d) {
+        for (var i = 0; i < d.length; ++i) {
+          $("div#inbox").append(buildVocationInboxView(d[i]))
+
+          var approveButtons = $("div#inbox").find("button.approve-button")
+          var lastAddedApproveButton = approveButtons[approveButtons.length - 1];
+          $(lastAddedApproveButton).click(function(event) {
+            var parentView = $(this).closest("div.vocation-inbox-item")[0]
+            var id = parseInt($(parentView).attr("id"))
+            $.post({
+              url: address + "/api/vocations/" + id + "/approve",
+              headers: {
+                session_id: session
+              },
+              success: function(d) {
+                alert(JSON.stringify(d))
+                $(parentView).remove()
+              }
+            })
+          })
+
+          var rejectButtons = $("div#inbox").find("button.reject-button")
+          var lastAddedRejectButton = rejectButtons[rejectButtons.length - 1];
+          $(lastAddedRejectButton).click(function(event) {
+            var parentView = $(this).closest("div.vocation-inbox-item")[0]
+            var id = parseInt($(parentView).attr("id"))
+            $.post({
+              url: address + "/api/vocations/" + id + "/reject",
+              headers: {
+                session_id: session
+              },
+              success: function(d) {
+                alert(JSON.stringify(d))
+                $(parentView).remove()
+              }
+            })
+          })
+
+        }
+      }
+    })
+
+    $.get({
+      url: address + "/api/vocations/pending/outbox",
+      headers: {
+        session_id: session
+      },
+      success: function(d) {
+        for (var i = 0; i < d.length; ++i) {
+          $("div#outbox").append(buildVocationOutboxView(d[i]))
+
+          var cancelButtons = $("div#outbox").find("button.cancel-button")
+          var lastAddedCancelButton = cancelButtons[cancelButtons.length - 1];
+          $(lastAddedCancelButton).click(function(event) {
+            var parentView = $(this).closest("div.vocation-outbox-item")[0]
+            var id = parseInt($(parentView).attr("id"))
+            $.ajax({
+              url: address + "/api/vocations/" + id + "/cancel",
+              method : "DELETE",
+              headers: {
+                session_id: session
+              },
+              success: function(d) {
+                alert(JSON.stringify(d))
+                $(parentView).remove()
+              }
+            })
+          })
+
+        }
+      }
+    })
   })
+
+
 })
