@@ -397,79 +397,100 @@ $(document).ready(function() {
 
   $("button#propose-vocation-button").click(function() {
     var proposeVocationForm = $("div#propose-vocation-form")
-    if ($(proposeVocationForm).css("display") == "none") {
-      $(proposeVocationForm).slideDown(800)
-    } else {
-      var sinceText = $("input#propose-vocation-since").val()
-      var tillText = $("input#propose-vocation-till").val()
 
-      if (sinceText != "" && tillText != "") {
-        var since = toMilliseconds(sinceText)
-        var till = toMilliseconds(tillText)
-        var duration = till - since
+    var sinceText = $("input#propose-vocation-since").val()
+    var tillText = $("input#propose-vocation-till").val()
 
-        $.post({
-          url: address + "/api/vocations/propose",
-          headers: {
-            session_id: session
-          },
-          data: {
-            when: since,
-            duration: duration
-          },
-          success: function(d) {
-            //alert(JSON.stringify(d))
-            if ($(homeSection).hasClass("active")) {
+    if (sinceText != "" && tillText != "") {
+      var since = toMilliseconds(sinceText)
+      var till = toMilliseconds(tillText)
+      var duration = till - since
+
+      $.post({
+        url: address + "/api/vocations/propose",
+        headers: {
+          session_id: session
+        },
+        data: {
+          when: since,
+          duration: duration
+        },
+        success: function(d) {
+          $("div#propose-vocation-dialog").data("dialog").close()
+          $("input#propose-vocation-since").val("")
+          $("input#propose-vocation-till").val("")
+
+          $.Notify({
+            caption: "Notification",
+            content: "Vocation proposed successfully. Wait for response from your manager.",
+            type: "success",
+            timeout: 5000
+          });
+
+          if ($(homeSection).hasClass("active")) {
               $(homeSection).click()
-            }
           }
-        })
-      }
-
-      $("input#propose-vocation-since").val("")
-      $("input#propose-vocation-till").val("")
-      $(proposeVocationForm).slideUp(400)
+        },
+        error: function(xhr, textStatus, errorThrown) {
+          $.Notify({
+            caption: "Notification",
+            content: "Fail to propose vocation. Check data input.",
+            type: "alert",
+            timeout: 5000
+          });
+        }
+      })
     }
   })
 
   $("button#reserve-out-of-office-button").click(function() {
     var reserveOutOfOfficeForm = $("div#reserve-out-of-office-form")
-    if ($(reserveOutOfOfficeForm).css("display") == "none") {
-      $(reserveOutOfOfficeForm).slideDown(800)
-    } else {
-      var sinceText = $("input#out-of-office-since").val()
-      var tillText = $("input#out-of-office-till").val()
-      var reason = $("textarea#out-of-office-reason").val()
 
-      if (sinceText != "" && tillText != "" && reason != "") {
-        var since = toMilliseconds(sinceText)
-        var till = toMilliseconds(tillText) + 24 * 60 * 60 * 1000
-        var duration = till - since
-        $.post({
-          url: address + "/api/out_of_offices/create",
-          headers: {
-            session_id: session
-          },
-          data: {
-            when: since,
-            duration: duration,
-            reason: reason
-          },
-          success: function(d) {
-            //alert(JSON.stringify(d))
-            if ($(homeSection).hasClass("active")) {
-              $(homeSection).click()
-            }
+    var sinceText = $("input#out-of-office-since").val()
+    var tillText = $("input#out-of-office-till").val()
+    var reason = $("textarea#out-of-office-reason").val()
+
+    if (sinceText != "" && tillText != "" && reason != "") {
+      var since = toMilliseconds(sinceText)
+      var till = toMilliseconds(tillText) + 24 * 60 * 60 * 1000
+      var duration = till - since
+      $.post({
+        url: address + "/api/out_of_offices/create",
+        headers: {
+          session_id: session
+        },
+        data: {
+          when: since,
+          duration: duration,
+          reason: reason
+        },
+        success: function(d) {
+          $("div#reserve-out-of-office-dialog").data("dialog").close()
+          $("input#out-of-office-since").val("")
+          $("input#out-of-office-till").val("")
+          $("textarea#out-of-office-reason").val("")
+
+          $.Notify({
+            caption: "Notification",
+            content: "Out of office reserved successfully.",
+            type: "success",
+            timeout: 5000
+          });
+          if ($(homeSection).hasClass("active")) {
+            $(homeSection).click()
           }
-        })
-      }
-
-      $("input#out-of-office-since").val("")
-      $("input#out-of-office-till").val("")
-      $("textarea#out-of-office-reason").val("")
-      $(reserveOutOfOfficeForm).slideUp(400)
-
+        },
+        error: function(xhr, textStatus, errorThrown) {
+          $.Notify({
+            caption: "Notification",
+            content: "Fail to reserve out of office. Check data input.",
+            type: "alert",
+            timeout: 5000
+          })
+        }
+      })
     }
+
   })
 
 

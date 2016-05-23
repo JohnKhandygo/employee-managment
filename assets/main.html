@@ -65,9 +65,14 @@
                 </li>
                 <li class="divider"></li>
             </ul>
+
+            <div id="propose-vocation-dialog" data-role="dialog"
+                 data-close-button="true"
+                 data-overlay="true"
+                 data-overlay-click-close="true"
+                 data-overlay-color="op-darkTeal">
             <div id="propose-vocation-form"
-                 class="login-form padding20"
-                 style="display: none">
+                 class="login-form padding20">
                 <form>
                     <h4 class="text-light">Propose Vocation</h4>
                     <hr class="thin">
@@ -88,16 +93,27 @@
                             <span class="fa fa-calendar"></span>
                         </button>
                     </div>
+                    <div class="form-actions align-right">
+                        <button id="propose-vocation-button" class="button primary">Propose</button>
+                    </div>
                 </form>
             </div>
-            <button id="propose-vocation-button"
+            </div>
+
+            <button id="open-propose-vocation-dialog-button"
                     class="button primary"
-                    style="width:100%"> Propose Vocation
+                    style="width:100%"
+                    onclick="showMetroDialog('#propose-vocation-dialog')">
+                Propose Vocation
             </button>
 
+            <div id="reserve-out-of-office-dialog" data-role="dialog"
+                 data-close-button="true"
+                 data-overlay="true"
+                 data-overlay-click-close="true"
+                 data-overlay-color="op-darkTeal">
             <div id="reserve-out-of-office-form"
-                 class="login-form padding20"
-                 style="display: none">
+                 class="login-form padding20">
                 <form>
                     <h4 class="text-light">Reserve Out Of Office</h4>
                     <hr class="thin">
@@ -126,13 +142,22 @@
                         <label class="text-light" for="out-of-office-reason">Reason:</label>
                         <textarea id="out-of-office-reason"></textarea>
                     </div>
+                    <div class="form-actions align-right">
+                        <button id="reserve-out-of-office-button"
+                                class="button primary">Reserve
+                        </button>
+                    </div>
                 </form>
             </div>
-            <button id="reserve-out-of-office-button"
+            </div>
+
+            <button id="open-out-of-office-dialog-button"
                     class="button primary"
-                    style="width:100%">
+                    style="width:100%"
+                    onclick="showMetroDialog('#reserve-out-of-office-dialog')">
                 Reserve Out Of Office Days
             </button>
+
         </div>
         <div class="cell colspan4 padding20">
             <div id="content" class="grid">
