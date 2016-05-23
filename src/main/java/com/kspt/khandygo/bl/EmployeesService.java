@@ -10,7 +10,7 @@ import java.util.List;
 
 @AllArgsConstructor(onConstructor = @__({@Inject}))
 @Singleton
-public class EmployeeService {
+public class EmployeesService {
 
   private final EmployeesDAO employeesDAO;
 

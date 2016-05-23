@@ -12,68 +12,40 @@ paymaster --|> employee
 
 rectangle discussion {
   (Discussion) as d
-  (Accept) as a
-  (Decline) as c
+  (Approve) as a
+  (Reject) as c
 
-  a --|> d
-  c --|> d
+  a -up-|> d
+  c -up-|> d
 }
 
 rectangle activity {
-  (Track Time) as tt
-  (On Behalf of \n Himself) as ttByEmployee
-  (On Behalf of \n Another User) as ttByManager
-
-  ttByEmployee --|> tt
-  ttByManager --|> tt
-
-  (Propose Meeting) as pm
-
+  (Propose Award) as pa
+  (Propose Vocation) as pv
   (Reserve Out-of-Office) as rooo
 
-  pm ..> d
+  pa ..> d
   rooo ..> d
-  tt ..> d
+  pv ..> d
 }
 
-employee -- ttByEmployee
-manager -- ttByManager
-
-employee -- pm
-
 employee -- rooo
+employee -- pv
+manager -- pa
 
 rectangle view {
   (View Data) as vd
-  (View Own Data) as vod
-  (View Other \n Employee Data) as voed
-  (View All \n Employees Data) as vaed
-  (View Payments) as vp
 
-  vod --|> vd
-  voed --|> vd
-  vaed --|> vd
-  vp --|> vd
+  (View Working Plan) as vwp
+  (View Awards) as va
+  (View Team) as vt
+
+
+  vwp -up-|> vd
+  va -up-|> vd
+  vt -up-|> vd
 }
 
-employee -- vod
-manager -- vd
-paymaster -- vd
-
-rectangle update {
-  (Update Data) as ud
-  (Update Employee Data) as ued
-  (Update Payments Plan) as upp
-  (Award Employee) as ae
-
-  ued --|> ud
-  upp --|> ud
-  ae --|> ud
-
-  upp ..> d
-}
-
-employee -- upp
-manager -- ud
+employee -- vd
 
 @enduml

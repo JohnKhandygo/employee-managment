@@ -1,78 +1,47 @@
 @startuml
-actor "Related \n Paymaster" as paymaster
+actor Paymaster as paymaster
 participant AwardResource as resource
-participant EmployeesApi as api
-participant "Repository<Payments>" as payments
-participant "Repository<Employee>" as employees
-participant "Repository<Message>" as messages
-participant "MessageSender" as sender
+participant AuthService as auth
+participant AwardsService as awards
+participant "AwardsDAO" as payments
 database DBMS
-actor "Related \n Manager" as manager
-actor "Related \n Employee" as employee
 
-paymaster -> resource : decline()
+paymaster -> resource : reject()
 activate resource
-resource -> api : decline()
-activate api
+
+''''' auth
+resource -> auth : employeeBySession()
+activate auth
+auth -> resource : Employee
+deactivate auth
+
+resource -> awards : reject()
+activate awards
 
 ''''' accept payment
-api -> payments : get()
+awards -> payments : get()
 activate payments
 payments -> DBMS : <<query>>
 activate DBMS
 DBMS --> payments : raw response
 deactivate DBMS
-payments --> api : Payment
+payments --> awards : Award
 deactivate payments
 
 ''''' update payment
-api -> payments : delete()
+ref over awards : Award::reject
+awards -> payments : update()
 activate payments
 payments -> DBMS : <<query>>
 activate DBMS
 DBMS --> payments : raw response
 deactivate DBMS
-payments --> api : Payment
+payments --> awards : Award
 deactivate payments
 
-''''' get awarded employee
-api -> employees : get()
-activate employees
-employees -> DBMS : <<query>>
-activate DBMS
-DBMS --> employees : raw response
-deactivate DBMS
-employees --> api : Employee
-deactivate employees
-
-''''' create message
-ref over api : Message::new
-api -> messages : add()
-activate messages
-messages -> DBMS : <<query>>
-activate DBMS
-DBMS --> messages : raw response
-deactivate DBMS
-messages --> api : Message
-deactivate messages
-
-''''' send a message to the employee
-api -> sender : send()
-activate sender
-sender ->> employee : <<send>>
-sender --> api : void
-deactivate sender
-
-''''' send a message to the manager
-ref over api : Employee::manager
-api -> sender : send()
-activate sender
-sender ->> manager : <<send>>
-sender --> api : void
-deactivate sender
-
-api -->  resource : void
-deactivate api
-resource --> paymaster : Response
+awards -->  resource : void
+deactivate awards
+ref over resource : AwardRejected::new
+resource --> paymaster : AwardRejected
 deactivate resource
 @enduml

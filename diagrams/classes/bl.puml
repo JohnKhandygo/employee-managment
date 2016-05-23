@@ -1,61 +1,55 @@
 @startuml
 left to right direction
 
-package "core" {
-  package "apis" {
-    interface EmployeesApi
-    interface CancelApi
-    interface PaymentsApi
-    interface ProposalApi
-    interface TimeHoldersApi
-  }
+class AuthService {
+  - authorizedUsers : Map<String, Tuple2<Integer, Employee>>
+  - authDAO : AuthDAO
 
-  interface Repository<E extends Entity>
-  interface Messenger
+  + auth(login : String, password : String) : String
+  + employeeBySession(session : String) : Employee
+  + employeeIdBySession(session : String) : int
 }
 
-package "bl" {
-  class EmployeesService {
-    - employees : Repository<Employee>
-  }
-  class CancelService {
-    - repository : Repository<Approved>
-    - messenger : Messenger
-  }
-  class PaymentsService {
-    - payments: Repository<Payments>
-    - messenger : Messenger
-  }
-  class ProposalService {
-    - proposals : Repository<Proposal>
-    - messenger : Messenger
-    - timeHoldersApi : TimeHoldersApi
-    - paymentsApi : PaymentsApi
-  }
-  class TimeHoldersService {
-    - ths: Repository<TimeHolder>
-    - messenger : Messenger
-  }
+class AwardsService {
+  - employeesDAO : EmployeesDAO
+  - awardsDAO : AwardsDAO
+
+  + approvedFor(employeeId : int) : List<Tuple2<Integer, Award>>
+  + pendingInboxFor(employeeId : int) : List<Tuple2<Integer, Award>>
+  + pendingOutboxFor(employeeId : int) : List<Tuple2<Integer, Award>>
+  + get(requester : Employee, awardId : int) : Award
+  + propose(requester : Employee, when : long, duration : long, employeeId : int) : int
+  + approve(requester : Employee, awardId : int) : void
+  + reject(requester : Employee, awardId : int) : void
+  + cancel(requester : Employee, awardId : int) : void
 }
 
-EmployeesService ..|> EmployeesApi
-CancelService ..|> CancelApi
-TimeHoldersService ..|> TimeHoldersApi
-ProposalService ..|> ProposalApi
-PaymentsService ..|> PaymentsApi
+class EmployeesService {
+  - employeesDAO : EmployeesDAO
+  + getAllUnderThePatronageOf(manager : Employee) : List<Tuple2<Integer, ? extends Employee>>
+}
 
-EmployeesService ..> Repository
-CancelService ..> Repository
-ProposalService ..> Repository
-PaymentsService ..> Repository
-TimeHoldersService ..> Repository
+class OutOfOfficesService {
+  - employeesDAO EmployeesDAO
+  - outOfOfficesDAO OutOfOfficesDAO
 
-CancelService ..> Messenger
-ProposalService ..> Messenger
-PaymentsService ..> Messenger
-TimeHoldersService ..> Messenger
+  + create(requester : Employee, when : long, duration : long, reason : String, employeeId : int)
+   : int
+  + cancel(requester : Employee, outOfOfficeId : int) : void
+  + approvedFor(employeeId : int) : List<Tuple2<Integer, OutOfOffice>>
+}
 
-ProposalService ..> TimeHoldersApi
-ProposalService ..> PaymentsApi
+class VocationsService {
+  - employeesDAO EmployeesDAO;
+  - vocationsDAO VocationsDAO;
+
+  + propose(requester : Employee, when : long, duration : long, employeeId : int) : int
+  + approve(requester : Employee, vocationId : int) : void
+  + reject(requester : Employee, vocationId : int) : void
+  + cancel(requester : Employee, vocationId : int) : void
+  + approvedFor(employeeId : int) : List<Tuple2<Integer, Vocation>>
+  + pendingInboxFor(employeeId : int) : List<Tuple2<Integer, Vocation>>
+  + pendingOutboxFor(employeeId : int) : List<Tuple2<Integer, Vocation>>
+}
 
 @enduml

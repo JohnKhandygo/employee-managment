@@ -1,10 +1,10 @@
 @startuml
 'left to right direction
+hide class circle
 
 class Employee {
   name : String
 }
-
 
 class Manager {
 }
@@ -15,36 +15,42 @@ class Paymaster {
 class Worker {
 }
 
-class Proposal {
+class Award {
+  employee : Employee
   when : long
-  pending : boolean
-}
-
-class ScheduledItem {
-  when : long
-}
-
-class Payment {
   amount : long
+  approved : boolean
+  rejected : boolean
+  cancelled : boolean
 }
 
-class TimeHolder {
-  duration : long  
+class OutOfOffice {
+  employee : Employee
+  when : long
+  duration : long
+  reason : String
+  cancelled : boolean
 }
 
-hide class circle
+class Vocation {
+  employee : Employee
+  when : long
+  duration : long
+  approved : boolean
+  rejected : boolean
+  cancelled : boolean
+}
 
-Payment -up-|> ScheduledItem
-TimeHolder -up-|> ScheduledItem
-Worker -down-|> Employee
-Paymaster -left-|> Employee
 
-Proposal "1" -right-> "1" ScheduledItem
+Award "*" -down-> "1" Employee : "owned by >"
+OutOfOffice "*" -down-> "1" Employee : "owned by >"
+Vocation "*" -down-> "1" Employee : "owned by >"
+
+Worker -up-|> Employee
+Manager -down-|> Employee
+Paymaster -down-|> Employee
+
 Employee "*" --> "0..1" Manager
 Employee "*" --> "1" Paymaster
-ScheduledItem "*" -right-> "1" Employee : "owned by >"
-ScheduledItem "*" -right-> "1" Employee : "scheduled for >"
-
-Manager -up-|> Employee
 
 @enduml

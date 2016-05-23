@@ -2,62 +2,50 @@
 
 actor Manager as manager
 participant AwardResource as resource
-participant EmployeesApi as api
-participant "Repository<Employee>" as employees
-participant "Repository<Payments>" as payments
-participant "Repository<Message>" as messages
-participant "MessageSender" as sender
+participant AuthService as auth
+participant AwardsService as awards
+participant "EmployeesDAO" as employees
+participant "AwardsDAO" as payments
 database DBMS
-actor "Related \n Paymaster" as paymaster
 
-manager -> resource : award()
+manager -> resource : propose()
 activate resource
-resource -> api : award()
-activate api
+
+''''' auth 
+resource -> auth : employeeBySession()
+activate auth
+auth -> resource : Employee
+deactivate auth
+
+resource -> awards : propose()
+activate awards
 
 ''''' get awarded employee
-api -> employees : get()
+awards -> employees : get()
 activate employees
 employees -> DBMS : <<query>>
 activate DBMS
 DBMS --> employees : raw response
 deactivate DBMS
-employees --> api : Employee
+employees --> awards : Employee
 deactivate employees
 
 ''''' add new payment
-ref over api : Payment::new
-api -> payments : add()
+ref over awards : Award::newOne
+awards -> payments : save()
 activate payments
 payments -> DBMS : <<query>>
 activate DBMS
 DBMS --> payments : raw response
 deactivate DBMS
-payments --> api : Payment
+payments --> awards : int
 deactivate payments
 
-''''' create message
-ref over api : Message::new
-api -> messages : add()
-activate messages
-messages -> DBMS : <<query>>
-activate DBMS
-DBMS --> messages : raw response
-deactivate DBMS
-messages --> api : Message
-deactivate messages
+awards -->  resource : int
+deactivate awards
 
-''''' send a message to the paymaster
-ref over api : Employee::paymaster
-api -> sender : send()
-activate sender
-sender ->> paymaster : <<send>>
-sender --> api : void
-deactivate sender
-
-api -->  resource : void
-deactivate api
-resource --> manager : Response
+ref over resource : AwardProposed::new
+resource --> manager : AwardProposed
 deactivate resource
 
 @enduml

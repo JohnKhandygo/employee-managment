@@ -2,7 +2,7 @@ package com.kspt.khandygo.web.resources;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.kspt.khandygo.bl.AuthService;
-import com.kspt.khandygo.bl.EmployeeService;
+import com.kspt.khandygo.bl.EmployeesService;
 import com.kspt.khandygo.core.entities.Employee;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -24,7 +24,7 @@ public class EmployeesResource {
 
   private final AuthService authService;
 
-  private final EmployeeService employeeService;
+  private final EmployeesService employeesService;
 
   @Path("/manager")
   @GET
@@ -53,7 +53,7 @@ public class EmployeesResource {
       final @HeaderParam("session_id") String session) {
     final Employee employee = authService.employeeBySession(session);
     final Employee manager = employee.manager();
-    return employeeService.getAllUnderThePatronageOf(manager)
+    return employeesService.getAllUnderThePatronageOf(manager)
         .stream()
         .<Employee>map(t2 -> t2._2)
         .filter(e -> !e.equals(employee))
@@ -67,7 +67,7 @@ public class EmployeesResource {
   public List<EmployeeWithIdRepresentation> getPatronaged(
       final @HeaderParam("session_id") String session) {
     final Employee employee = authService.employeeBySession(session);
-    return employeeService.getAllUnderThePatronageOf(employee)
+    return employeesService.getAllUnderThePatronageOf(employee)
         .stream()
         .map(t2 -> new EmployeeWithIdRepresentation(t2._2.name(), t2._1))
         .collect(toList());
