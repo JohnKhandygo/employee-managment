@@ -12,13 +12,13 @@ import static java.util.stream.Collectors.toList;
 import lombok.AllArgsConstructor;
 import javax.inject.Inject;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
@@ -72,10 +72,10 @@ public class VocationsResource {
   @ApiOperation(value = "propose vocation.")
   public VocationProposed propose(
       final @HeaderParam("session_id") String session,
-      final @QueryParam("when") long when,
-      final @QueryParam("duration") long duration,
-      final @QueryParam("employee_id") int employeeId) {
+      final @FormParam("when") long when,
+      final @FormParam("duration") long duration) {
     final Employee requester = authService.employeeBySession(session);
+    final int employeeId = authService.employeeIdBySession(session);
     final int id = vocationsService.propose(requester, when, duration, employeeId);
     return new VocationProposed(id);
   }

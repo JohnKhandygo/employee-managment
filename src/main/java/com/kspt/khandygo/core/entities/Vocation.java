@@ -6,6 +6,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import java.time.Instant;
+import java.util.concurrent.TimeUnit;
 
 @AllArgsConstructor
 @Accessors(fluent = true)
@@ -50,6 +52,10 @@ public class Vocation {
       final Employee employee,
       final long when,
       final long duration) {
-    return new Vocation(employee, when, duration, false, false, false);
+    final long sevenDays = TimeUnit.DAYS.toMillis(7);
+    Preconditions.checkState(when > Instant.now().toEpochMilli() + sevenDays);
+    Preconditions.checkState(duration >= sevenDays);
+    final boolean approved = employee.manager() == null;
+    return new Vocation(employee, when, duration, approved, false, false);
   }
 }

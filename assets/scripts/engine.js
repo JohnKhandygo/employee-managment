@@ -1,8 +1,42 @@
 var address = "http://localhost:8080";
-//var session = "0f470947-5a6e-4dfa-8a9e-71e4e3622c05"
-var session = "6468538b-5a32-407a-b2dc-e80c453a3825"
+
+var session
 
 $(document).ready(function() {
+  var appBar = $("div.app-bar")
+  var grid = $("div.grid")
+  var loginForm = $("div#login-form")
+
+  $("body").css("background-color", "#008080")
+  $(appBar).hide()
+  $(grid).hide()
+  $(loginForm).show()
+
+  $(loginForm).find("button#login-button").click(function(event) {
+    event.preventDefault();
+
+    var userLogin = $(loginForm).find("input#user-login").val()
+    var userPassword = $(loginForm).find("input#user-password").val()
+
+    $.post({
+      url: address + "/api/auth",
+      data: {
+        login: userLogin,
+        password: userPassword
+      },
+      success: function(d) {
+        session = d.session
+
+        $("body").css("background-color", "#ffffff")
+        $(appBar).show()
+        $(grid).show()
+        $(loginForm).hide()
+
+        $(homeSection).click()
+      }
+    })
+  })
+
   var contentDiv = $("div#content")
 
   var homeSection = $("li#home")
@@ -59,7 +93,7 @@ $(document).ready(function() {
                   session_id: session
                 },
                 success: function(r) {
-                  alert(JSON.stringify(r));
+                  //alert(JSON.stringify(r));
                   $(parentView).remove();
                 }
               })
@@ -157,7 +191,8 @@ $(document).ready(function() {
             var id = parseInt($(parentView).attr("id"))
             var awardForm = $(parentView).find("div.award-form")[0];
             if ($(awardForm).css("display") == "none") {
-              $(awardForm).css("display", "block")
+              //$(awardForm).css("display", "block")
+              $(awardForm).show(1000)
             } else {
               var awardAmountField = $(awardForm).find("input[name=\"award-amount\"]")[0];
               var awardAmountText = $(awardAmountField).val();
@@ -176,12 +211,12 @@ $(document).ready(function() {
                   amount : awardAmount
                 },
                 success: function(d) {
-                  alert(JSON.stringify(d))
                   $(awardAmountField).val("")
                   $(awardDateField  ).val("")
                 }
               })
-              $(awardForm).css("display", "none")
+              //$(awardForm).css("display", "none")
+              $(awardForm).hide(800)
             }
           })
         }
@@ -223,7 +258,7 @@ $(document).ready(function() {
                 session_id: session
               },
               success: function(d) {
-                alert(JSON.stringify(d))
+                //alert(JSON.stringify(d))
                 $(parentView).remove()
               }
             })
@@ -240,7 +275,7 @@ $(document).ready(function() {
                 session_id: session
               },
               success: function(d) {
-                alert(JSON.stringify(d))
+                //alert(JSON.stringify(d))
                 $(parentView).remove()
               }
             })
@@ -271,7 +306,7 @@ $(document).ready(function() {
                 session_id: session
               },
               success: function(d) {
-                alert(JSON.stringify(d))
+                //alert(JSON.stringify(d))
                 $(parentView).remove()
               }
             })
@@ -301,7 +336,7 @@ $(document).ready(function() {
                 session_id: session
               },
               success: function(d) {
-                alert(JSON.stringify(d))
+                //alert(JSON.stringify(d))
                 $(parentView).remove()
               }
             })
@@ -318,7 +353,7 @@ $(document).ready(function() {
                 session_id: session
               },
               success: function(d) {
-                alert(JSON.stringify(d))
+                //alert(JSON.stringify(d))
                 $(parentView).remove()
               }
             })
@@ -349,7 +384,7 @@ $(document).ready(function() {
                 session_id: session
               },
               success: function(d) {
-                alert(JSON.stringify(d))
+                //alert(JSON.stringify(d))
                 $(parentView).remove()
               }
             })
@@ -358,6 +393,83 @@ $(document).ready(function() {
         }
       }
     })
+  })
+
+  $("button#propose-vocation-button").click(function() {
+    var proposeVocationForm = $("div#propose-vocation-form")
+    if ($(proposeVocationForm).css("display") == "none") {
+      $(proposeVocationForm).slideDown(800)
+    } else {
+      var sinceText = $("input#propose-vocation-since").val()
+      var tillText = $("input#propose-vocation-till").val()
+
+      if (sinceText != "" && tillText != "") {
+        var since = toMilliseconds(sinceText)
+        var till = toMilliseconds(tillText)
+        var duration = till - since
+
+        $.post({
+          url: address + "/api/vocations/propose",
+          headers: {
+            session_id: session
+          },
+          data: {
+            when: since,
+            duration: duration
+          },
+          success: function(d) {
+            //alert(JSON.stringify(d))
+            if ($(homeSection).hasClass("active")) {
+              $(homeSection).click()
+            }
+          }
+        })
+      }
+
+      $("input#propose-vocation-since").val("")
+      $("input#propose-vocation-till").val("")
+      $(proposeVocationForm).slideUp(400)
+    }
+  })
+
+  $("button#reserve-out-of-office-button").click(function() {
+    var reserveOutOfOfficeForm = $("div#reserve-out-of-office-form")
+    if ($(reserveOutOfOfficeForm).css("display") == "none") {
+      $(reserveOutOfOfficeForm).slideDown(800)
+    } else {
+      var sinceText = $("input#out-of-office-since").val()
+      var tillText = $("input#out-of-office-till").val()
+      var reason = $("textarea#out-of-office-reason").val()
+
+      if (sinceText != "" && tillText != "" && reason != "") {
+        var since = toMilliseconds(sinceText)
+        var till = toMilliseconds(tillText) + 24 * 60 * 60 * 1000
+        var duration = till - since
+        $.post({
+          url: address + "/api/out_of_offices/create",
+          headers: {
+            session_id: session
+          },
+          data: {
+            when: since,
+            duration: duration,
+            reason: reason
+          },
+          success: function(d) {
+            //alert(JSON.stringify(d))
+            if ($(homeSection).hasClass("active")) {
+              $(homeSection).click()
+            }
+          }
+        })
+      }
+
+      $("input#out-of-office-since").val("")
+      $("input#out-of-office-till").val("")
+      $("textarea#out-of-office-reason").val("")
+      $(reserveOutOfOfficeForm).slideUp(400)
+
+    }
   })
 
 

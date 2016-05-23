@@ -12,6 +12,7 @@ import static java.util.stream.Collectors.toList;
 import lombok.AllArgsConstructor;
 import javax.inject.Inject;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -49,11 +50,11 @@ public class OutOfOfficesResource {
   @ApiOperation(value = "create out of office.")
   public OutOfOfficeCreated create(
       final @HeaderParam("session_id") String session,
-      final @QueryParam("when") long when,
-      final @QueryParam("duration") long duration,
-      final @QueryParam("reason") String reason,
-      final @QueryParam("employee_id") int employeeId) {
+      final @FormParam("when") long when,
+      final @FormParam("duration") long duration,
+      final @FormParam("reason") String reason) {
     final Employee requester = authService.employeeBySession(session);
+    final int employeeId = authService.employeeIdBySession(session);
     final int id = outOfOfficesService.create(requester, when, duration, reason, employeeId);
     return new OutOfOfficeCreated(id);
   }
