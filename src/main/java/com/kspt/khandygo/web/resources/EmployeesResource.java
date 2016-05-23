@@ -73,9 +73,6 @@ public class EmployeesResource {
         .collect(toList());
   }
 
-  /*@ResourceRepresentationWithType
-  @JsonTypeName(".employee")
-  @AllArgsConstructor*/
   private static class EmployeeRepresentation {
 
   }

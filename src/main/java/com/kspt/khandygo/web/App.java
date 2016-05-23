@@ -40,8 +40,6 @@ public class App extends Application<AppConfiguration> {
     filter.setInitParameter(ALLOWED_HEADERS_PARAM, "Origin, Content-Type, Accept, session_id");
     filter.setInitParameter(ALLOWED_ORIGINS_PARAM, "null,localhost,http://localhost:*");
     filter.setInitParameter(ALLOW_CREDENTIALS_PARAM, "true");
-    /*filter.setInitParameter(ALLOWED_ORIGINS_PARAM, "*");
-    filter.setInitParameter(ALLOW_CREDENTIALS_PARAM, "true");*/
   }
 
   protected void setupJersey(final Environment environment) {

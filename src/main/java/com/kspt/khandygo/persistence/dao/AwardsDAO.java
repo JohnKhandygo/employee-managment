@@ -67,7 +67,7 @@ public class AwardsDAO {
   @AllArgsConstructor(access = AccessLevel.PRIVATE)
   @EqualsAndHashCode
   @ToString
-  private static class AwardEntity /*extends Award*/ {
+  private static class AwardEntity {
     @Id
     private final Integer id;
 
@@ -82,18 +82,6 @@ public class AwardsDAO {
     private final Boolean rejected;
 
     private final Boolean cancelled;
-
-    /*private AwardEntity(
-        final EmployeeEntity employee,
-        final long timestamp,
-        final long amount,
-        final boolean approved,
-        final boolean rejected,
-        final boolean cancelled,
-        final Integer id) {
-      super(employee, timestamp, amount, approved, rejected, cancelled);
-      this.id = id;
-    }*/
 
     Award toAward() {
       return new Award(employee, timestamp, amount, approved, rejected, cancelled);

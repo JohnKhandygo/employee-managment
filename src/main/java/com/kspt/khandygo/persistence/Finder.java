@@ -75,21 +75,8 @@ public class Finder {
 
       final String referenceKeyColumnName = referenceKeyColumnName(parameter.getName());
       final Object extracted = extractValueFor(rs, referenceKeyColumnName);
-      /*if (parameter.isAnnotationPresent(Column.class)) {
-        final Column columnSpecification = parameter.getAnnotation(Column.class);
-        if (!columnSpecification.nullable() && extracted == null)
-          throw new RuntimeException(
-              format(
-                  "Expecting non null value for field %s.",
-                  referenceKeyColumnName));
-      }*/
       if (extracted == null) return null;
       final Class<?> entityParameterType = entityClassFor(parameterType);
-      /*return parameterType.cast(Proxy.newProxyInstance(
-          parameterType.getClassLoader(),
-          new Class[] {parameterType},
-          new EntityProxyInvocationHandler<>(this, (int) extracted, entityParameterType, null)
-      ));*/
       return find(entityParameterType).where().eq("id", extracted).unique();
     } else {
       final Object extracted = extractValueFor(rs, parameter.getName());
